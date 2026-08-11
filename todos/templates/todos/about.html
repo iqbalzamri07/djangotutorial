@@ -248,6 +248,15 @@
         transition: all 0.2s ease;
     }
 
+    /* Make feature cards clickable links */
+    .feature-link {
+        display: block;
+
+        color: inherit;
+
+        text-decoration: none;
+    }
+
     .feature:hover {
         transform: translateY(-3px);
 
@@ -468,7 +477,7 @@
 
     <div class="features">
 
-        <div class="feature">
+        <a href="{% url 'home' %}" class="feature feature-link">
 
             <div class="feature-icon">
                 ➕
@@ -483,10 +492,10 @@
                 organized in one place.
             </p>
 
-        </div>
+        </a>
 
 
-        <div class="feature">
+        <a href="{% url 'home' %}" class="feature feature-link">
 
             <div class="feature-icon">
                 📋
@@ -501,10 +510,10 @@
                 table.
             </p>
 
-        </div>
+        </a>
 
 
-        <div class="feature">
+        <a href="{% url 'home' %}" class="feature feature-link">
 
             <div class="feature-icon">
                 ✅
@@ -519,10 +528,10 @@
                 what's still pending.
             </p>
 
-        </div>
+        </a>
 
 
-        <div class="feature">
+        <a href="{% url 'edit_todos' %}" class="feature feature-link">
 
             <div class="feature-icon">
                 ✏️
@@ -537,7 +546,7 @@
                 something changes.
             </p>
 
-        </div>
+        </a>
 
     </div>
 
