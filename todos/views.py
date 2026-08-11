@@ -2,6 +2,7 @@ import calendar as py_calendar
 from datetime import date, datetime, time, timedelta
 
 from django.utils import timezone
+from django.urls import reverse
 
 from django.shortcuts import get_object_or_404, render, redirect
 from .models import Todo
@@ -147,6 +148,25 @@ def calendar(request):
 
     month_title = datetime(year, month, 1).strftime("%B %Y")
 
+    # Handle "add todo" popup submit without leaving the calendar page.
+    show_modal = False
+    title_value = ""
+    due_datetime_value = ""
+    form = None
+    if request.method == "POST":
+        form = TodoForm(request.POST)
+        if form.is_valid():
+            todo = form.save()
+            local_due = timezone.localtime(todo.due_datetime)
+            calendar_url = reverse("calendar")
+            return redirect(
+                f"{calendar_url}?year={local_due.year}&month={local_due.month}"
+            )
+
+        show_modal = True
+        title_value = request.POST.get("title", "")
+        due_datetime_value = request.POST.get("due_datetime", "")
+
     return render(
         request,
         "todos/calendar.html",
@@ -159,5 +179,52 @@ def calendar(request):
             "prev_month": prev_month,
             "next_year": next_year,
             "next_month": next_month,
+            "show_modal": show_modal,
+            "title_value": title_value,
+            "due_datetime_value": due_datetime_value,
+            "form": form,
+        },
+    )
+
+
+def calendar_add(request):
+    """
+    Add a Todo with its due_datetime prefilled from a day clicked in the calendar.
+    GET params:
+      - date=YYYY-MM-DD
+    """
+    selected_date_str = request.GET.get("date")
+    today = date.today()
+
+    selected_date = today
+    if selected_date_str:
+        try:
+            selected_date = datetime.strptime(selected_date_str, "%Y-%m-%d").date()
+        except ValueError:
+            selected_date = today
+
+    if request.method == "POST":
+        form = TodoForm(request.POST)
+        if form.is_valid():
+            todo = form.save()
+            local_due = timezone.localtime(todo.due_datetime)
+            return redirect(
+                "calendar",
+                year=local_due.year,
+                month=local_due.month,
+            )
+    else:
+        # Prefill time so user only needs to type the title (adjust as you like).
+        tz = timezone.get_current_timezone()
+        due_local = datetime.combine(selected_date, time(9, 0))
+        due_aware = timezone.make_aware(due_local, tz)
+        form = TodoForm(initial={"due_datetime": due_aware})
+
+    return render(
+        request,
+        "todos/calendar_add.html",
+        {
+            "form": form,
+            "selected_date": selected_date,
         },
     )

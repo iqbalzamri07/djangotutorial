@@ -5,6 +5,7 @@ urlpatterns = [
     path("", views.home, name="home"),
     path("about/", views.about, name="about"),
     path("calendar/", views.calendar, name="calendar"),
+    path("calendar/add/", views.calendar_add, name="calendar_add"),
 
     # Page showing all todos
     path("edit-todos/", views.edit_todos, name="edit_todos"),

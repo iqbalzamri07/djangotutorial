@@ -321,7 +321,8 @@
                     {% for week in weeks %}
                         {% for cell in week %}
                             <div
-                                class="day-cell {% if not cell.in_month %}outside{% elif cell.todos %}has-todos{% endif %}"
+                                class="day-cell {% if not cell.in_month %}outside{% else %}clickable{% endif %} {% if cell.todos %}has-todos{% endif %}"
+                                data-date="{{ cell.date|date:'Y-m-d' }}"
                             >
                                 <div class="day-number">
                                     <span>{{ cell.date.day }}</span>
@@ -352,6 +353,119 @@
             </div>
         </div>
     </div>
+
+    <!-- Add Todo Modal -->
+    <div
+        id="addTodoModal"
+        style="display:{% if show_modal %}block{% else %}none{% endif %};position:fixed;inset:0;z-index:50;background:rgba(0,0,0,0.45);"
+    >
+        <div
+            style="max-width:560px;margin:7vh auto;background:#ffffff;border-radius:18px;overflow:hidden;box-shadow:0 20px 80px rgba(0,0,0,0.3);"
+        >
+            <div
+                style="padding:18px 22px;background:linear-gradient(135deg,#8b5cf6,#ec4899,#f97316);color:#fff;"
+            >
+                <h2 style="margin:0;font-size:18px;">
+                    ➕ Add Todo
+                </h2>
+                <p style="margin:6px 0 0;color:rgba(255,255,255,0.9);font-size:13px;">
+                    Click a day to prefill the due date.
+                </p>
+            </div>
+
+            <form
+                method="POST"
+                action="{% url 'calendar' %}?year={{ selected_year }}&month={{ selected_month }}"
+                style="padding:22px;"
+            >
+                {% csrf_token %}
+
+                <label style="display:block;margin-bottom:6px;font-size:14px;font-weight:700;color:#374151;">
+                    Title
+                </label>
+                <input
+                    type="text"
+                    name="title"
+                    value="{{ title_value }}"
+                    required
+                    style="width:100%;padding:11px 13px;border:1px solid #d1d5db;border-radius:9px;font-size:14px;font-family:inherit;outline:none;"
+                />
+
+                <div style="height:10px;"></div>
+
+                <label style="display:block;margin-bottom:6px;font-size:14px;font-weight:700;color:#374151;">
+                    Due datetime
+                </label>
+                <input
+                    id="due_datetime_input"
+                    type="datetime-local"
+                    name="due_datetime"
+                    value="{{ due_datetime_value }}"
+                    required
+                    style="width:100%;padding:11px 13px;border:1px solid #d1d5db;border-radius:9px;font-size:14px;font-family:inherit;outline:none;"
+                />
+
+                {% if form and form.errors %}
+                    <div style="margin-top:14px;color:#b91c1c;font-weight:700;font-size:13px;">
+                        {% for field, errors in form.errors.items %}
+                            {% for error in errors %}
+                                <div>{{ error }}</div>
+                            {% endfor %}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <div style="margin-top:18px;display:flex;justify-content:flex-end;gap:12px;align-items:center;">
+                    <button
+                        type="button"
+                        onclick="closeAddTodoModal()"
+                        style="border:1px solid #e5e7eb;background:#f3f4f6;border-radius:10px;padding:11px 18px;font-weight:800;cursor:pointer;"
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        type="submit"
+                        style="border:none;border-radius:10px;padding:11px 18px;font-weight:800;cursor:pointer;color:#fff;background:linear-gradient(135deg,#2563eb,#7c3aed);box-shadow:0 6px 18px rgba(124,58,237,0.25);"
+                    >
+                        💾 Save
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const modalEl = document.getElementById('addTodoModal');
+        const dueInputEl = document.getElementById('due_datetime_input');
+
+        function pad2(n) {
+            return String(n).padStart(2, '0');
+        }
+
+        function openAddTodoModal(dateISO) {
+            // dateISO: YYYY-MM-DD
+            // default time: 09:00
+            const value = dateISO + 'T09:00';
+            dueInputEl.value = value;
+            modalEl.style.display = 'block';
+        }
+
+        function closeAddTodoModal() {
+            modalEl.style.display = 'none';
+        }
+
+        // Prefill and open modal on day-cell click (in-month only).
+        document.querySelectorAll('.day-cell.clickable').forEach((cell) => {
+            cell.style.cursor = 'pointer';
+            cell.addEventListener('click', (e) => {
+                const dateISO = cell.getAttribute('data-date');
+                if (!dateISO) return;
+
+                // Avoid triggering when clicking inside text nodes.
+                openAddTodoModal(dateISO);
+            });
+        });
+    </script>
 </body>
 
 </html>
