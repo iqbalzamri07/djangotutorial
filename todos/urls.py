@@ -4,6 +4,7 @@ from . import views
 urlpatterns = [
     path("", views.home, name="home"),
     path("about/", views.about, name="about"),
+    path("calendar/", views.calendar, name="calendar"),
 
     # Page showing all todos
     path("edit-todos/", views.edit_todos, name="edit_todos"),
