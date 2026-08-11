@@ -9,7 +9,23 @@ from .models import Todo
 from .forms import TodoForm
 
 
+def mark_overdue_todos_completed():
+    """
+    Auto-complete todos whose due_datetime is in the past.
+
+    This is a "lazy" approach: it runs when pages are visited (home/calendar),
+    avoiding extra background jobs for this tutorial project.
+    """
+    now = timezone.now()
+    Todo.objects.filter(
+        completed=False,
+        due_datetime__isnull=False,
+        due_datetime__lt=now,
+    ).update(completed=True)
+
+
 def home(request):
+    mark_overdue_todos_completed()
     todos = Todo.objects.all()
     completed_tasks = todos.filter(completed=True).count()
     pending_tasks = todos.filter(completed=False).count()
@@ -36,6 +52,7 @@ def home(request):
 
 
 def edit_todos(request):
+    mark_overdue_todos_completed()
     todos = Todo.objects.all()
 
     if request.method == "POST":
@@ -94,6 +111,7 @@ def calendar(request):
     - year (YYYY)
     - month (1-12)
     """
+    mark_overdue_todos_completed()
     today = date.today()
     try:
         year = int(request.GET.get("year", today.year))

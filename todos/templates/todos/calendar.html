@@ -203,6 +203,16 @@
             gap: 6px;
         }
 
+        .todo-entry {
+            padding-bottom: 6px;
+            border-bottom: 1px dashed rgba(107, 114, 128, 0.25);
+        }
+
+        .todo-entry:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
         .mini-todo {
             font-size: 12px;
             color: #1f2937;
@@ -249,6 +259,18 @@
         .pending {
             background-color: #fef3c7;
             color: #92400e;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 50;
+            background: rgba(0, 0, 0, 0.45);
+        }
+
+        .modal-overlay.modal-visible {
+            display: block;
         }
 
         @media (max-width: 700px) {
@@ -336,12 +358,14 @@
                                 <div class="day-todos">
                                     {% for todo in cell.todos %}
                                         {% if forloop.counter <= 3 %}
-                                            <div class="mini-todo">
-                                                {{ todo.title }}
-                                            </div>
-                                            <div class="mini-meta">
-                                                ⏰ {{ todo.due_datetime|date:"H:i" }}
-                                                {% if todo.completed %}✓{% endif %}
+                                            <div class="todo-entry">
+                                                <div class="mini-todo">
+                                                    {{ todo.title }}
+                                                </div>
+                                                <div class="mini-meta">
+                                                    ⏰ {{ todo.due_datetime|date:"H:i" }}
+                                                    {% if todo.completed %}✓{% endif %}
+                                                </div>
                                             </div>
                                         {% endif %}
                                     {% endfor %}
@@ -357,7 +381,7 @@
     <!-- Add Todo Modal -->
     <div
         id="addTodoModal"
-        style="display:{% if show_modal %}block{% else %}none{% endif %};position:fixed;inset:0;z-index:50;background:rgba(0,0,0,0.45);"
+        class="modal-overlay {% if show_modal %}modal-visible{% endif %}"
     >
         <div
             style="max-width:560px;margin:7vh auto;background:#ffffff;border-radius:18px;overflow:hidden;box-shadow:0 20px 80px rgba(0,0,0,0.3);"
