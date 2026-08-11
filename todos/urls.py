@@ -1,0 +1,16 @@
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path("", views.home, name="home"),
+    path("about/", views.about, name="about"),
+
+    # Page showing all todos
+    path("edit-todos/", views.edit_todos, name="edit_todos"),
+
+    # Delete one todo
+    path("delete/<int:todo_id>/", views.delete, name="delete"),
+
+    # Edit one todo
+    path("edit/<int:todo_id>/", views.edit, name="edit"),
+]

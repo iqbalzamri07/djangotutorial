@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>My Blog</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: Arial, Helvetica, sans-serif;
+
+        background:
+            linear-gradient(135deg, #eff6ff, #f5f3ff);
+
+        color: #1f2937;
+    }
+
+    /* Main container */
+
+    .container {
+        width: 92%;
+        max-width: 1000px;
+        margin: 60px auto;
+    }
+
+    /* Header */
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        margin-bottom: 30px;
+    }
+
+    .logo {
+        font-size: 30px;
+        font-weight: 800;
+        color: #111827;
+    }
+
+    .subtitle {
+        margin-top: 6px;
+        color: #6b7280;
+        font-size: 14px;
+    }
+
+    /* Back button */
+
+    .back-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+
+        padding: 11px 18px;
+
+        background-color: white;
+        color: #374151;
+
+        text-decoration: none;
+
+        border: 1px solid #e5e7eb;
+        border-radius: 9px;
+
+        font-size: 14px;
+        font-weight: 600;
+
+        transition: all 0.2s ease;
+    }
+
+    .back-button:hover {
+        background-color: #f9fafb;
+        border-color: #d1d5db;
+        transform: translateY(-1px);
+    }
+
+    /* Blog card */
+
+    .blog-card {
+        background-color: white;
+
+        padding: 45px;
+
+        border-radius: 18px;
+
+        border: 1px solid #e5e7eb;
+
+        box-shadow:
+            0 15px 40px rgba(0, 0, 0, 0.07);
+    }
+
+    .blog-icon {
+        width: 65px;
+        height: 65px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        background: linear-gradient(
+            135deg,
+            #2563eb,
+            #7c3aed
+        );
+
+        color: white;
+
+        border-radius: 15px;
+
+        font-size: 30px;
+
+        margin-bottom: 25px;
+    }
+
+    .blog-card h1 {
+        margin: 0;
+
+        font-size: 38px;
+
+        color: #111827;
+    }
+
+    .description {
+        margin-top: 15px;
+
+        font-size: 17px;
+
+        line-height: 1.7;
+
+        color: #6b7280;
+    }
+
+    /* Divider */
+
+    .divider {
+        height: 1px;
+
+        background-color: #e5e7eb;
+
+        margin: 30px 0;
+    }
+
+    /* Welcome section */
+
+    .welcome {
+        background-color: #f8fafc;
+
+        padding: 22px;
+
+        border-radius: 12px;
+
+        border-left: 4px solid #2563eb;
+    }
+
+    .welcome h2 {
+        margin-top: 0;
+
+        color: #1f2937;
+
+        font-size: 20px;
+    }
+
+    .welcome p {
+        margin-bottom: 0;
+
+        color: #6b7280;
+
+        line-height: 1.6;
+    }
+
+    /* Footer */
+
+    .footer {
+        text-align: center;
+
+        margin-top: 30px;
+
+        color: #9ca3af;
+
+        font-size: 13px;
+    }
+
+    /* Mobile */
+
+    @media (max-width: 700px) {
+
+        .container {
+            width: 94%;
+            margin: 30px auto;
+        }
+
+        .header {
+            flex-direction: column;
+            align-items: flex-start;
+
+            gap: 15px;
+        }
+
+        .back-button {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .blog-card {
+            padding: 30px 22px;
+        }
+
+        .blog-card h1 {
+            font-size: 30px;
+        }
+
+        .description {
+            font-size: 15px;
+        }
+    }
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- Header -->
+
+<div class="header">
+
+    <div>
+        <div class="logo">
+            📝 My Blog
+        </div>
+
+        <div class="subtitle">
+            Thoughts, ideas, and stories
+        </div>
+    </div>
+
+    <a href="{% url 'home' %}" class="back-button">
+        ← Back to Todo App
+    </a>
+
+</div>
+
+
+<!-- Blog content -->
+
+<div class="blog-card">
+
+    <div class="blog-icon">
+        ✍️
+    </div>
+
+    <h1>
+        Welcome to My Blog
+    </h1>
+
+    <p class="description">
+        Welcome to my personal blog. This is where I'll share
+        thoughts, ideas, projects, and things I'm learning along
+        the way.
+    </p>
+
+    <div class="divider"></div>
+
+    <div class="welcome">
+
+        <h2>
+            🚀 My Django Journey
+        </h2>
+
+        <p>
+            I'm currently learning Django and building my first
+            web applications. This blog will grow alongside my
+            journey as I learn more about Python, Django,
+            databases, and web development.
+        </p>
+
+    </div>
+
+</div>
+
+</div>
+
+</body>
+
+</html>
