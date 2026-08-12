@@ -109,7 +109,69 @@
             font-size: 13px;
             font-weight: 700;
             color: #44403c;
+            text-decoration: none;
         }
+
+        .user-pill:hover {
+            background: #eff6ff;
+            color: #1d4ed8;
+            border-color: #93c5fd;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            padding: 14px 24px;
+            border-top: 1px solid #e7e5e4;
+            background: #fff;
+        }
+
+        .page-info {
+            color: #78716c;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .page-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .page-links a,
+        .page-links span {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 34px;
+            height: 34px;
+            padding: 0 10px;
+            border-radius: 999px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 800;
+            border: 1px solid #d6d3d1;
+            background: #fff;
+            color: #44403c;
+        }
+
+        .page-links a:hover {
+            background: #ecfdf5;
+            color: #0f766e;
+            border-color: #5eead4;
+        }
+
+        .page-links .current {
+            background: #0f766e;
+            color: #fff;
+            border-color: #0f766e;
+        }
+
+        .page-links .disabled { opacity: 0.45; }
 
         .panel {
             background: #fff;
@@ -397,7 +459,7 @@
 
         <div class="nav">
             {% if user.is_authenticated %}
-                <span class="user-pill">👤 {{ user.username }}</span>
+                <a href="{% url 'profile' %}" class="user-pill">👤 {{ user.username }}</a>
                 <form method="post" action="{% url 'logout' %}">
                     {% csrf_token %}
                     <button type="submit" class="button logout">Log out</button>
@@ -469,7 +531,7 @@
                     <tbody>
                         {% for todo in todos %}
                             <tr class="{% if todo.completed %}done{% endif %}">
-                                <td><span class="number">{{ forloop.counter }}</span></td>
+                                <td><span class="number">{{ page_obj.start_index|add:forloop.counter0 }}</span></td>
                                 <td><span class="task-title">{{ todo.title }}</span></td>
                                 <td>
                                     <span class="duration">
@@ -527,6 +589,8 @@
                     </tbody>
                 </table>
             </div>
+
+            {% include "todos/_pagination.html" %}
 
             <div class="panel-footer">
                 <span class="footer-text">Check completed tasks, then save your changes.</span>

@@ -264,7 +264,7 @@
         </div>
         <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
             {% if user.is_authenticated %}
-                <span class="ghost" style="cursor:default;">👤 {{ user.username }}</span>
+                <a class="ghost" href="{% url 'profile' %}">👤 {{ user.username }}</a>
                 <form method="post" action="{% url 'logout' %}" style="margin:0;">
                     {% csrf_token %}
                     <button type="submit" class="ghost" style="cursor:pointer;font-family:inherit;">Log out</button>
@@ -343,6 +343,13 @@
             <span class="go">Search tasks →</span>
         </a>
 
+        <a class="feature" href="{% url 'profile' %}">
+            <div class="icon">👤</div>
+            <h4>Your profile</h4>
+            <p>Update your name and email, change your password, and see your stats.</p>
+            <span class="go">Open profile →</span>
+        </a>
+
         <a class="feature" href="{% url 'blog:blog' %}">
             <div class="icon">📖</div>
             <h4>Read the blog</h4>
@@ -375,6 +382,7 @@
                 <li>Start date → end date durations</li>
                 <li>Click-to-view popups and a blog</li>
                 <li>Search todos by title and status</li>
+                <li>Pagination and a user profile</li>
             </ul>
         </div>
 

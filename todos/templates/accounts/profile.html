@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Profile</title>
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: "Segoe UI", Tahoma, sans-serif;
+            background: #f6f1e8;
+            color: #1c1917;
+        }
+
+        .container {
+            width: 94%;
+            max-width: 1080px;
+            margin: 36px auto 70px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .kicker {
+            margin: 0 0 6px;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: #0f766e;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 34px;
+            letter-spacing: -0.04em;
+        }
+
+        .header p { margin: 6px 0 0; color: #57534e; }
+
+        .nav {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .nav form { margin: 0; }
+
+        .button {
+            display: inline-flex;
+            align-items: center;
+            padding: 9px 14px;
+            background: #fff;
+            color: #44403c;
+            text-decoration: none;
+            border: 1px solid #d6d3d1;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s ease;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(28, 25, 23, 0.1);
+            background: #ecfdf5;
+            color: #0f766e;
+            border-color: #5eead4;
+        }
+
+        .button.logout {
+            background: #fef2f2;
+            color: #b91c1c;
+            border-color: #fecaca;
+        }
+
+        .button.logout:hover {
+            background: #b91c1c;
+            color: #fff;
+            border-color: #b91c1c;
+        }
+
+        .hero {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 20px;
+            align-items: center;
+            background: #1c1917;
+            color: #fafaf9;
+            border-radius: 22px;
+            padding: 24px 28px;
+            margin-bottom: 18px;
+        }
+
+        .avatar {
+            width: 84px;
+            height: 84px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #0f766e;
+            color: #fff;
+            font-size: 32px;
+            font-weight: 800;
+        }
+
+        .hero h2 { margin: 0 0 4px; font-size: 26px; }
+        .hero p { margin: 0; color: #d6d3d1; font-size: 14px; }
+
+        .meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .pill {
+            display: inline-flex;
+            padding: 5px 10px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.1);
+            color: #ecfdf5;
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .stat-card {
+            background: #fff;
+            border: 1px solid #e7e5e4;
+            border-radius: 16px;
+            padding: 16px 18px;
+        }
+
+        .stat-card.total { border-top: 4px solid #0f766e; }
+        .stat-card.pending { border-top: 4px solid #f97316; }
+        .stat-card.done { border-top: 4px solid #16a34a; }
+
+        .stat-label { color: #78716c; font-size: 13px; font-weight: 700; }
+        .stat-number { margin-top: 6px; font-size: 28px; font-weight: 800; }
+
+        .workspace {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .panel {
+            background: #fff;
+            border: 1px solid #e7e5e4;
+            border-radius: 18px;
+            overflow: hidden;
+        }
+
+        .panel.full { grid-column: 1 / -1; }
+
+        .panel-head {
+            padding: 18px 20px;
+            background: #0f766e;
+            color: #fff;
+        }
+
+        .panel-head h3 { margin: 0; font-size: 18px; }
+        .panel-head p { margin: 4px 0 0; color: rgba(255,255,255,0.85); font-size: 13px; }
+
+        .panel-body { padding: 18px 20px 22px; }
+
+        form p { margin: 0 0 14px; }
+        form label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 13px;
+            font-weight: 800;
+        }
+        form input {
+            width: 100%;
+            padding: 11px 13px;
+            border: 1px solid #d6d3d1;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 14px;
+        }
+        form input:focus {
+            outline: none;
+            border-color: #0f766e;
+            box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.15);
+        }
+
+        .password-wrap { position: relative; }
+        .password-wrap input { padding-right: 46px; }
+        .eye-btn {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .helptext { display: block; margin-top: 6px; color: #78716c; font-size: 12px; }
+        .errorlist { margin: 6px 0 0; padding: 0; list-style: none; color: #dc2626; font-size: 13px; }
+
+        .save-button {
+            border: none;
+            background: #0f766e;
+            color: #fff;
+            border-radius: 10px;
+            padding: 11px 18px;
+            font-weight: 800;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .save-button:hover { background: #0d9488; }
+
+        .banner {
+            margin-bottom: 14px;
+            padding: 10px 12px;
+            border-radius: 10px;
+            background: #dcfce7;
+            color: #166534;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .task-row {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 10px;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #f5f5f4;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .task-row:last-child { border-bottom: none; }
+        .task-title { font-weight: 800; font-size: 14px; }
+        .task-meta { margin-top: 3px; font-size: 12px; color: #78716c; font-weight: 700; }
+        .status {
+            display: inline-flex;
+            padding: 5px 10px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 800;
+        }
+        .completed { background: #dcfce7; color: #166534; }
+        .pending { background: #ffedd5; color: #9a3412; }
+        .empty { text-align: center; padding: 24px 8px; color: #78716c; }
+
+        @media (max-width: 800px) {
+            .header, .hero, .workspace, .stats { display: block; }
+            .avatar { margin-bottom: 12px; }
+            .stat-card, .panel { margin-top: 12px; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <div>
+            <p class="kicker">Your account</p>
+            <h1>Profile</h1>
+            <p>Update your details, change your password, and review your activity.</p>
+        </div>
+        <div class="nav">
+            <a href="{% url 'home' %}" class="button">← Home</a>
+            <a href="{% url 'edit_todos' %}" class="button">Edit Todos</a>
+            <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="button logout">Log out</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="hero">
+        <div class="avatar">{{ user.username|slice:":1"|upper }}</div>
+        <div>
+            <h2>
+                {% if user.first_name %}
+                    {{ user.first_name }} {{ user.last_name }}
+                {% else %}
+                    {{ user.username }}
+                {% endif %}
+            </h2>
+            <p>@{{ user.username }}{% if user.email %} · {{ user.email }}{% endif %}</p>
+            <div class="meta">
+                <span class="pill">Joined {{ user.date_joined|date:"M j, Y" }}</span>
+                {% if user.last_login %}
+                    <span class="pill">Last login {{ user.last_login|date:"M j, Y" }}</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="stats">
+        <div class="stat-card total">
+            <div class="stat-label">Total tasks</div>
+            <div class="stat-number">{{ total_tasks }}</div>
+        </div>
+        <div class="stat-card pending">
+            <div class="stat-label">Pending</div>
+            <div class="stat-number">{{ pending_tasks }}</div>
+        </div>
+        <div class="stat-card done">
+            <div class="stat-label">Completed</div>
+            <div class="stat-number">{{ completed_tasks }}</div>
+        </div>
+    </div>
+
+    <div class="workspace">
+        <div class="panel">
+            <div class="panel-head">
+                <h3>Profile details</h3>
+                <p>Username stays the same. You can update your name and email.</p>
+            </div>
+            <div class="panel-body">
+                {% if profile_saved %}
+                    <div class="banner">Profile saved.</div>
+                {% endif %}
+                <form method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="profile">
+                    {{ profile_form.as_p }}
+                    <button type="submit" class="save-button">Save profile</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-head">
+                <h3>Change password</h3>
+                <p>Use a strong password you don’t reuse elsewhere.</p>
+            </div>
+            <div class="panel-body">
+                {% if password_saved %}
+                    <div class="banner">Password updated.</div>
+                {% endif %}
+                <form method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="password">
+                    {{ password_form.as_p }}
+                    <button type="submit" class="save-button">Update password</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="panel full">
+            <div class="panel-head">
+                <h3>Recent todos</h3>
+                <p>Your five newest tasks.</p>
+            </div>
+            <div class="panel-body">
+                {% for todo in recent_todos %}
+                    <a href="{% url 'edit' todo.id %}" class="task-row">
+                        <div>
+                            <div class="task-title">{{ todo.title }}</div>
+                            <div class="task-meta">
+                                {% if todo.start_date %}
+                                    {{ todo.duration_label }}
+                                {% else %}
+                                    No dates yet
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% if todo.completed %}
+                            <span class="status completed">Done</span>
+                        {% else %}
+                            <span class="status pending">Pending</span>
+                        {% endif %}
+                    </a>
+                {% empty %}
+                    <div class="empty">No todos yet. Add one from Home.</div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.querySelectorAll('input[type="password"]').forEach((input) => {
+        const wrap = document.createElement('div');
+        wrap.className = 'password-wrap';
+        input.parentNode.insertBefore(wrap, input);
+        wrap.appendChild(input);
+
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'eye-btn';
+        btn.setAttribute('aria-label', 'Show password');
+        btn.textContent = '👁️';
+        btn.addEventListener('click', () => {
+            const showing = input.type === 'text';
+            input.type = showing ? 'password' : 'text';
+            btn.textContent = showing ? '👁️' : '🙈';
+            btn.setAttribute('aria-label', showing ? 'Show password' : 'Hide password');
+        });
+        wrap.appendChild(btn);
+    });
+</script>
+</body>
+</html>

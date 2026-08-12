@@ -275,6 +275,59 @@
             color: #78716c;
         }
 
+        .pagination {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            padding: 8px 8px 8px;
+        }
+
+        .page-info {
+            color: #78716c;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .page-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .page-links a,
+        .page-links span {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 34px;
+            height: 34px;
+            padding: 0 10px;
+            border-radius: 999px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 800;
+            border: 1px solid #d6d3d1;
+            background: #fff;
+            color: #44403c;
+        }
+
+        .page-links a:hover {
+            background: #ecfdf5;
+            color: #0f766e;
+            border-color: #5eead4;
+        }
+
+        .page-links .current {
+            background: #0f766e;
+            color: #fff;
+            border-color: #0f766e;
+        }
+
+        .page-links .disabled { opacity: 0.45; }
+
         @media (max-width: 700px) {
             .header { flex-direction: column; }
             .search-row { flex-direction: column; }
@@ -294,6 +347,7 @@
         <div class="nav">
             <a href="{% url 'home' %}" class="button">← Home</a>
             <a href="{% url 'edit_todos' %}" class="button edit">Edit Todos</a>
+            <a href="{% url 'profile' %}" class="button">Profile</a>
             <a href="{% url 'calendar' %}" class="button">Calendar</a>
         </div>
     </div>
@@ -389,6 +443,7 @@
                     {% endif %}
                 </div>
             {% endfor %}
+            {% include "todos/_pagination.html" %}
         </div>
     </div>
 </div>

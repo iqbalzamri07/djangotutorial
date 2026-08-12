@@ -1,15 +1,18 @@
 import calendar as py_calendar
 from datetime import date, datetime, timedelta
 
-from django.contrib.auth import login, logout
+from django.contrib.auth import login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
+from django.core.paginator import Paginator
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 
-from .forms import SignUpForm, TodoForm
+from .forms import ProfileForm, SignUpForm, TodoForm
 from .models import Todo
+
+TODOS_PER_PAGE = 8
 
 STATUS_FILTERS = ("all", "pending", "completed")
 WHEN_FILTERS = ("all", "today", "week", "month", "upcoming", "undated")
@@ -111,6 +114,18 @@ def apply_todo_filters(todos, request):
     }
 
 
+def paginate_todos(queryset, request, per_page=TODOS_PER_PAGE):
+    paginator = Paginator(queryset, per_page)
+    page_obj = paginator.get_page(request.GET.get("page"))
+    params = request.GET.copy()
+    params.pop("page", None)
+    return {
+        "todos": page_obj.object_list,
+        "page_obj": page_obj,
+        "page_query": params.urlencode(),
+    }
+
+
 def mark_overdue_todos_completed(user=None):
     """
     Auto-complete todos whose end_date is in the past.
@@ -171,6 +186,46 @@ def logout_view(request):
 
 
 @login_required
+def profile(request):
+    mark_overdue_todos_completed(request.user)
+    todos = Todo.objects.filter(user=request.user)
+    profile_form = ProfileForm(instance=request.user)
+    password_form = PasswordChangeForm(request.user)
+    profile_saved = False
+    password_saved = False
+
+    if request.method == "POST":
+        action = request.POST.get("action")
+        if action == "profile":
+            profile_form = ProfileForm(request.POST, instance=request.user)
+            if profile_form.is_valid():
+                profile_form.save()
+                profile_saved = True
+        elif action == "password":
+            password_form = PasswordChangeForm(request.user, request.POST)
+            if password_form.is_valid():
+                user = password_form.save()
+                update_session_auth_hash(request, user)
+                password_form = PasswordChangeForm(request.user)
+                password_saved = True
+
+    return render(
+        request,
+        "accounts/profile.html",
+        {
+            "profile_form": profile_form,
+            "password_form": password_form,
+            "profile_saved": profile_saved,
+            "password_saved": password_saved,
+            "total_tasks": todos.count(),
+            "pending_tasks": todos.filter(completed=False).count(),
+            "completed_tasks": todos.filter(completed=True).count(),
+            "recent_todos": todos.order_by("-created_at")[:5],
+        },
+    )
+
+
+@login_required
 def home(request):
     mark_overdue_todos_completed(request.user)
     all_todos = Todo.objects.filter(user=request.user)
@@ -179,6 +234,7 @@ def home(request):
     total_tasks = all_todos.count()
     progress_percent = int((completed_tasks / total_tasks) * 100) if total_tasks else 0
     filtered = apply_todo_filters(all_todos, request)
+    filtered.update(paginate_todos(filtered["todos"], request))
 
     hour = datetime.now().hour
     if hour < 12:
@@ -222,6 +278,7 @@ def search_todos(request):
         Todo.objects.filter(user=request.user),
         request,
     )
+    filtered.update(paginate_todos(filtered["todos"], request))
     return render(request, "todos/search.html", filtered)
 
 
@@ -232,6 +289,7 @@ def edit_todos(request):
         Todo.objects.filter(user=request.user),
         request,
     )
+    filtered.update(paginate_todos(filtered["todos"], request))
     todos = filtered["todos"]
 
     if request.method == "POST":

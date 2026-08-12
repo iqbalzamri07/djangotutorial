@@ -13,6 +13,17 @@ class SignUpForm(UserCreationForm):
         fields = ["username", "email"]
 
 
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ["first_name", "last_name", "email"]
+        widgets = {
+            "first_name": forms.TextInput(attrs={"placeholder": "First name"}),
+            "last_name": forms.TextInput(attrs={"placeholder": "Last name"}),
+            "email": forms.EmailInput(attrs={"placeholder": "you@example.com"}),
+        }
+
+
 class TodoForm(forms.ModelForm):
     """Todo create/edit form using start/end dates (not due_datetime)."""
 
