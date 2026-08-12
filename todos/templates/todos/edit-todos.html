@@ -1,556 +1,417 @@
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Todos</title>
+    <style>
+        * { box-sizing: border-box; }
 
-<title>Edit Todos</title>
-
-<style>
-    * {
-        box-sizing: border-box;
-    }
-
-    body {
-        margin: 0;
-        min-height: 100vh;
-        font-family: Arial, Helvetica, sans-serif;
-        background:
-            linear-gradient(135deg, #eff6ff, #f8fafc);
-        color: #1f2937;
-    }
-
-    /* Main container */
-    .container {
-        width: 92%;
-        max-width: 1100px;
-        margin: 60px auto;
-    }
-
-    /* Header */
-    .header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 25px;
-    }
-
-    .header h1 {
-        margin: 0;
-        font-size: 32px;
-        color: #111827;
-    }
-
-    .header p {
-        margin: 6px 0 0;
-        color: #6b7280;
-        font-size: 14px;
-    }
-
-    /* Home button */
-    .home-button {
-        display: inline-flex;
-        align-items: center;
-        gap: 7px;
-        padding: 11px 18px;
-        background-color: white;
-        color: #374151;
-        text-decoration: none;
-        border: 1px solid #e5e7eb;
-        border-radius: 9px;
-        font-size: 14px;
-        font-weight: 600;
-        transition: all 0.2s ease;
-    }
-
-    .home-button:hover {
-        background-color: #f9fafb;
-        border-color: #d1d5db;
-        transform: translateY(-1px);
-    }
-
-    /* Table card */
-    .table-card {
-        background-color: white;
-        border-radius: 16px;
-        overflow: hidden;
-        border: 1px solid #e5e7eb;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
-    }
-
-    .table-header {
-        padding: 20px 24px;
-        border-bottom: 1px solid #e5e7eb;
-        background-color: #ffffff;
-    }
-
-    .table-header h2 {
-        margin: 0;
-        font-size: 18px;
-        color: #111827;
-    }
-
-    .table-header p {
-        margin: 5px 0 0;
-        color: #6b7280;
-        font-size: 14px;
-    }
-
-    /* Table */
-    .table-container {
-        overflow-x: auto;
-    }
-
-    table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-    th {
-        padding: 14px 20px;
-        background-color: #f9fafb;
-        color: #6b7280;
-        text-align: left;
-        font-size: 12px;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        border-bottom: 1px solid #e5e7eb;
-    }
-
-    td {
-        padding: 17px 20px;
-        border-bottom: 1px solid #f0f0f0;
-        vertical-align: middle;
-    }
-
-    tbody tr {
-        transition: background-color 0.2s ease;
-    }
-
-    tbody tr:hover {
-        background-color: #f8fafc;
-    }
-
-    tbody tr:last-child td {
-        border-bottom: none;
-    }
-
-    /* Number */
-    .number {
-        color: #9ca3af;
-        font-size: 14px;
-        font-weight: 600;
-    }
-
-    /* Task title */
-    .task-title {
-        font-weight: 600;
-        color: #1f2937;
-    }
-
-    /* Checkbox */
-    .checkbox {
-        width: 20px;
-        height: 20px;
-        cursor: pointer;
-        accent-color: #2563eb;
-    }
-
-    /* Status */
-    .status {
-        display: inline-flex;
-        align-items: center;
-        gap: 5px;
-        padding: 6px 11px;
-        border-radius: 999px;
-        font-size: 12px;
-        font-weight: 700;
-    }
-
-    .completed {
-        background-color: #dcfce7;
-        color: #166534;
-    }
-
-    .pending {
-        background-color: #fef3c7;
-        color: #92400e;
-    }
-
-    /* Action buttons */
-    .actions {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-
-    .edit-button,
-    .delete-button {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        padding: 7px 11px;
-        border-radius: 7px;
-        text-decoration: none;
-        font-size: 13px;
-        font-weight: 600;
-        transition: all 0.2s ease;
-    }
-
-    .edit-button {
-        background-color: #eff6ff;
-        color: #2563eb;
-        border: 1px solid #dbeafe;
-    }
-
-    .edit-button:hover {
-        background-color: #dbeafe;
-        transform: translateY(-1px);
-    }
-
-    .delete-button {
-        background-color: #fef2f2;
-        color: #dc2626;
-        border: 1px solid #fee2e2;
-    }
-
-    .delete-button:hover {
-        background-color: #fee2e2;
-        transform: translateY(-1px);
-    }
-
-    /* Bottom section */
-    .table-footer {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 20px 24px;
-        border-top: 1px solid #e5e7eb;
-        background-color: #fafafa;
-    }
-
-    .footer-text {
-        color: #6b7280;
-        font-size: 13px;
-    }
-
-    /* Save button */
-    .save-button {
-        display: inline-flex;
-        align-items: center;
-        gap: 7px;
-        padding: 11px 20px;
-        background-color: #2563eb;
-        color: white;
-        border: none;
-        border-radius: 8px;
-        font-size: 14px;
-        font-weight: 700;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        box-shadow: 0 3px 8px rgba(37, 99, 235, 0.25);
-    }
-
-    .save-button:hover {
-        background-color: #1d4ed8;
-        transform: translateY(-1px);
-        box-shadow: 0 5px 12px rgba(37, 99, 235, 0.3);
-    }
-
-    .save-button:active {
-        transform: translateY(0);
-    }
-
-    /* Empty state */
-    .empty {
-        text-align: center;
-        padding: 60px 20px !important;
-        color: #9ca3af;
-    }
-
-    .empty-icon {
-        font-size: 40px;
-        margin-bottom: 10px;
-    }
-
-    .empty-text {
-        font-size: 15px;
-        font-weight: 600;
-        color: #6b7280;
-    }
-
-    /* Mobile */
-    @media (max-width: 700px) {
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: "Segoe UI", Tahoma, sans-serif;
+            background: #f6f1e8;
+            color: #1c1917;
+        }
 
         .container {
-            width: 95%;
-            margin: 30px auto;
+            width: 94%;
+            max-width: 1120px;
+            margin: 36px auto 70px;
         }
 
         .header {
-            flex-direction: column;
+            display: flex;
+            justify-content: space-between;
             align-items: flex-start;
-            gap: 15px;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .kicker {
+            margin: 0 0 6px;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: #0f766e;
         }
 
         .header h1 {
-            font-size: 26px;
+            margin: 0;
+            font-size: 34px;
+            letter-spacing: -0.04em;
         }
 
-        .home-button {
+        .header p {
+            margin: 6px 0 0;
+            color: #57534e;
+        }
+
+        .nav {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        .nav form { margin: 0; }
+
+        .button {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 9px 14px;
+            background: #fff;
+            color: #44403c;
+            text-decoration: none;
+            border: 1px solid #d6d3d1;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(28, 25, 23, 0.1);
+        }
+
+        .button.home:hover {
+            background: #ecfdf5;
+            color: #0f766e;
+            border-color: #5eead4;
+        }
+
+        .button.logout {
+            background: #fef2f2;
+            color: #b91c1c;
+            border-color: #fecaca;
+        }
+
+        .button.logout:hover {
+            background: #b91c1c;
+            color: #fff;
+            border-color: #b91c1c;
+        }
+
+        .user-pill {
+            display: inline-flex;
+            align-items: center;
+            padding: 9px 14px;
+            background: #fff;
+            border: 1px solid #d6d3d1;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 700;
+            color: #44403c;
+        }
+
+        .panel {
+            background: #fff;
+            border: 1px solid #e7e5e4;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 16px 40px rgba(28, 25, 23, 0.06);
+        }
+
+        .panel-head {
+            padding: 20px 24px;
+            background: #0f766e;
+            color: #fff;
+        }
+
+        .panel-head h2 {
+            margin: 0;
+            font-size: 20px;
+        }
+
+        .panel-head p {
+            margin: 6px 0 0;
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 14px;
+        }
+
+        .table-scroll { overflow-x: auto; }
+
+        table {
             width: 100%;
-            justify-content: center;
+            border-collapse: collapse;
         }
 
-        .table-header {
-            padding: 18px;
+        th {
+            padding: 14px 18px;
+            background: #fafaf9;
+            color: #78716c;
+            text-align: left;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid #e7e5e4;
         }
 
-        th,
         td {
-            padding: 13px 12px;
+            padding: 16px 18px;
+            border-bottom: 1px solid #f5f5f4;
+            vertical-align: middle;
         }
+
+        tbody tr:hover { background: #f0fdfa; }
+        tbody tr:last-child td { border-bottom: none; }
+        tbody tr.done td { background: #f8faf9; }
+
+        .number {
+            color: #a8a29e;
+            font-weight: 700;
+        }
+
+        .task-title {
+            font-weight: 800;
+            color: #1c1917;
+        }
+
+        tr.done .task-title {
+            text-decoration: line-through;
+            color: #78716c;
+        }
+
+        .duration {
+            color: #57534e;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #0f766e;
+        }
+
+        .status {
+            display: inline-flex;
+            align-items: center;
+            padding: 5px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .completed { background: #dcfce7; color: #166534; }
+        .pending { background: #ffedd5; color: #9a3412; }
 
         .actions {
-            flex-direction: column;
-            align-items: stretch;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .edit-button,
         .delete-button {
-            text-align: center;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 7px 12px;
+            border-radius: 999px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s ease;
         }
 
-        .table-footer {
-            flex-direction: column;
-            gap: 15px;
-            align-items: stretch;
+        .edit-button {
+            background: #f5f3ff;
+            color: #6d28d9;
+            border: 1px solid #c4b5fd;
+        }
+
+        .edit-button:hover {
+            background: #f8eaff;
+            color: #651f83;
+            border-color: #bf59eb;
+            transform: translateY(-2px);
+        }
+
+        .delete-button {
+            background: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
+
+        .delete-button:hover {
+            background: #b91c1c;
+            color: #fff;
+            border-color: #b91c1c;
+            transform: translateY(-2px);
+        }
+
+        .panel-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            padding: 18px 24px;
+            border-top: 1px solid #e7e5e4;
+            background: #fafaf9;
+        }
+
+        .footer-text {
+            color: #78716c;
+            font-size: 13px;
+            font-weight: 600;
         }
 
         .save-button {
-            width: 100%;
-            justify-content: center;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 11px 20px;
+            background: #0f766e;
+            color: #fff;
+            border: none;
+            border-radius: 999px;
+            font-size: 14px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.2s ease;
         }
-    }
-</style>
 
+        .save-button:hover {
+            background: #9af4ee;
+            border: 1px solid #76ada9;
+            color: #0f766e;
+            transform: translateY(-2px);
+        }
+
+        .empty {
+            text-align: center;
+            padding: 56px 20px !important;
+            color: #78716c;
+        }
+
+        .empty-icon { font-size: 40px; margin-bottom: 8px; }
+        .empty-text { font-size: 15px; font-weight: 800; }
+
+        @media (max-width: 800px) {
+            .header { flex-direction: column; }
+            .nav { justify-content: flex-start; }
+            .panel-footer { flex-direction: column; align-items: stretch; }
+            .save-button { justify-content: center; width: 100%; }
+            .actions { flex-direction: column; align-items: stretch; }
+        }
+    </style>
 </head>
-
 <body>
-
 <div class="container">
-
-<!-- Header -->
-
-<div class="header">
-
-    <div>
-        <h1>My Todos</h1>
-        <p>Manage your tasks and keep track of your progress.</p>
-    </div>
-
-    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
-        {% if user.is_authenticated %}
-            <span class="home-button" style="cursor:default;">👤 {{ user.username }}</span>
-            <form method="post" action="{% url 'logout' %}" style="margin:0;">
-                {% csrf_token %}
-                <button type="submit" class="home-button" style="cursor:pointer;font-family:inherit;">Log out</button>
-            </form>
-        {% endif %}
-        <a href="{% url 'home' %}" class="home-button">
-            ← Home
-        </a>
-    </div>
-
-</div>
-
-
-<!-- Todo table -->
-
-<form method="POST">
-
-    {% csrf_token %}
-
-    <div class="table-card">
-
-        <div class="table-header">
-
-            <h2>Task Management</h2>
-
-            <p>
-                Check the tasks you have completed.
-            </p>
-
+    <div class="header">
+        <div>
+            <p class="kicker">Manage tasks</p>
+            <h1>Edit Todos</h1>
+            <p>Check off completed work, edit details, or delete what you no longer need.</p>
         </div>
 
+        <div class="nav">
+            {% if user.is_authenticated %}
+                <span class="user-pill">👤 {{ user.username }}</span>
+                <form method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="button logout">Log out</button>
+                </form>
+            {% endif %}
+            <a href="{% url 'home' %}" class="button home">← Home</a>
+            <a href="{% url 'calendar' %}" class="button home">Calendar</a>
+        </div>
+    </div>
 
-        <div class="table-container">
+    <form method="POST">
+        {% csrf_token %}
+        <div class="panel">
+            <div class="panel-head">
+                <h2>Your task list</h2>
+                <p>{{ todos|length }} task{{ todos|length|pluralize }} · tick completed items, then save</p>
+            </div>
 
-            <table>
-
-                <thead>
-
-                    <tr>
-                        <th>#</th>
-                        <th>Task</th>
-                        <th>Duration</th>
-                        <th>Completed</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-
-                </thead>
-
-
-                <tbody>
-
-                    {% for todo in todos %}
-
+            <div class="table-scroll">
+                <table>
+                    <thead>
                         <tr>
-
-                            <!-- Number -->
-
-                            <td>
-                                <span class="number">
-                                    {{ forloop.counter }}
-                                </span>
-                            </td>
-
-
-                            <!-- Task -->
-
-                            <td>
-                                <span class="task-title">
-                                    {{ todo.title }}
-                                </span>
-                            </td>
-
-
-                            <td>
-                                {% if todo.start_date %}
-                                    {{ todo.duration_label }}
-                                {% else %}
-                                    —
-                                {% endif %}
-                            </td>
-
-
-                            <!-- Checkbox -->
-
-                            <td>
-
-                                <input
-                                    type="checkbox"
-                                    class="checkbox"
-                                    name="completed_{{ todo.id }}"
-                                    {% if todo.completed %}
-                                        checked
-                                    {% endif %}
-                                >
-
-                            </td>
-
-
-                            <!-- Status -->
-
-                            <td>
-
-                                {% if todo.completed %}
-
-                                    <span class="status completed">
-                                        ✓ Completed
+                            <th>#</th>
+                            <th>Task</th>
+                            <th>Duration</th>
+                            <th>Completed</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for todo in todos %}
+                            <tr class="{% if todo.completed %}done{% endif %}">
+                                <td><span class="number">{{ forloop.counter }}</span></td>
+                                <td><span class="task-title">{{ todo.title }}</span></td>
+                                <td>
+                                    <span class="duration">
+                                        {% if todo.start_date %}
+                                            {{ todo.duration_label }}
+                                        {% else %}
+                                            —
+                                        {% endif %}
                                     </span>
-
-                                {% else %}
-
-                                    <span class="status pending">
-                                        ⏳ Pending
-                                    </span>
-
-                                {% endif %}
-
-                            </td>
-
-
-                            <!-- Actions -->
-
-                            <td>
-
-                                <div class="actions">
-
-                                    <a
-                                        href="{% url 'edit' todo.id %}"
-                                        class="edit-button"
+                                </td>
+                                <td>
+                                    <input
+                                        type="checkbox"
+                                        class="checkbox"
+                                        name="completed_{{ todo.id }}"
+                                        {% if todo.completed %}checked{% endif %}
                                     >
-                                        ✏️ Edit
-                                    </a>
+                                </td>
+                                <td>
+                                    {% if todo.completed %}
+                                        <span class="status completed">✓ Completed</span>
+                                    {% else %}
+                                        <span class="status pending">⏳ Pending</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="actions">
+                                        <a href="{% url 'edit' todo.id %}" class="edit-button">Edit</a>
+                                        <button
+                                            type="submit"
+                                            class="delete-button"
+                                            formaction="{% url 'delete' todo.id %}"
+                                            formmethod="POST"
+                                            onclick="return confirm('Are you sure you want to delete this todo?');"
+                                        >
+                                            Delete
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="6" class="empty">
+                                    <div class="empty-icon">📝</div>
+                                    <div class="empty-text">No tasks yet.</div>
+                                    <p>Go back home and add your first one.</p>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
 
-                                    <button
-                                        type="submit"
-                                        class="delete-button"
-                                        formaction="{% url 'delete' todo.id %}"
-                                        formmethod="POST"
-                                        onclick="return confirm('Are you sure you want to delete this todo?');">
-                                        🗑️ Delete
-
-                                    </button>
-
-                                </div>
-
-                            </td>
-
-                        </tr>
-
-
-                    {% empty %}
-
-                        <tr>
-
-                            <td colspan="6" class="empty">
-
-                                <div class="empty-icon">
-                                    📝
-                                </div>
-
-                                <div class="empty-text">
-                                    No tasks yet.
-                                </div>
-
-                            </td>
-
-                        </tr>
-
-                    {% endfor %}
-
-                </tbody>
-
-            </table>
-
+            <div class="panel-footer">
+                <span class="footer-text">Check completed tasks, then save your changes.</span>
+                <button type="submit" class="save-button">Save Changes</button>
+            </div>
         </div>
-
-
-        <!-- Footer -->
-
-        <div class="table-footer">
-
-            <span class="footer-text">
-                ☑ Check your completed tasks and save your changes.
-            </span>
-
-            <button type="submit" class="save-button">
-                💾 Save Changes
-            </button>
-
-        </div>
-
-    </div>
-
-</form>
-
+    </form>
 </div>
-
 </body>
-
 </html>

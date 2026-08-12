@@ -1,297 +1,281 @@
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Todo</title>
+    <style>
+        * { box-sizing: border-box; }
 
-<title>Edit Todo</title>
-
-<style>
-    * {
-        box-sizing: border-box;
-    }
-
-    body {
-        margin: 0;
-        min-height: 100vh;
-        font-family: Arial, Helvetica, sans-serif;
-        background: linear-gradient(135deg, #eff6ff, #f8fafc);
-        color: #1f2937;
-    }
-
-    /* Main container */
-
-    .container {
-        width: 92%;
-        max-width: 650px;
-        margin: 60px auto;
-    }
-
-    /* Header */
-
-    .header {
-        margin-bottom: 20px;
-    }
-
-    .header h1 {
-        margin: 0;
-        font-size: 32px;
-        color: #111827;
-    }
-
-    .header p {
-        margin: 7px 0 0;
-        color: #6b7280;
-        font-size: 14px;
-    }
-
-    /* Card */
-
-    .card {
-        background-color: white;
-        padding: 32px;
-        border-radius: 16px;
-        border: 1px solid #e5e7eb;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
-    }
-
-    /* Form */
-
-    form p {
-        margin: 0 0 20px;
-    }
-
-    form label {
-        display: block;
-        margin-bottom: 7px;
-        color: #374151;
-        font-size: 14px;
-        font-weight: 700;
-    }
-
-    form input[type="text"],
-    form input[type="email"],
-    form input[type="number"],
-    form input[type="date"],
-    form input[type="datetime-local"],
-    form textarea,
-    form select {
-        width: 100%;
-        padding: 12px 14px;
-        border: 1px solid #d1d5db;
-        border-radius: 9px;
-        background-color: #ffffff;
-        color: #1f2937;
-        font-family: inherit;
-        font-size: 14px;
-        outline: none;
-        transition: all 0.2s ease;
-    }
-
-    form input[type="text"]:focus,
-    form input[type="email"]:focus,
-    form input[type="number"]:focus,
-    form input[type="date"]:focus,
-    form input[type="datetime-local"]:focus,
-    form textarea:focus,
-    form select:focus {
-        border-color: #2563eb;
-        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-    }
-
-    form textarea {
-        min-height: 120px;
-        resize: vertical;
-    }
-
-    /* Checkbox */
-
-    form input[type="checkbox"] {
-        width: 20px;
-        height: 20px;
-        accent-color: #2563eb;
-        cursor: pointer;
-        vertical-align: middle;
-    }
-
-    /* Help text */
-
-    form .helptext {
-        display: block;
-        margin-top: 6px;
-        color: #9ca3af;
-        font-size: 12px;
-    }
-
-    /* Error messages */
-
-    .errorlist {
-        margin: 6px 0 0;
-        padding: 0;
-        list-style: none;
-        color: #dc2626;
-        font-size: 13px;
-    }
-
-    /* Buttons */
-
-    .actions {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        margin-top: 28px;
-        padding-top: 22px;
-        border-top: 1px solid #e5e7eb;
-    }
-
-    .save-button,
-    .cancel-button {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 7px;
-        padding: 11px 20px;
-        border-radius: 8px;
-        font-size: 14px;
-        font-weight: 700;
-        text-decoration: none;
-        cursor: pointer;
-        transition: all 0.2s ease;
-    }
-
-    .save-button {
-        background-color: #2563eb;
-        color: white;
-        border: none;
-        box-shadow: 0 3px 8px rgba(37, 99, 235, 0.25);
-    }
-
-    .save-button:hover {
-        background-color: #1d4ed8;
-        transform: translateY(-1px);
-    }
-
-    .cancel-button {
-        background-color: #f3f4f6;
-        color: #374151;
-        border: 1px solid #e5e7eb;
-    }
-
-    .cancel-button:hover {
-        background-color: #e5e7eb;
-        transform: translateY(-1px);
-    }
-
-    /* Todo information */
-
-    .todo-info {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        margin-bottom: 28px;
-        padding: 14px 16px;
-        background-color: #eff6ff;
-        border: 1px solid #dbeafe;
-        border-radius: 10px;
-        color: #1e40af;
-        font-size: 13px;
-    }
-
-    .todo-info-icon {
-        font-size: 20px;
-    }
-
-    /* Mobile */
-
-    @media (max-width: 600px) {
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: "Segoe UI", Tahoma, sans-serif;
+            background: #f6f1e8;
+            color: #1c1917;
+        }
 
         .container {
             width: 94%;
-            margin: 30px auto;
+            max-width: 680px;
+            margin: 36px auto 70px;
         }
 
-        .card {
-            padding: 22px;
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .kicker {
+            margin: 0 0 6px;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: #0f766e;
         }
 
         .header h1 {
-            font-size: 27px;
+            margin: 0;
+            font-size: 32px;
+            letter-spacing: -0.04em;
+        }
+
+        .header p {
+            margin: 6px 0 0;
+            color: #57534e;
+        }
+
+        .nav {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .button {
+            display: inline-flex;
+            align-items: center;
+            padding: 9px 14px;
+            background: #fff;
+            color: #44403c;
+            text-decoration: none;
+            border: 1px solid #d6d3d1;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s ease;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(28, 25, 23, 0.1);
+            background: #ecfdf5;
+            color: #0f766e;
+            border-color: #5eead4;
+        }
+
+        .card {
+            background: #fff;
+            border: 1px solid #e7e5e4;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 16px 40px rgba(28, 25, 23, 0.06);
+        }
+
+        .card-head {
+            padding: 18px 24px;
+            background: #0f766e;
+            color: #fff;
+        }
+
+        .card-head h2 {
+            margin: 0;
+            font-size: 18px;
+        }
+
+        .card-head p {
+            margin: 6px 0 0;
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 13px;
+        }
+
+        .meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 16px 24px 0;
+        }
+
+        .pill {
+            display: inline-flex;
+            padding: 5px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .pill.pending { background: #ffedd5; color: #9a3412; }
+        .pill.completed { background: #dcfce7; color: #166534; }
+        .pill.dates { background: #ecfdf5; color: #0f766e; }
+
+        .card-body { padding: 18px 24px 24px; }
+
+        form p { margin: 0 0 16px; }
+
+        form label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 13px;
+            font-weight: 800;
+            color: #44403c;
+        }
+
+        form input[type="text"],
+        form input[type="email"],
+        form input[type="number"],
+        form input[type="date"],
+        form input[type="datetime-local"],
+        form textarea,
+        form select {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #d6d3d1;
+            border-radius: 10px;
+            background: #fff;
+            color: #1c1917;
+            font-family: inherit;
+            font-size: 14px;
+            outline: none;
+        }
+
+        form input:focus,
+        form textarea:focus,
+        form select:focus {
+            border-color: #0f766e;
+            box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.15);
+        }
+
+        form .helptext {
+            display: block;
+            margin-top: 6px;
+            color: #78716c;
+            font-size: 12px;
+        }
+
+        .errorlist {
+            margin: 6px 0 0;
+            padding: 0;
+            list-style: none;
+            color: #dc2626;
+            font-size: 13px;
         }
 
         .actions {
-            flex-direction: column;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 8px;
+            padding-top: 18px;
+            border-top: 1px solid #e7e5e4;
         }
 
         .save-button,
         .cancel-button {
-            width: 100%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            padding: 11px 20px;
+            border-radius: 999px;
+            font-size: 14px;
+            font-weight: 800;
+            text-decoration: none;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s ease;
         }
-    }
-</style>
 
+        .save-button {
+            background: #0f766e;
+            color: #fff;
+            border: 1px solid #0f766e;
+        }
+
+        .save-button:hover {
+            background: #9af4ee;
+            border-color: #76ada9;
+            color: #0f766e;
+            transform: translateY(-2px);
+        }
+
+        .cancel-button {
+            background: #fff;
+            color: #44403c;
+            border: 1px solid #d6d3d1;
+        }
+
+        .cancel-button:hover {
+            background: #f5f3ff;
+            color: #651f83;
+            border-color: #bf59eb;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 600px) {
+            .header { flex-direction: column; }
+            .actions { flex-direction: column; }
+            .save-button, .cancel-button { width: 100%; }
+        }
+    </style>
 </head>
-
 <body>
-
 <div class="container">
-
-<!-- Header -->
-
-<div class="header">
-
-    <h1>✏️ Edit Todo</h1>
-
-    <p>
-        Update your task details and save your changes.
-    </p>
-
-</div>
-
-
-<!-- Edit Card -->
-
-<div class="card">
-
-    <div class="todo-info">
-
-        <span class="todo-info-icon">
-            📝
-        </span>
-
-        <span>
-            You are editing this Todo. Make your changes below.
-        </span>
-
+    <div class="header">
+        <div>
+            <p class="kicker">Update task</p>
+            <h1>Edit Todo</h1>
+            <p>Change the title or date range, then save.</p>
+        </div>
+        <div class="nav">
+            <a href="{% url 'edit_todos' %}" class="button">← All todos</a>
+            <a href="{% url 'home' %}" class="button">Home</a>
+        </div>
     </div>
 
-
-    <form method="POST">
-
-        {% csrf_token %}
-
-        {{ form.as_p }}
-
-
-        <div class="actions">
-
-            <button type="submit" class="save-button">
-                💾 Save Changes
-            </button>
-
-            <a href="{% url 'edit_todos' %}" class="cancel-button">
-                ← Cancel
-            </a>
-
+    <div class="card">
+        <div class="card-head">
+            <h2>{{ todo.title }}</h2>
+            <p>You are editing this todo.</p>
         </div>
 
-    </form>
+        <div class="meta">
+            {% if todo.completed %}
+                <span class="pill completed">✓ Completed</span>
+            {% else %}
+                <span class="pill pending">⏳ Pending</span>
+            {% endif %}
+            {% if todo.start_date %}
+                <span class="pill dates">{{ todo.duration_label }}</span>
+            {% endif %}
+        </div>
 
+        <div class="card-body">
+            <form method="POST">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <div class="actions">
+                    <button type="submit" class="save-button">Save Changes</button>
+                    <a href="{% url 'edit_todos' %}" class="cancel-button">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
-
-</div>
-
 </body>
-
 </html>
