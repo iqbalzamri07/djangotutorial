@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Todo</title>
-    {% include "todos/_nav_styles.html" %}
+    {% include "partials/nav_styles.html" %}
     <style>
         * { box-sizing: border-box; }
 
@@ -217,10 +217,10 @@
     </style>
 </head>
 <body>
-{% include "todos/_nav.html" with active_nav="edit" %}
+{% include "partials/nav.html" with active_nav="edit" %}
 <div class="container">
     {% url 'edit_todos' as edit_url %}
-    {% include "todos/_page_banner.html" with banner="edit" banner_mark="✎" banner_chip_1="Fine-tune" banner_chip_2=todo.title|truncatechars:28 banner_title="Edit Todo" action1_url=edit_url action1_label="Back to list" %}
+    {% include "partials/page_banner.html" with banner="edit" banner_mark="✎" banner_chip_1="Fine-tune" banner_chip_2=todo.title|truncatechars:28 banner_title="Edit Todo" action1_url=edit_url action1_label="Back to list" %}
 
     <div class="card">
         <div class="card-head">

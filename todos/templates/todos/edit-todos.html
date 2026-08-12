@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Todos</title>
-    {% include "todos/_nav_styles.html" %}
+    {% include "partials/nav_styles.html" %}
     <style>
         * { box-sizing: border-box; }
 
@@ -384,12 +384,12 @@
     </style>
 </head>
 <body>
-{% include "todos/_nav.html" with active_nav="edit" %}
+{% include "partials/nav.html" with active_nav="edit" %}
 <div class="container">
     {% url 'home' as home_url %}
     {% url 'search' as search_url %}
     {% with count_label=result_count|stringformat:"s" %}
-        {% include "todos/_page_banner.html" with banner="edit" banner_mark="✎" banner_chip_1="Board" banner_chip_2=count_label|add:" tasks" banner_chip_3="Tick · edit · delete" banner_title="Edit Todos" action1_url=home_url action1_label="Home" action2_url=search_url action2_label="Search" %}
+        {% include "partials/page_banner.html" with banner="edit" banner_mark="✎" banner_chip_1="Board" banner_chip_2=count_label|add:" tasks" banner_chip_3="Tick · edit · delete" banner_title="Edit Todos" action1_url=home_url action1_label="Home" action2_url=search_url action2_label="Search" %}
     {% endwith %}
 
     <form class="list-search" method="get" action="{% url 'edit_todos' %}">
@@ -540,7 +540,7 @@
                 </table>
             </div>
 
-            {% include "todos/_pagination.html" %}
+            {% include "partials/pagination.html" %}
 
             <div class="panel-footer">
                 <span class="footer-text">Save completions, or archive/restore selected rows.</span>

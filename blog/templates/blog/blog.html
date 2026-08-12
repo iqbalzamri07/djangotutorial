@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Notes from Building</title>
-    {% include "todos/_nav_styles.html" %}
+    {% include "partials/nav_styles.html" %}
     <style>
         * { box-sizing: border-box; }
 
@@ -177,11 +177,11 @@
     </style>
 </head>
 <body>
-{% include "todos/_nav.html" with active_nav="blog" %}
+{% include "partials/nav.html" with active_nav="blog" %}
 <div class="wrap">
     {% url 'home' as home_url %}
     {% url 'about' as about_url %}
-    {% include "todos/_page_banner.html" with banner="blog" banner_mark="✎" banner_chip_1="Field notes" banner_chip_2="Bugs · UI · lessons" banner_title="Notes from Building" action1_url=home_url action1_label="Todos" action2_url=about_url action2_label="About" %}
+    {% include "partials/page_banner.html" with banner="blog" banner_mark="✎" banner_chip_1="Field notes" banner_chip_2="Bugs · UI · lessons" banner_title="Notes from Building" action1_url=home_url action1_label="Todos" action2_url=about_url action2_label="About" %}
 
     <div class="filters">
         <a class="chip {% if not active_category %}active{% endif %}" href="{% url 'blog:blog' %}">All</a>

@@ -121,8 +121,11 @@ python manage.py test
 ## Project layout
 
 ```text
-config/          Django project settings and root URLs
-todos/           Todo app, templates, and todo API viewset
-blog/            Blog app and post API viewset
-api/             REST API auth views and URL routes
+config/              Django project settings and root URLs
+accounts/            Signup, login, profile, and auth API views
+todos/               Todo models, services, views package, and todo API
+blog/                Blog app and post API viewset
+api/                 REST API root and URL routes
+templates/partials/  Shared nav, banner, pagination
+static/css/          Shared stylesheet (nav/base)
 ```

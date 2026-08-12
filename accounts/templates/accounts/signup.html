@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign up</title>
-    {% include "todos/_nav_styles.html" %}
+    {% include "partials/nav_styles.html" %}
     <style>
         * { box-sizing: border-box; }
         body {
@@ -85,10 +85,10 @@
     </style>
 </head>
 <body>
-{% include "todos/_nav.html" with active_nav="signup" %}
+{% include "partials/nav.html" with active_nav="signup" %}
 <div class="page">
     {% url 'login' as login_url %}
-    {% include "todos/_page_banner.html" with banner="signup" banner_mark="＋" banner_chip_1="Start fresh" banner_chip_2="Your todos only" banner_title="Create an account" action1_url=login_url action1_label="Already have one?" %}
+    {% include "partials/page_banner.html" with banner="signup" banner_mark="＋" banner_chip_1="Start fresh" banner_chip_2="Your todos only" banner_title="Create an account" action1_url=login_url action1_label="Already have one?" %}
 
     <div class="wrap">
     <div class="card">

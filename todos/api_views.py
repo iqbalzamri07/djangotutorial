@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 
 from .models import Tag, Todo
 from .serializers import TagSerializer, TodoSerializer
-from .views import apply_todo_filters, mark_overdue_todos_completed, user_todos
+from .services import apply_todo_filters, mark_overdue_todos_completed, user_todos
 
 
 class TodoViewSet(viewsets.ModelViewSet):

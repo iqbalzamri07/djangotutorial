@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Activity</title>
-    {% include "todos/_nav_styles.html" %}
+    {% include "partials/nav_styles.html" %}
     <style>
         * { box-sizing: border-box; }
         body { font-family: "Segoe UI", Tahoma, sans-serif; }
@@ -111,12 +111,12 @@
     </style>
 </head>
 <body>
-{% include "todos/_nav.html" with active_nav="activity" %}
+{% include "partials/nav.html" with active_nav="activity" %}
 <div class="container">
     {% url 'home' as home_url %}
     {% url 'edit_todos' as edit_url %}
     {% with week_label=week_total|stringformat:"s" streak_label=streak|stringformat:"s" %}
-        {% include "todos/_page_banner.html" with banner="profile" banner_mark="⌁" banner_chip_1="This week" banner_chip_2=week_label|add:" done" banner_chip_3=streak_label|add:" day streak" banner_title="Activity" action1_url=home_url action1_label="Home" action2_url=edit_url action2_label="Edit list" %}
+        {% include "partials/page_banner.html" with banner="profile" banner_mark="⌁" banner_chip_1="This week" banner_chip_2=week_label|add:" done" banner_chip_3=streak_label|add:" day streak" banner_title="Activity" action1_url=home_url action1_label="Home" action2_url=edit_url action2_label="Edit list" %}
     {% endwith %}
 
     <div class="stats">

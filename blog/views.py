@@ -20,7 +20,7 @@ def blog(request):
 
     return render(
         request,
-        "blogs/blog.html",
+        "blog/blog.html",
         {
             "featured": featured,
             "posts": others,
@@ -39,7 +39,7 @@ def post_detail(request, slug):
 
     return render(
         request,
-        "blogs/post_detail.html",
+        "blog/post_detail.html",
         {
             "post": post,
             "related": related,

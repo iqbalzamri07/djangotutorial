@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About - My Todo App</title>
-    {% include "todos/_nav_styles.html" %}
+    {% include "partials/nav_styles.html" %}
     <style>
         * { box-sizing: border-box; }
 
@@ -227,12 +227,12 @@
     </style>
 </head>
 <body>
-{% include "todos/_nav.html" with active_nav="about" %}
+{% include "partials/nav.html" with active_nav="about" %}
 <div class="wrap">
     {% url 'home' as home_url %}
     {% url 'calendar' as calendar_url %}
     {% url 'blog:blog' as blog_url %}
-    {% include "todos/_page_banner.html" with banner="about" banner_mark="✦" banner_chip_1="Django build" banner_chip_2="Learning in public" banner_chip_3="Still shipping" banner_title="About this app" action1_url=home_url action1_label="Open todos" action2_url=calendar_url action2_label="Calendar" action3_url=blog_url action3_label="Blog" %}
+    {% include "partials/page_banner.html" with banner="about" banner_mark="✦" banner_chip_1="Django build" banner_chip_2="Learning in public" banner_chip_3="Still shipping" banner_title="About this app" action1_url=home_url action1_label="Open todos" action2_url=calendar_url action2_label="Calendar" action3_url=blog_url action3_label="Blog" %}
 
     <div class="hero">
         <div class="hero-copy">

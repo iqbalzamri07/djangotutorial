@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ post.title }}</title>
-    {% include "todos/_nav_styles.html" %}
+    {% include "partials/nav_styles.html" %}
     <style>
         * { box-sizing: border-box; }
 
@@ -106,10 +106,10 @@
     </style>
 </head>
 <body>
-{% include "todos/_nav.html" with active_nav="blog" %}
+{% include "partials/nav.html" with active_nav="blog" %}
 <div class="wrap">
     {% url 'blog:blog' as blog_url %}
-    {% include "todos/_page_banner.html" with banner="blog" banner_mark=post.emoji banner_chip_1=post.get_category_display banner_chip_2=post.created_at|date:"M j, Y" banner_chip_3=post.reading_time|stringformat:"s"|add:" min read" banner_title=post.title action1_url=blog_url action1_label="All notes" %}
+    {% include "partials/page_banner.html" with banner="blog" banner_mark=post.emoji banner_chip_1=post.get_category_display banner_chip_2=post.created_at|date:"M j, Y" banner_chip_3=post.reading_time|stringformat:"s"|add:" min read" banner_title=post.title action1_url=blog_url action1_label="All notes" %}
 
     <article class="article">
     <p class="excerpt">{{ post.excerpt }}</p>

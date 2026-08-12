@@ -9,7 +9,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Delete Todo</title>
-{% include "todos/_nav_styles.html" %}
+{% include "partials/nav_styles.html" %}
 <style>
 
     * {
@@ -178,10 +178,10 @@
 </head>
 
 <body>
-{% include "todos/_nav.html" with active_nav="edit" %}
+{% include "partials/nav.html" with active_nav="edit" %}
 <div class="page">
     {% url 'edit_todos' as edit_url %}
-    {% include "todos/_page_banner.html" with banner="edit" banner_mark="🗄" banner_chip_1="Archive first" banner_chip_2="History stays" banner_title="Archive Todo" action1_url=edit_url action1_label="Keep it · go back" %}
+    {% include "partials/page_banner.html" with banner="edit" banner_mark="🗄" banner_chip_1="Archive first" banner_chip_2="History stays" banner_title="Archive Todo" action1_url=edit_url action1_label="Keep it · go back" %}
 
 <div class="card">
 

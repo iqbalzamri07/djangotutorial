@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Todo App</title>
-    {% include "todos/_nav_styles.html" %}
+    {% include "partials/nav_styles.html" %}
     <style>
         * { box-sizing: border-box; }
 
@@ -650,13 +650,13 @@
     </style>
 </head>
 <body>
-{% include "todos/_nav.html" with active_nav="home" %}
+{% include "partials/nav.html" with active_nav="home" %}
 <div class="container">
     {% url 'calendar' as calendar_url %}
     {% url 'search' as search_url %}
     {% url 'edit_todos' as edit_url %}
     {% with mark=user.first_name|default:user.username|slice:":1"|upper open_label=pending_tasks|stringformat:"s" %}
-        {% include "todos/_page_banner.html" with banner="home" banner_mark=mark banner_chip_1=greeting banner_chip_2=today|date:"D · M j" banner_chip_3=open_label|add:" open" banner_title=user.first_name|default:user.username action1_url=calendar_url action1_label="Open calendar" action2_url=search_url action2_label="Search" action3_url=edit_url action3_label="Edit list" %}
+        {% include "partials/page_banner.html" with banner="home" banner_mark=mark banner_chip_1=greeting banner_chip_2=today|date:"D · M j" banner_chip_3=open_label|add:" open" banner_title=user.first_name|default:user.username action1_url=calendar_url action1_label="Open calendar" action2_url=search_url action2_label="Search" action3_url=edit_url action3_label="Edit list" %}
     {% endwith %}
 
     <div class="hero">
@@ -911,7 +911,7 @@
                     </div>
                 {% endfor %}
             </div>
-            {% include "todos/_pagination.html" with page_anchor="tasks" %}
+            {% include "partials/pagination.html" with page_anchor="tasks" %}
         </div>
     </div>
 </div>

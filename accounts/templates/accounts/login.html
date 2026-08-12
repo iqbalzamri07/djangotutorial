@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Log in</title>
-    {% include "todos/_nav_styles.html" %}
+    {% include "partials/nav_styles.html" %}
     <style>
         * { box-sizing: border-box; }
         body {
@@ -84,11 +84,11 @@
     </style>
 </head>
 <body>
-{% include "todos/_nav.html" with active_nav="login" %}
+{% include "partials/nav.html" with active_nav="login" %}
 <div class="page">
     {% url 'signup' as signup_url %}
     {% url 'home' as home_url %}
-    {% include "todos/_page_banner.html" with banner="login" banner_mark="⇢" banner_chip_1="Welcome back" banner_chip_2="Private list" banner_title="Log in" action1_url=signup_url action1_label="Need an account?" action2_url=home_url action2_label="Home" %}
+    {% include "partials/page_banner.html" with banner="login" banner_mark="⇢" banner_chip_1="Welcome back" banner_chip_2="Private list" banner_title="Log in" action1_url=signup_url action1_label="Need an account?" action2_url=home_url action2_label="Home" %}
 
     <div class="wrap">
     <div class="card">

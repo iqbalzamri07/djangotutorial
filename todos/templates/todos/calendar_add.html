@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Todo</title>
-    {% include "todos/_nav_styles.html" %}
+    {% include "partials/nav_styles.html" %}
     <style>
         * {
             box-sizing: border-box;
@@ -116,10 +116,10 @@
 </head>
 
 <body>
-    {% include "todos/_nav.html" with active_nav="calendar" %}
+    {% include "partials/nav.html" with active_nav="calendar" %}
     <div class="container">
         {% url 'calendar' as calendar_url %}
-        {% include "todos/_page_banner.html" with banner="calendar" banner_mark="＋" banner_chip_1=selected_date|date:"D, M j" banner_chip_2="New on calendar" banner_title="Pin it on the calendar" action1_url=calendar_url action1_label="Back to month" %}
+        {% include "partials/page_banner.html" with banner="calendar" banner_mark="＋" banner_chip_1=selected_date|date:"D, M j" banner_chip_2="New on calendar" banner_title="Pin it on the calendar" action1_url=calendar_url action1_label="Back to month" %}
 
         <div class="card">
             <div class="card-header">

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Profile</title>
-    {% include "todos/_nav_styles.html" %}
+    {% include "partials/nav_styles.html" %}
     <style>
         * { box-sizing: border-box; }
 
@@ -218,12 +218,12 @@
     </style>
 </head>
 <body>
-{% include "todos/_nav.html" with active_nav="profile" %}
+{% include "partials/nav.html" with active_nav="profile" %}
 <div class="container">
     {% url 'home' as home_url %}
     {% url 'edit_todos' as edit_url %}
     {% with mark=user.username|slice:":1"|upper total_label=total_tasks|stringformat:"s" pending_label=pending_tasks|stringformat:"s" %}
-        {% include "todos/_page_banner.html" with banner="profile" banner_mark=mark banner_chip_1=user.username banner_chip_2=total_label|add:" tasks" banner_chip_3=pending_label|add:" open" banner_title="Profile" action1_url=home_url action1_label="Home" action2_url=edit_url action2_label="Edit list" %}
+        {% include "partials/page_banner.html" with banner="profile" banner_mark=mark banner_chip_1=user.username banner_chip_2=total_label|add:" tasks" banner_chip_3=pending_label|add:" open" banner_title="Profile" action1_url=home_url action1_label="Home" action2_url=edit_url action2_label="Edit list" %}
     {% endwith %}
 
     <div class="hero">

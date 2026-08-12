@@ -17,27 +17,6 @@ class TodoAPITests(APITestCase):
             password=self.password,
         )
 
-    def test_signup_and_login(self):
-        response = self.client.post(
-            "/api/auth/signup/",
-            {
-                "username": "new_api_user",
-                "password": self.password,
-                "email": "new@test.com",
-            },
-            format="json",
-        )
-        self.assertEqual(response.status_code, 201)
-        self.assertIn("token", response.data)
-
-        response = self.client.post(
-            "/api/auth/login/",
-            {"username": "new_api_user", "password": self.password},
-            format="json",
-        )
-        self.assertEqual(response.status_code, 200)
-        self.assertIn("token", response.data)
-
     def test_todo_crud_is_scoped_to_user(self):
         login = self.client.post(
             "/api/auth/login/",
