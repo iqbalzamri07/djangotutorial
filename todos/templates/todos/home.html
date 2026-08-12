@@ -331,10 +331,23 @@
             font-size: 14px;
         }
 
-        .todo-form input:focus {
+        .todo-form input:focus,
+        .todo-form select:focus,
+        .todo-form textarea:focus {
             outline: none;
             border-color: #0f766e;
             box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.15);
+        }
+
+        .repeat-pill {
+            display: inline-flex;
+            margin-left: 6px;
+            padding: 3px 8px;
+            border-radius: 999px;
+            background: #f5f3ff;
+            color: #6d28d9;
+            font-size: 11px;
+            font-weight: 800;
         }
 
         .add-button {
@@ -479,7 +492,7 @@
         <div class="panel">
             <div class="panel-head">
                 <h3>Add a todo</h3>
-                <p>Give it a title, optional notes, and a date range.</p>
+                <p>Give it a title, optional notes, dates, and a repeat schedule.</p>
             </div>
             <div class="todo-form">
                 <form method="POST">
@@ -533,7 +546,12 @@
                     <div class="task-row {% if todo.completed %}done{% endif %}">
                         <span class="dot"></span>
                         <div>
-                            <div class="task-title">{{ todo.title }}</div>
+                            <div class="task-title">
+                                {{ todo.title }}
+                                {% if todo.recurrence %}
+                                    <span class="repeat-pill">↻ {{ todo.get_recurrence_display }}</span>
+                                {% endif %}
+                            </div>
                             {% if todo.notes %}
                                 <div class="task-notes">{{ todo.notes|truncatechars:90 }}</div>
                             {% endif %}
@@ -542,6 +560,9 @@
                                     {{ todo.duration_label }}
                                 {% else %}
                                     No dates yet
+                                {% endif %}
+                                {% if todo.recurrence_until %}
+                                    · until {{ todo.recurrence_until|date:"M j, Y" }}
                                 {% endif %}
                             </div>
                         </div>

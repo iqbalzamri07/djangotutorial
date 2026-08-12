@@ -215,6 +215,10 @@
             border-left-color: #22c55e;
         }
 
+        .todo-chip.virtual {
+            border-left-style: dashed;
+        }
+
         .todo-chip.is-extra {
             display: none;
         }
@@ -282,6 +286,7 @@
         }
 
         .modal-form input,
+        .modal-form select,
         .modal-form textarea {
             width: 100%;
             padding: 11px 13px;
@@ -298,6 +303,7 @@
         }
 
         .modal-form input:focus,
+        .modal-form select:focus,
         .modal-form textarea:focus {
             border-color: #0f766e;
             box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.15);
@@ -427,7 +433,7 @@
         <div class="header">
             <div>
                 <h1>Todo Calendar</h1>
-                <p>Click a day to schedule a todo across a date range</p>
+                <p>Click a day to schedule a todo. Repeating tasks show on every matching day.</p>
             </div>
             {% include "todos/_nav.html" with active_nav="calendar" %}
         </div>
@@ -473,15 +479,17 @@
                                 {% for todo in cell.todos %}
                                     <button
                                         type="button"
-                                        class="todo-chip {% if todo.completed %}completed{% else %}pending{% endif %}{% if forloop.counter > 3 %} is-extra{% endif %}"
+                                        class="todo-chip {% if todo.completed %}completed{% else %}pending{% endif %}{% if todo.is_virtual %} virtual{% endif %}{% if forloop.counter > 3 %} is-extra{% endif %}"
                                         data-title="{{ todo.title }}"
                                         data-start="{{ todo.start_date|date:'M j, Y'|default:'—' }}"
                                         data-end="{{ todo.end_date|date:'M j, Y'|default:'—' }}"
                                         data-duration="{{ todo.duration_label|default:'—' }}"
                                         data-status="{% if todo.completed %}Completed{% else %}Pending{% endif %}"
+                                        data-virtual="{% if todo.is_virtual %}1{% else %}0{% endif %}"
+                                        data-recurrence="{% if todo.recurrence %}{{ todo.get_recurrence_display }}{% if todo.recurrence_until %} until {{ todo.recurrence_until|date:'M j, Y' }}{% endif %}{% else %}Does not repeat{% endif %}"
                                         data-edit="{% url 'edit' todo.id %}"
                                     >
-                                        {{ todo.title }}
+                                        {% if todo.recurrence %}↻ {% endif %}{{ todo.title }}
                                         <span class="chip-notes" hidden>{{ todo.notes }}</span>
                                     </button>
                                 {% endfor %}
@@ -504,7 +512,7 @@
         <div class="modal-card">
             <div class="modal-head">
                 <h2>Add Todo</h2>
-                <p>Set a start date and end date for this task.</p>
+                <p>Set dates and optionally repeat this task.</p>
             </div>
 
             <form
@@ -554,6 +562,25 @@
                     required
                 >
 
+                <div class="field-gap"></div>
+
+                <label for="recurrence_input">Repeat</label>
+                <select id="recurrence_input" name="recurrence">
+                    {% for value, label in recurrence_choices %}
+                        <option value="{{ value }}" {% if recurrence_value == value %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+
+                <div class="field-gap"></div>
+
+                <label for="recurrence_until_input">Repeat until</label>
+                <input
+                    id="recurrence_until_input"
+                    type="date"
+                    name="recurrence_until"
+                    value="{{ recurrence_until_value }}"
+                >
+
                 {% if form and form.errors %}
                     <div class="form-error">
                         {% for field, errors in form.errors.items %}
@@ -598,6 +625,10 @@
                 <div class="detail-row">
                     <span>Duration</span>
                     <strong id="viewTodoDuration">—</strong>
+                </div>
+                <div class="detail-row">
+                    <span>Repeats</span>
+                    <strong id="viewTodoRecurrence">Does not repeat</strong>
                 </div>
                 <div class="detail-row">
                     <span>Notes</span>
@@ -655,6 +686,9 @@
             document.getElementById('viewTodoStart').textContent = chip.dataset.start || '—';
             document.getElementById('viewTodoEnd').textContent = chip.dataset.end || '—';
             document.getElementById('viewTodoDuration').textContent = chip.dataset.duration || '—';
+            const recurrenceLabel = chip.dataset.recurrence || 'Does not repeat';
+            document.getElementById('viewTodoRecurrence').textContent =
+                chip.dataset.virtual === '1' ? `${recurrenceLabel} · scheduled repeat` : recurrenceLabel;
             const notesEl = chip.querySelector('.chip-notes');
             const notes = notesEl ? notesEl.textContent.trim() : '';
             document.getElementById('viewTodoNotes').textContent = notes || 'No notes';

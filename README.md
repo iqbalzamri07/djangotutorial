@@ -5,8 +5,9 @@ A first Django project: personal todos, a monthly calendar, search and filters, 
 ## Features
 
 - Sign up, log in, log out, and edit your profile
-- Create todos with a title, optional notes, and start/end dates
-- Calendar view with date-range todos and click-to-add popups
+- Create todos with a title, optional notes, start/end dates, and recurrence
+- Recurring tasks (daily, weekly, monthly, yearly) spawn the next occurrence when completed
+- Calendar shows repeating todos on every matching day, including future months
 - Search, status/date filters, sorting, and pagination
 - Auto-complete todos after their end date passes
 - Magazine-style blog
@@ -67,7 +68,8 @@ Authorization: Token YOUR_TOKEN
 
 ### Todos
 
-Your todos only. Fields include `title`, `notes`, `completed`, `start_date`, and `end_date`.  
+Your todos only. Fields include `title`, `notes`, `completed`, `start_date`, `end_date`, `recurrence`, and `recurrence_until`.  
+`recurrence`: `""` (none) · `daily` · `weekly` · `monthly` · `yearly`. Completing a recurring todo creates the next occurrence.  
 Search `q` matches title or notes. Also supports `status`, `when`, `sort`, and `page`.
 
 | Method | URL |

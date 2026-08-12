@@ -262,6 +262,17 @@
             font-weight: 700;
         }
 
+        .repeat-pill {
+            display: inline-flex;
+            margin-top: 6px;
+            padding: 3px 8px;
+            border-radius: 999px;
+            background: #f5f3ff;
+            color: #6d28d9;
+            font-size: 11px;
+            font-weight: 800;
+        }
+
         .checkbox {
             width: 20px;
             height: 20px;
@@ -471,6 +482,9 @@
                                             —
                                         {% endif %}
                                     </span>
+                                    {% if todo.recurrence %}
+                                        <div class="repeat-pill">↻ {{ todo.get_recurrence_display }}</div>
+                                    {% endif %}
                                 </td>
                                 <td>
                                     <input

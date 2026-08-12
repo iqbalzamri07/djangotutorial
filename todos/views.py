@@ -12,6 +12,33 @@ from django.urls import reverse
 from .forms import ProfileForm, SignUpForm, TodoForm
 from .models import Todo
 
+
+class CalendarItem:
+    def __init__(self, todo, start_date, end_date, completed=False, is_virtual=False):
+        self.todo = todo
+        self.id = todo.id
+        self.title = todo.title
+        self.notes = todo.notes
+        self.recurrence = todo.recurrence
+        self.recurrence_until = todo.recurrence_until
+        self.start_date = start_date
+        self.end_date = end_date
+        self.completed = completed
+        self.is_virtual = is_virtual
+
+    def occurrence_key(self):
+        return (self.title, self.start_date, self.recurrence or "")
+
+    def duration_label(self):
+        if not self.start_date:
+            return ""
+        if not self.end_date or self.end_date == self.start_date:
+            return self.start_date.strftime("%b %d, %Y")
+        return f"{self.start_date.strftime('%b %d')} – {self.end_date.strftime('%b %d, %Y')}"
+
+    def get_recurrence_display(self):
+        return self.todo.get_recurrence_display()
+
 TODOS_PER_PAGE = 8
 
 STATUS_FILTERS = ("all", "pending", "completed")
@@ -151,6 +178,7 @@ def paginate_todos(queryset, request, per_page=TODOS_PER_PAGE):
 def mark_overdue_todos_completed(user=None):
     """
     Auto-complete todos whose end_date is in the past.
+    Recurring tasks spawn their next occurrence.
     """
     today = date.today()
     todos = Todo.objects.filter(
@@ -160,7 +188,15 @@ def mark_overdue_todos_completed(user=None):
     )
     if user is not None:
         todos = todos.filter(user=user)
-    todos.update(completed=True)
+
+    overdue = list(todos)
+    if not overdue:
+        return
+
+    Todo.objects.filter(pk__in=[todo.pk for todo in overdue]).update(completed=True)
+    for todo in overdue:
+        todo.completed = True
+        todo.spawn_next_occurrence()
 
 
 def signup(request):
@@ -329,8 +365,11 @@ def edit_todos(request):
 
     if request.method == "POST":
         for todo in todos:
+            was_completed = todo.completed
             todo.completed = f"completed_{todo.id}" in request.POST
             todo.save()
+            if todo.completed and not was_completed:
+                todo.spawn_next_occurrence()
 
         redirect_url = reverse("edit_todos")
         querystring = request.GET.urlencode()
@@ -419,22 +458,56 @@ def calendar(request):
     )
     month_end_date = next_month_date - timedelta(days=1)
 
-    todos_in_month = Todo.objects.filter(
+    window_start = month_start_date - timedelta(days=7)
+    window_end = month_end_date + timedelta(days=7)
+
+    actual_todos = Todo.objects.filter(
         user=request.user,
         start_date__isnull=False,
-        end_date__isnull=False,
-        start_date__lte=month_end_date,
-        end_date__gte=month_start_date,
+    ).filter(
+        Q(end_date__isnull=True, start_date__gte=window_start, start_date__lte=window_end)
+        | Q(end_date__isnull=False, start_date__lte=window_end, end_date__gte=window_start)
     ).order_by("start_date", "end_date", "title")
 
+    recurring_todos = Todo.objects.filter(
+        user=request.user,
+        start_date__isnull=False,
+        recurrence__gt="",
+    ).order_by("start_date", "id")
+
+    placed = {}
+    for todo in actual_todos:
+        occ_end = todo.end_date or todo.start_date
+        item = CalendarItem(todo, todo.start_date, occ_end, todo.completed, is_virtual=False)
+        placed[item.occurrence_key()] = item
+
+    for todo in recurring_todos:
+        source_end = todo.end_date or todo.start_date
+        for occ_start, occ_end in todo.iter_occurrences(window_start, window_end):
+            is_source = occ_start == todo.start_date and occ_end == source_end
+            item = CalendarItem(
+                todo,
+                occ_start,
+                occ_end,
+                completed=todo.completed if is_source else False,
+                is_virtual=not is_source,
+            )
+            existing = placed.get(item.occurrence_key())
+            if existing and not existing.is_virtual:
+                continue
+            placed[item.occurrence_key()] = item
+
     todos_by_date = {}
-    for todo in todos_in_month:
-        span_start = max(todo.start_date, month_start_date - timedelta(days=7))
-        span_end = min(todo.end_date, month_end_date + timedelta(days=7))
+    for item in placed.values():
+        span_start = max(item.start_date, window_start)
+        span_end = min(item.end_date or item.start_date, window_end)
         current = span_start
         while current <= span_end:
-            todos_by_date.setdefault(current, []).append(todo)
+            todos_by_date.setdefault(current, []).append(item)
             current += timedelta(days=1)
+
+    for items in todos_by_date.values():
+        items.sort(key=lambda item: (item.start_date, item.title.lower()))
 
     cal = py_calendar.Calendar(firstweekday=0)
     weeks = []
@@ -463,6 +536,8 @@ def calendar(request):
     notes_value = ""
     start_date_value = ""
     end_date_value = ""
+    recurrence_value = ""
+    recurrence_until_value = ""
     form = None
     if request.method == "POST":
         form = TodoForm(request.POST)
@@ -481,6 +556,8 @@ def calendar(request):
         notes_value = request.POST.get("notes", "")
         start_date_value = request.POST.get("start_date", "")
         end_date_value = request.POST.get("end_date", "")
+        recurrence_value = request.POST.get("recurrence", "")
+        recurrence_until_value = request.POST.get("recurrence_until", "")
 
     return render(
         request,
@@ -499,6 +576,9 @@ def calendar(request):
             "notes_value": notes_value,
             "start_date_value": start_date_value,
             "end_date_value": end_date_value,
+            "recurrence_value": recurrence_value,
+            "recurrence_until_value": recurrence_until_value,
+            "recurrence_choices": Todo.RECURRENCE_CHOICES,
             "form": form,
         },
     )

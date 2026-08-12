@@ -321,6 +321,9 @@
                                 {% else %}
                                     No dates yet
                                 {% endif %}
+                                {% if todo.recurrence %}
+                                    · ↻ {{ todo.get_recurrence_display }}
+                                {% endif %}
                             </div>
                         </div>
                         {% if todo.completed %}
