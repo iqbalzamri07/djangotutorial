@@ -97,6 +97,7 @@
             border-radius: 20px;
             overflow: hidden;
             box-shadow: 0 16px 40px rgba(28, 25, 23, 0.06);
+            scroll-margin-top: 80px;
         }
 
         .panel-head {
@@ -117,82 +118,129 @@
         }
 
         .list-search {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 14px;
-        }
-
-        .list-search input {
-            flex: 1;
-            padding: 11px 14px;
-            border: 1px solid #d6d3d1;
-            border-radius: 12px;
-            background: #fff;
-            font-family: inherit;
-            font-size: 14px;
-        }
-
-        .list-search input:focus {
-            outline: none;
-            border-color: #0f766e;
-            box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.15);
-        }
-
-        .list-search button {
-            padding: 11px 16px;
-            background: #0f766e;
-            color: #fff;
-            border: none;
-            border-radius: 12px;
-            font-family: inherit;
-            font-weight: 800;
-            cursor: pointer;
+            display: none;
         }
 
         .filters {
+            margin-bottom: 16px;
+        }
+
+        .filter-bar {
             display: grid;
+            grid-template-columns: minmax(0, 1.4fr) auto;
+            gap: 12px;
+            align-items: end;
+            padding: 14px;
+            border: 1px solid #e7e5e4;
+            border-radius: 16px;
+            background: #fafaf9;
+        }
+
+        .filter-fields {
+            display: grid;
+            grid-template-columns: minmax(140px, 1.5fr) repeat(6, minmax(92px, 0.85fr));
             gap: 10px;
-            margin-bottom: 14px;
+            align-items: end;
         }
 
-        .filter-row {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .filter-label {
-            min-width: 48px;
-            font-size: 12px;
+        .filter-field label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 11px;
             font-weight: 800;
             letter-spacing: 0.06em;
             text-transform: uppercase;
             color: #78716c;
         }
 
-        .chip {
-            display: inline-flex;
-            padding: 6px 11px;
-            border-radius: 999px;
-            text-decoration: none;
-            font-size: 13px;
-            font-weight: 800;
-            background: #fff;
-            color: #44403c;
+        .filter-field input,
+        .filter-field select {
+            width: 100%;
+            padding: 10px 12px;
             border: 1px solid #d6d3d1;
+            border-radius: 10px;
+            background: #fff;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 600;
+            color: #1c1917;
         }
 
-        .chip.active {
+        .filter-field input:focus,
+        .filter-field select:focus {
+            outline: none;
+            border-color: #0f766e;
+            box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.12);
+        }
+
+        .filter-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        .filter-actions button,
+        .filter-actions a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 40px;
+            padding: 0 16px;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 800;
+            text-decoration: none;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+
+        .filter-actions button {
             background: #0f766e;
             color: #fff;
             border-color: #0f766e;
         }
 
-        .chip.clear {
-            background: #fef2f2;
+        .filter-actions a {
+            background: #fff;
+            color: #78716c;
+            border-color: #d6d3d1;
+        }
+
+        .filter-actions a:hover {
             color: #b91c1c;
             border-color: #fecaca;
+            background: #fef2f2;
+        }
+
+        .active-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+            min-height: 0;
+        }
+
+        .active-filters:empty {
+            display: none;
+        }
+
+        .active-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 10px;
+            border-radius: 999px;
+            background: #ecfdf5;
+            color: #0f766e;
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .active-pill.archived {
+            background: #fef2f2;
+            color: #b91c1c;
         }
 
         .table-scroll { overflow-x: auto; }
@@ -376,7 +424,26 @@
         .empty-icon { font-size: 40px; margin-bottom: 8px; }
         .empty-text { font-size: 15px; font-weight: 800; }
 
-        @media (max-width: 800px) {
+        @media (max-width: 860px) {
+            .filter-bar,
+            .filter-fields {
+                display: block;
+            }
+
+            .filter-field,
+            .filter-actions {
+                margin-top: 10px;
+            }
+
+            .filter-actions {
+                justify-content: stretch;
+            }
+
+            .filter-actions button,
+            .filter-actions a {
+                width: 100%;
+            }
+
             .panel-footer { flex-direction: column; align-items: stretch; }
             .save-button { justify-content: center; width: 100%; }
             .actions { flex-direction: column; align-items: stretch; }
@@ -392,57 +459,93 @@
         {% include "partials/page_banner.html" with banner="edit" banner_mark="✎" banner_chip_1="Board" banner_chip_2=count_label|add:" tasks" banner_chip_3="Tick · edit · delete" banner_title="Edit Todos" action1_url=home_url action1_label="Home" action2_url=search_url action2_label="Search" %}
     {% endwith %}
 
-    <form class="list-search" method="get" action="{% url 'edit_todos' %}">
-        <input type="hidden" name="status" value="{{ status }}">
-        <input type="hidden" name="when" value="{{ when }}">
-        <input type="hidden" name="sort" value="{{ sort }}">
-        <input type="search" name="q" value="{{ query }}" placeholder="Filter by title...">
-        <button type="submit">Filter</button>
+    <form class="filters" method="get" action="{% url 'edit_todos' %}#edit-board">
+        <div class="filter-bar">
+            <div class="filter-fields">
+                <div class="filter-field">
+                    <label for="edit-q">Search</label>
+                    <input id="edit-q" type="search" name="q" value="{{ query }}" placeholder="Title, notes, or tags">
+                </div>
+                <div class="filter-field">
+                    <label for="edit-status">Status</label>
+                    <select id="edit-status" name="status">
+                        <option value="all" {% if status == 'all' %}selected{% endif %}>All</option>
+                        <option value="pending" {% if status == 'pending' %}selected{% endif %}>Pending</option>
+                        <option value="completed" {% if status == 'completed' %}selected{% endif %}>Done</option>
+                    </select>
+                </div>
+                <div class="filter-field">
+                    <label for="edit-when">When</label>
+                    <select id="edit-when" name="when">
+                        <option value="all" {% if when == 'all' %}selected{% endif %}>Any date</option>
+                        <option value="today" {% if when == 'today' %}selected{% endif %}>Today</option>
+                        <option value="due_soon" {% if when == 'due_soon' %}selected{% endif %}>Due soon</option>
+                        <option value="week" {% if when == 'week' %}selected{% endif %}>This week</option>
+                        <option value="month" {% if when == 'month' %}selected{% endif %}>This month</option>
+                        <option value="upcoming" {% if when == 'upcoming' %}selected{% endif %}>Upcoming</option>
+                        <option value="undated" {% if when == 'undated' %}selected{% endif %}>No dates</option>
+                    </select>
+                </div>
+                <div class="filter-field">
+                    <label for="edit-priority">Priority</label>
+                    <select id="edit-priority" name="priority">
+                        <option value="all" {% if priority == 'all' %}selected{% endif %}>Any</option>
+                        <option value="high" {% if priority == 'high' %}selected{% endif %}>High</option>
+                        <option value="medium" {% if priority == 'medium' %}selected{% endif %}>Medium</option>
+                        <option value="low" {% if priority == 'low' %}selected{% endif %}>Low</option>
+                    </select>
+                </div>
+                <div class="filter-field">
+                    <label for="edit-tag">Tag</label>
+                    <select id="edit-tag" name="tag">
+                        <option value="">Any tag</option>
+                        {% for item in all_tags %}
+                            <option value="{{ item.slug }}" {% if tag == item.slug %}selected{% endif %}>{{ item.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="filter-field">
+                    <label for="edit-sort">Sort</label>
+                    <select id="edit-sort" name="sort">
+                        <option value="status" {% if sort == 'status' %}selected{% endif %}>Status</option>
+                        <option value="priority" {% if sort == 'priority' %}selected{% endif %}>Priority</option>
+                        <option value="newest" {% if sort == 'newest' %}selected{% endif %}>Newest</option>
+                        <option value="oldest" {% if sort == 'oldest' %}selected{% endif %}>Oldest</option>
+                        <option value="title" {% if sort == 'title' %}selected{% endif %}>Title</option>
+                        <option value="start" {% if sort == 'start' %}selected{% endif %}>Start date</option>
+                    </select>
+                </div>
+                <div class="filter-field">
+                    <label for="edit-view">View</label>
+                    <select id="edit-view" name="archived">
+                        <option value="">Active</option>
+                        <option value="1" {% if archived_view %}selected{% endif %}>Archived</option>
+                    </select>
+                </div>
+            </div>
+            <div class="filter-actions">
+                <button type="submit">Apply</button>
+                {% if filters_active or archived_view %}
+                    <a href="{% url 'edit_todos' %}#edit-board">Clear</a>
+                {% endif %}
+            </div>
+        </div>
+        {% if filters_active or archived_view %}
+            <div class="active-filters">
+                {% if archived_view %}<span class="active-pill archived">Archived</span>{% endif %}
+                {% if query %}<span class="active-pill">Search: {{ query }}</span>{% endif %}
+                {% if status != 'all' %}<span class="active-pill">{{ status|title }}</span>{% endif %}
+                {% if when != 'all' %}<span class="active-pill">{{ when|cut:"_"|title }}</span>{% endif %}
+                {% if priority != 'all' %}<span class="active-pill">{{ priority|title }} priority</span>{% endif %}
+                {% if tag %}<span class="active-pill">Tag: {{ tag|title }}</span>{% endif %}
+                {% if sort != 'status' %}<span class="active-pill">Sort: {{ sort|title }}</span>{% endif %}
+            </div>
+        {% endif %}
     </form>
-
-    <div class="filters">
-        <div class="filter-row">
-            <span class="filter-label">Status</span>
-            <a class="chip {% if status == 'all' %}active{% endif %}" href="?q={{ query|urlencode }}&status=all&when={{ when }}&sort={{ sort }}">All</a>
-            <a class="chip {% if status == 'pending' %}active{% endif %}" href="?q={{ query|urlencode }}&status=pending&when={{ when }}&sort={{ sort }}">Pending</a>
-            <a class="chip {% if status == 'completed' %}active{% endif %}" href="?q={{ query|urlencode }}&status=completed&when={{ when }}&sort={{ sort }}">Completed</a>
-        </div>
-        <div class="filter-row">
-            <span class="filter-label">When</span>
-            <a class="chip {% if when == 'all' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=all&sort={{ sort }}&priority={{ priority }}&tag={{ tag }}{% if archived_view %}&archived=1{% endif %}">Any date</a>
-            <a class="chip {% if when == 'today' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=today&sort={{ sort }}&priority={{ priority }}&tag={{ tag }}{% if archived_view %}&archived=1{% endif %}">Today</a>
-            <a class="chip {% if when == 'due_soon' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=due_soon&sort={{ sort }}&priority={{ priority }}&tag={{ tag }}">Due soon</a>
-            <a class="chip {% if when == 'week' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=week&sort={{ sort }}&priority={{ priority }}&tag={{ tag }}{% if archived_view %}&archived=1{% endif %}">This week</a>
-            <a class="chip {% if when == 'upcoming' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=upcoming&sort={{ sort }}&priority={{ priority }}&tag={{ tag }}{% if archived_view %}&archived=1{% endif %}">Upcoming</a>
-        </div>
-        <div class="filter-row">
-            <span class="filter-label">Priority</span>
-            <a class="chip {% if priority == 'all' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort={{ sort }}&priority=all&tag={{ tag }}{% if archived_view %}&archived=1{% endif %}">Any</a>
-            <a class="chip {% if priority == 'high' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort={{ sort }}&priority=high&tag={{ tag }}{% if archived_view %}&archived=1{% endif %}">High</a>
-            <a class="chip {% if priority == 'medium' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort={{ sort }}&priority=medium&tag={{ tag }}{% if archived_view %}&archived=1{% endif %}">Medium</a>
-            <a class="chip {% if priority == 'low' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort={{ sort }}&priority=low&tag={{ tag }}{% if archived_view %}&archived=1{% endif %}">Low</a>
-            {% if archived_view %}
-                <a class="chip clear" href="{% url 'edit_todos' %}">Active list</a>
-            {% else %}
-                <a class="chip" href="?archived=1">Archived</a>
-            {% endif %}
-        </div>
-        <div class="filter-row">
-            <span class="filter-label">Sort</span>
-            <a class="chip {% if sort == 'status' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort=status">Status</a>
-            <a class="chip {% if sort == 'newest' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort=newest">Newest</a>
-            <a class="chip {% if sort == 'oldest' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort=oldest">Oldest</a>
-            <a class="chip {% if sort == 'title' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort=title">Title</a>
-            <a class="chip {% if sort == 'start' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort=start">Start date</a>
-            {% if filters_active %}
-                <a class="chip clear" href="{% url 'edit_todos' %}">Clear filters</a>
-            {% endif %}
-        </div>
-    </div>
 
     <form method="POST">
         {% csrf_token %}
-        <div class="panel">
+        <div class="panel" id="edit-board">
             <div class="panel-head">
                 <h2>{% if archived_view %}Archived tasks{% else %}Your task list{% endif %}</h2>
                 <p>{{ result_count }} task{{ result_count|pluralize }} · select rows for archive/restore</p>
@@ -540,7 +643,7 @@
                 </table>
             </div>
 
-            {% include "partials/pagination.html" %}
+            {% include "partials/pagination.html" with page_anchor="edit-board" %}
 
             <div class="panel-footer">
                 <span class="footer-text">Save completions, or archive/restore selected rows.</span>
