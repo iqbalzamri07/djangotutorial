@@ -17,6 +17,26 @@ TODOS_PER_PAGE = 8
 STATUS_FILTERS = ("all", "pending", "completed")
 WHEN_FILTERS = ("all", "today", "week", "month", "upcoming", "undated")
 SORT_FILTERS = ("status", "newest", "oldest", "title", "start")
+STATUS_LABELS = {
+    "all": "All tasks",
+    "pending": "Pending",
+    "completed": "Completed",
+}
+WHEN_LABELS = {
+    "all": "Any date",
+    "today": "Today",
+    "week": "This week",
+    "month": "This month",
+    "upcoming": "Upcoming",
+    "undated": "No dates",
+}
+SORT_LABELS = {
+    "status": "Status",
+    "newest": "Newest",
+    "oldest": "Oldest",
+    "title": "Title",
+    "start": "Start date",
+}
 
 
 def month_bounds(today):
@@ -274,11 +294,24 @@ def home(request):
 @login_required
 def search_todos(request):
     mark_overdue_todos_completed(request.user)
-    filtered = apply_todo_filters(
-        Todo.objects.filter(user=request.user),
-        request,
-    )
+    all_todos = Todo.objects.filter(user=request.user)
+    filtered = apply_todo_filters(all_todos, request)
     filtered.update(paginate_todos(filtered["todos"], request))
+
+    counted = all_todos
+    if filtered["query"]:
+        counted = counted.filter(title__icontains=filtered["query"])
+
+    filtered.update(
+        {
+            "all_count": counted.count(),
+            "pending_count": counted.filter(completed=False).count(),
+            "completed_count": counted.filter(completed=True).count(),
+            "status_label": STATUS_LABELS[filtered["status"]],
+            "when_label": WHEN_LABELS[filtered["when"]],
+            "sort_label": SORT_LABELS[filtered["sort"]],
+        }
+    )
     return render(request, "todos/search.html", filtered)
 
 

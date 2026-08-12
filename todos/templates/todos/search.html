@@ -11,14 +11,18 @@
             margin: 0;
             min-height: 100vh;
             font-family: "Segoe UI", Tahoma, sans-serif;
-            background: #f6f1e8;
+            background:
+                radial-gradient(circle at 12% -10%, #fde68a 0, transparent 28%),
+                radial-gradient(circle at 92% 8%, #99f6e4 0, transparent 32%),
+                radial-gradient(circle at 80% 90%, #ddd6fe 0, transparent 28%),
+                #f6f1e8;
             color: #1c1917;
         }
 
         .container {
             width: 94%;
-            max-width: 860px;
-            margin: 36px auto 70px;
+            max-width: 1080px;
+            margin: 32px auto 80px;
         }
 
         .header {
@@ -26,7 +30,7 @@
             justify-content: space-between;
             align-items: flex-start;
             gap: 16px;
-            margin-bottom: 20px;
+            margin-bottom: 18px;
         }
 
         .kicker {
@@ -40,13 +44,14 @@
 
         .header h1 {
             margin: 0;
-            font-size: 34px;
-            letter-spacing: -0.04em;
+            font-size: 36px;
+            letter-spacing: -0.05em;
         }
 
         .header p {
             margin: 6px 0 0;
             color: #57534e;
+            max-width: 420px;
         }
 
         .nav {
@@ -60,7 +65,7 @@
             display: inline-flex;
             align-items: center;
             padding: 9px 14px;
-            background: #fff;
+            background: rgba(255,255,255,0.85);
             color: #44403c;
             text-decoration: none;
             border: 1px solid #d6d3d1;
@@ -86,51 +91,95 @@
             border-color: #bf59eb;
         }
 
-        .panel {
-            background: #fff;
-            border: 1px solid #e7e5e4;
-            border-radius: 20px;
+        .button.profile:hover {
+            background: #eff6ff;
+            color: #1d4ed8;
+            border-color: #93c5fd;
+        }
+
+        .hero {
+            position: relative;
             overflow: hidden;
-            box-shadow: 0 16px 40px rgba(28, 25, 23, 0.06);
-        }
-
-        .search-box {
-            padding: 22px 24px 18px;
-            background: #0f766e;
+            background: linear-gradient(135deg, #115e59 0%, #0f766e 45%, #134e4a 100%);
             color: #fff;
+            border-radius: 28px;
+            padding: 32px 32px 28px;
+            margin-bottom: 18px;
+            box-shadow: 0 24px 50px rgba(15, 118, 110, 0.22);
         }
 
-        .search-box h2 {
+        .hero::before,
+        .hero::after {
+            content: "";
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .hero::before {
+            width: 220px;
+            height: 220px;
+            right: -40px;
+            top: -70px;
+            background: rgba(253, 224, 71, 0.18);
+        }
+
+        .hero::after {
+            width: 160px;
+            height: 160px;
+            right: 90px;
+            bottom: -80px;
+            background: rgba(165, 243, 252, 0.16);
+        }
+
+        .hero-copy {
+            position: relative;
+            z-index: 1;
+            margin-bottom: 18px;
+        }
+
+        .hero h2 {
             margin: 0 0 6px;
-            font-size: 18px;
+            font-size: 28px;
+            letter-spacing: -0.04em;
         }
 
-        .search-box p {
-            margin: 0 0 14px;
-            color: rgba(255, 255, 255, 0.85);
-            font-size: 13px;
+        .hero p {
+            margin: 0;
+            color: rgba(255,255,255,0.82);
+            font-size: 15px;
+        }
+
+        .search-form {
+            position: relative;
+            z-index: 1;
         }
 
         .search-row {
             display: flex;
-            gap: 8px;
+            gap: 10px;
+            background: #fff;
+            border-radius: 18px;
+            padding: 8px;
+            box-shadow: 0 16px 40px rgba(0,0,0,0.12);
         }
 
         .search-row input {
             flex: 1;
-            padding: 12px 14px;
             border: none;
-            border-radius: 12px;
-            font-family: inherit;
-            font-size: 15px;
             outline: none;
+            padding: 14px 16px;
+            font-family: inherit;
+            font-size: 16px;
+            background: transparent;
+            color: #1c1917;
         }
 
         .search-row button {
-            padding: 12px 18px;
-            background: #134e4a;
+            padding: 12px 20px;
+            background: #0f766e;
             color: #fff;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: none;
             border-radius: 12px;
             font-family: inherit;
             font-size: 14px;
@@ -139,38 +188,148 @@
         }
 
         .search-row button:hover {
-            background: #9af4ee;
-            color: #0f766e;
+            background: #134e4a;
         }
 
-        .filters {
-            display: grid;
-            gap: 14px;
-            padding: 18px 24px 6px;
-        }
-
-        .filter-row {
+        .active-summary {
+            position: relative;
+            z-index: 1;
             display: flex;
             flex-wrap: wrap;
-            align-items: center;
             gap: 8px;
+            margin-top: 14px;
         }
 
-        .filter-label {
-            min-width: 58px;
+        .summary-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.14);
+            color: #ecfdf5;
             font-size: 12px;
             font-weight: 800;
-            letter-spacing: 0.06em;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 16px;
+            align-items: start;
+        }
+
+        .filter-panel,
+        .results-panel {
+            background: rgba(255,255,255,0.9);
+            border: 1px solid #e7e5e4;
+            border-radius: 22px;
+            box-shadow: 0 16px 40px rgba(28, 25, 23, 0.06);
+            backdrop-filter: blur(8px);
+        }
+
+        .filter-panel { padding: 18px; }
+
+        .filter-group { margin-bottom: 18px; }
+        .filter-group:last-child { margin-bottom: 0; }
+
+        .filter-title {
+            margin: 0 0 10px;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.08em;
             text-transform: uppercase;
             color: #78716c;
         }
 
+        .status-grid {
+            display: grid;
+            gap: 8px;
+        }
+
+        .status-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 14px;
+            border-radius: 16px;
+            text-decoration: none;
+            border: 1px solid #e7e5e4;
+            background: #fff;
+            color: #1c1917;
+            transition: all 0.2s ease;
+        }
+
+        .status-card:hover { transform: translateY(-1px); box-shadow: 0 8px 16px rgba(28,25,23,0.06); }
+
+        .status-card .name { font-weight: 800; font-size: 14px; }
+        .status-card .count {
+            font-size: 12px;
+            font-weight: 800;
+            padding: 4px 8px;
+            border-radius: 999px;
+            background: #f5f5f4;
+            color: #57534e;
+        }
+
+        .status-card.all.active {
+            background: #ecfdf5;
+            border-color: #5eead4;
+            color: #0f766e;
+        }
+        .status-card.pending.active {
+            background: #fff7ed;
+            border-color: #fdba74;
+            color: #c2410c;
+        }
+        .status-card.completed.active {
+            background: #dcfce7;
+            border-color: #86efac;
+            color: #166534;
+        }
+
+        .when-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .when-card {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            padding: 12px 10px;
+            border-radius: 14px;
+            text-decoration: none;
+            border: 1px solid #e7e5e4;
+            background: #fff;
+            color: #44403c;
+            font-weight: 800;
+            font-size: 12px;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+
+        .when-card .icon { font-size: 18px; }
+        .when-card:hover { transform: translateY(-1px); }
+        .when-card.active {
+            background: #0f766e;
+            border-color: #0f766e;
+            color: #fff;
+        }
+
+        .sort-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
         .chip {
             display: inline-flex;
-            padding: 7px 12px;
+            padding: 7px 11px;
             border-radius: 999px;
             text-decoration: none;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 800;
             background: #fff;
             color: #44403c;
@@ -178,9 +337,9 @@
         }
 
         .chip.active {
-            background: #0f766e;
+            background: #1c1917;
             color: #fff;
-            border-color: #0f766e;
+            border-color: #1c1917;
         }
 
         .chip.clear {
@@ -189,71 +348,102 @@
             border-color: #fecaca;
         }
 
-        .results {
-            padding: 12px 16px 20px;
+        .results-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: 12px;
+            padding: 20px 22px 0;
         }
 
-        .result-count {
-            padding: 0 8px 10px;
+        .results-head h3 {
+            margin: 0;
+            font-size: 20px;
+        }
+
+        .results-head p {
+            margin: 4px 0 0;
             color: #78716c;
             font-size: 13px;
             font-weight: 700;
         }
 
-        .task-row {
+        .results { padding: 14px 16px 18px; }
+
+        .task-card {
             display: grid;
-            grid-template-columns: 28px 1fr auto auto;
-            gap: 10px;
+            grid-template-columns: 8px 1fr auto;
+            gap: 14px;
             align-items: center;
-            padding: 14px 10px;
-            border-bottom: 1px solid #f5f5f4;
+            padding: 16px;
+            margin-bottom: 10px;
+            border-radius: 18px;
+            background: #fff;
+            border: 1px solid #e7e5e4;
             text-decoration: none;
             color: inherit;
-            border-radius: 12px;
+            transition: all 0.2s ease;
         }
 
-        .task-row:last-child { border-bottom: none; }
-        .task-row:hover { background: #f0fdfa; }
+        .task-card:last-child { margin-bottom: 0; }
+        .task-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(28, 25, 23, 0.08);
+            border-color: #99f6e4;
+        }
 
-        .task-row.done .task-title {
+        .accent {
+            height: 100%;
+            min-height: 48px;
+            border-radius: 999px;
+            background: #f97316;
+        }
+
+        .task-card.done .accent { background: #16a34a; }
+        .task-card.done .task-title {
             text-decoration: line-through;
             color: #78716c;
         }
 
-        .dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: #f97316;
-        }
-
-        .task-row.done .dot { background: #16a34a; }
-
         .task-title {
             font-weight: 800;
-            font-size: 15px;
+            font-size: 16px;
+            margin-bottom: 4px;
         }
 
         .task-meta {
-            margin-top: 3px;
-            font-size: 12px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
             color: #78716c;
+            font-size: 12px;
             font-weight: 700;
+        }
+
+        .meta-pill {
+            display: inline-flex;
+            padding: 4px 8px;
+            border-radius: 999px;
+            background: #f5f5f4;
         }
 
         .status {
             display: inline-flex;
-            padding: 5px 10px;
+            padding: 6px 10px;
             border-radius: 999px;
             font-size: 11px;
             font-weight: 800;
+            margin-bottom: 8px;
         }
 
         .completed { background: #dcfce7; color: #166534; }
         .pending { background: #ffedd5; color: #9a3412; }
 
+        .side-actions { text-align: right; }
+
         .edit-link {
-            padding: 7px 12px;
+            display: inline-flex;
+            padding: 8px 12px;
             border-radius: 999px;
             background: #f5f3ff;
             color: #6d28d9;
@@ -271,8 +461,20 @@
 
         .empty {
             text-align: center;
-            padding: 48px 16px;
+            padding: 56px 20px;
             color: #78716c;
+        }
+
+        .empty-icon {
+            width: 72px;
+            height: 72px;
+            margin: 0 auto 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 24px;
+            background: #ecfdf5;
+            font-size: 32px;
         }
 
         .pagination {
@@ -281,7 +483,7 @@
             align-items: center;
             gap: 12px;
             flex-wrap: wrap;
-            padding: 8px 8px 8px;
+            padding: 8px 8px 6px;
         }
 
         .page-info {
@@ -328,11 +530,13 @@
 
         .page-links .disabled { opacity: 0.45; }
 
-        @media (max-width: 700px) {
-            .header { flex-direction: column; }
+        @media (max-width: 860px) {
+            .header, .layout { display: block; }
+            .nav { justify-content: flex-start; margin-top: 10px; }
+            .filter-panel { margin-bottom: 14px; }
             .search-row { flex-direction: column; }
-            .task-row { grid-template-columns: 28px 1fr auto; }
-            .edit-link { grid-column: 2 / -1; justify-self: start; }
+            .task-card { grid-template-columns: 8px 1fr; }
+            .side-actions { grid-column: 2; text-align: left; }
         }
     </style>
 </head>
@@ -340,111 +544,166 @@
 <div class="container">
     <div class="header">
         <div>
-            <p class="kicker">Find tasks</p>
-            <h1>Search Todos</h1>
-            <p>Look up a task by title, then jump in to edit it.</p>
+            <p class="kicker">Finder</p>
+            <h1>Search & filter</h1>
+            <p>Hunt down a task by title, then narrow it by status, date, or sort.</p>
         </div>
         <div class="nav">
             <a href="{% url 'home' %}" class="button">← Home</a>
             <a href="{% url 'edit_todos' %}" class="button edit">Edit Todos</a>
-            <a href="{% url 'profile' %}" class="button">Profile</a>
+            <a href="{% url 'profile' %}" class="button profile">Profile</a>
             <a href="{% url 'calendar' %}" class="button">Calendar</a>
         </div>
     </div>
 
-    <div class="panel">
-        <div class="search-box">
-            <h2>Search your list</h2>
-            <p>Matches titles for your account only.</p>
-            <form method="get" action="{% url 'search' %}">
-                <input type="hidden" name="status" value="{{ status }}">
-                <input type="hidden" name="when" value="{{ when }}">
-                <input type="hidden" name="sort" value="{{ sort }}">
-                <div class="search-row">
-                    <input
-                        type="search"
-                        name="q"
-                        value="{{ query }}"
-                        placeholder="e.g. grocery, meeting, homework..."
-                        autofocus
-                    >
-                    <button type="submit">Search</button>
-                </div>
-            </form>
-        </div>
-
-        <div class="filters">
-            <div class="filter-row">
-                <span class="filter-label">Status</span>
-                <a class="chip {% if status == 'all' %}active{% endif %}" href="?q={{ query|urlencode }}&status=all&when={{ when }}&sort={{ sort }}">All</a>
-                <a class="chip {% if status == 'pending' %}active{% endif %}" href="?q={{ query|urlencode }}&status=pending&when={{ when }}&sort={{ sort }}">Pending</a>
-                <a class="chip {% if status == 'completed' %}active{% endif %}" href="?q={{ query|urlencode }}&status=completed&when={{ when }}&sort={{ sort }}">Completed</a>
-            </div>
-            <div class="filter-row">
-                <span class="filter-label">When</span>
-                <a class="chip {% if when == 'all' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=all&sort={{ sort }}">Any date</a>
-                <a class="chip {% if when == 'today' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=today&sort={{ sort }}">Today</a>
-                <a class="chip {% if when == 'week' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=week&sort={{ sort }}">This week</a>
-                <a class="chip {% if when == 'month' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=month&sort={{ sort }}">This month</a>
-                <a class="chip {% if when == 'upcoming' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=upcoming&sort={{ sort }}">Upcoming</a>
-                <a class="chip {% if when == 'undated' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=undated&sort={{ sort }}">No dates</a>
-            </div>
-            <div class="filter-row">
-                <span class="filter-label">Sort</span>
-                <a class="chip {% if sort == 'status' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort=status">Status</a>
-                <a class="chip {% if sort == 'newest' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort=newest">Newest</a>
-                <a class="chip {% if sort == 'oldest' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort=oldest">Oldest</a>
-                <a class="chip {% if sort == 'title' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort=title">Title</a>
-                <a class="chip {% if sort == 'start' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort=start">Start date</a>
-                {% if filters_active %}
-                    <a class="chip clear" href="{% url 'search' %}">Clear filters</a>
-                {% endif %}
-            </div>
-        </div>
-
-        <div class="results">
-            <div class="result-count">
+    <div class="hero">
+        <div class="hero-copy">
+            <h2>
                 {% if query %}
-                    {{ result_count }} result{{ result_count|pluralize }} for “{{ query }}”
+                    Results for “{{ query }}”
                 {% else %}
-                    {{ result_count }} task{{ result_count|pluralize }}
+                    What are you looking for?
                 {% endif %}
+            </h2>
+            <p>Search only your todos. Combine filters to zoom in fast.</p>
+        </div>
+        <form class="search-form" method="get" action="{% url 'search' %}">
+            <input type="hidden" name="status" value="{{ status }}">
+            <input type="hidden" name="when" value="{{ when }}">
+            <input type="hidden" name="sort" value="{{ sort }}">
+            <div class="search-row">
+                <input
+                    type="search"
+                    name="q"
+                    value="{{ query }}"
+                    placeholder="Try grocery, meeting, homework..."
+                    autofocus
+                >
+                <button type="submit">Search</button>
+            </div>
+        </form>
+        <div class="active-summary">
+            <span class="summary-pill">{{ result_count }} result{{ result_count|pluralize }}</span>
+            <span class="summary-pill">{{ status_label }}</span>
+            <span class="summary-pill">{{ when_label }}</span>
+            <span class="summary-pill">Sort: {{ sort_label }}</span>
+        </div>
+    </div>
+
+    <div class="layout">
+        <aside class="filter-panel">
+            <div class="filter-group">
+                <p class="filter-title">Status</p>
+                <div class="status-grid">
+                    <a class="status-card all {% if status == 'all' %}active{% endif %}" href="?q={{ query|urlencode }}&status=all&when={{ when }}&sort={{ sort }}">
+                        <span class="name">All tasks</span>
+                        <span class="count">{{ all_count }}</span>
+                    </a>
+                    <a class="status-card pending {% if status == 'pending' %}active{% endif %}" href="?q={{ query|urlencode }}&status=pending&when={{ when }}&sort={{ sort }}">
+                        <span class="name">Pending</span>
+                        <span class="count">{{ pending_count }}</span>
+                    </a>
+                    <a class="status-card completed {% if status == 'completed' %}active{% endif %}" href="?q={{ query|urlencode }}&status=completed&when={{ when }}&sort={{ sort }}">
+                        <span class="name">Completed</span>
+                        <span class="count">{{ completed_count }}</span>
+                    </a>
+                </div>
             </div>
 
-            {% for todo in todos %}
-                <div class="task-row {% if todo.completed %}done{% endif %}">
-                    <span class="dot"></span>
-                    <div>
-                        <div class="task-title">{{ todo.title }}</div>
-                        <div class="task-meta">
-                            {% if todo.start_date %}
-                                {{ todo.duration_label }}
+            <div class="filter-group">
+                <p class="filter-title">When</p>
+                <div class="when-grid">
+                    <a class="when-card {% if when == 'all' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=all&sort={{ sort }}">
+                        <span class="icon">🗓️</span>Any date
+                    </a>
+                    <a class="when-card {% if when == 'today' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=today&sort={{ sort }}">
+                        <span class="icon">☀️</span>Today
+                    </a>
+                    <a class="when-card {% if when == 'week' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=week&sort={{ sort }}">
+                        <span class="icon">📅</span>This week
+                    </a>
+                    <a class="when-card {% if when == 'month' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=month&sort={{ sort }}">
+                        <span class="icon">🌙</span>This month
+                    </a>
+                    <a class="when-card {% if when == 'upcoming' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=upcoming&sort={{ sort }}">
+                        <span class="icon">🚀</span>Upcoming
+                    </a>
+                    <a class="when-card {% if when == 'undated' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=undated&sort={{ sort }}">
+                        <span class="icon">📝</span>No dates
+                    </a>
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <p class="filter-title">Sort</p>
+                <div class="sort-grid">
+                    <a class="chip {% if sort == 'status' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort=status">Status</a>
+                    <a class="chip {% if sort == 'newest' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort=newest">Newest</a>
+                    <a class="chip {% if sort == 'oldest' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort=oldest">Oldest</a>
+                    <a class="chip {% if sort == 'title' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort=title">Title</a>
+                    <a class="chip {% if sort == 'start' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort=start">Start date</a>
+                    {% if filters_active %}
+                        <a class="chip clear" href="{% url 'search' %}">Clear all</a>
+                    {% endif %}
+                </div>
+            </div>
+        </aside>
+
+        <section class="results-panel">
+            <div class="results-head">
+                <div>
+                    <h3>Matching tasks</h3>
+                    <p>
+                        {% if query %}
+                            {{ result_count }} result{{ result_count|pluralize }} for “{{ query }}”
+                        {% else %}
+                            {{ result_count }} task{{ result_count|pluralize }} in this view
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+
+            <div class="results">
+                {% for todo in todos %}
+                    <div class="task-card {% if todo.completed %}done{% endif %}">
+                        <span class="accent"></span>
+                        <div>
+                            <div class="task-title">{{ todo.title }}</div>
+                            <div class="task-meta">
+                                <span class="meta-pill">
+                                    {% if todo.start_date %}
+                                        {{ todo.duration_label }}
+                                    {% else %}
+                                        No dates yet
+                                    {% endif %}
+                                </span>
+                                <span class="meta-pill">Added {{ todo.created_at|date:"M j" }}</span>
+                            </div>
+                        </div>
+                        <div class="side-actions">
+                            {% if todo.completed %}
+                                <div class="status completed">Done</div>
                             {% else %}
-                                No dates yet
+                                <div class="status pending">Pending</div>
                             {% endif %}
+                            <a href="{% url 'edit' todo.id %}" class="edit-link">Edit</a>
                         </div>
                     </div>
-                    {% if todo.completed %}
-                        <span class="status completed">Done</span>
-                    {% else %}
-                        <span class="status pending">Pending</span>
-                    {% endif %}
-                    <a href="{% url 'edit' todo.id %}" class="edit-link">Edit</a>
-                </div>
-            {% empty %}
-                <div class="empty">
-                    <div style="font-size:32px;">🔎</div>
-                    {% if query %}
-                        <div><strong>No todos match “{{ query }}”</strong></div>
-                        <p>Try another word or switch the filters.</p>
-                    {% else %}
-                        <div><strong>No tasks yet</strong></div>
-                        <p>Add a todo on the home page first.</p>
-                    {% endif %}
-                </div>
-            {% endfor %}
-            {% include "todos/_pagination.html" %}
-        </div>
+                {% empty %}
+                    <div class="empty">
+                        <div class="empty-icon">🔎</div>
+                        {% if query or filters_active %}
+                            <div><strong>Nothing matches this mix</strong></div>
+                            <p>Try another word, or clear filters and start fresh.</p>
+                        {% else %}
+                            <div><strong>No tasks yet</strong></div>
+                            <p>Add a todo on the home page first.</p>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+                {% include "todos/_pagination.html" %}
+            </div>
+        </section>
     </div>
 </div>
 </body>
