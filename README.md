@@ -6,12 +6,17 @@ A first Django project: personal todos, a monthly calendar, search and filters, 
 
 - Sign up, log in, log out, and edit your profile
 - Create todos with a title, optional notes, start/end dates, and recurrence
+- Priorities (low/medium/high) and tags (work, personal, health, learning, errands)
+- Subtasks / checklist items on each todo
+- Soft archive (keeps history) plus optional permanent delete
+- Due-soon reminders on Home for tasks ending today or tomorrow
+- Activity dashboard with weekly chart, streak, and completion history
 - Recurring tasks (daily, weekly, monthly, yearly) spawn the next occurrence when completed
 - Calendar shows repeating todos on every matching day, including future months
-- Search, status/date filters, sorting, and pagination
+- Search, status/date/priority/tag filters, sorting, and pagination
 - Auto-complete todos after their end date passes
 - Magazine-style blog
-- Token-authenticated REST API for auth, todos, and posts
+- Token-authenticated REST API for auth, todos, tags, and posts
 
 ## Setup
 
@@ -43,7 +48,8 @@ python manage.py createsuperuser
 | `/profile/` | Profile and password |
 | `/calendar/` | Monthly planner |
 | `/search/` | Search and filters |
-| `/edit-todos/` | Edit, complete, or delete |
+| `/activity/` | Completions, streak, due soon |
+| `/edit-todos/` | Edit, complete, archive, or restore |
 | `/blog/` | Blog list and posts |
 | `/api/` | REST API |
 
@@ -68,9 +74,12 @@ Authorization: Token YOUR_TOKEN
 
 ### Todos
 
-Your todos only. Fields include `title`, `notes`, `completed`, `start_date`, `end_date`, `recurrence`, and `recurrence_until`.  
+Your todos only. Fields include `title`, `notes`, `completed`, `priority`, `tag_slugs`, `subtasks`, `archived`, `start_date`, `end_date`, `recurrence`, and `recurrence_until`.  
+`priority`: `low` · `medium` · `high`.  
 `recurrence`: `""` (none) · `daily` · `weekly` · `monthly` · `yearly`. Completing a recurring todo creates the next occurrence.  
-Search `q` matches title or notes. Also supports `status`, `when`, `sort`, and `page`.
+`DELETE /api/todos/<id>/` archives. Use `POST .../restore/` or `POST .../purge/` to restore or hard-delete.  
+`GET /api/tags/` lists available tags.  
+Search `q` matches title, notes, tags, or subtasks. Also supports `status`, `when`, `sort`, `priority`, `tag`, `archived=1`, and `page`.
 
 | Method | URL |
 | --- | --- |
@@ -78,8 +87,10 @@ Search `q` matches title or notes. Also supports `status`, `when`, `sort`, and `
 | `GET` `PATCH` `PUT` `DELETE` | `/api/todos/<id>/` |
 
 `status`: `all` · `pending` · `completed`  
-`when`: `all` · `today` · `week` · `month` · `upcoming` · `undated`  
-`sort`: `status` · `newest` · `oldest` · `title` · `start`
+`when`: `all` · `today` · `week` · `month` · `upcoming` · `undated` · `due_soon`  
+`sort`: `status` · `newest` · `oldest` · `title` · `start` · `priority`  
+`priority`: `all` · `low` · `medium` · `high`  
+`tag`: tag slug such as `work` or `personal`
 
 ### Blog
 

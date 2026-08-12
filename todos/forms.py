@@ -1,8 +1,9 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from django.forms import inlineformset_factory
 
-from .models import Todo
+from .models import Subtask, Tag, Todo
 
 
 class SignUpForm(UserCreationForm):
@@ -29,7 +30,16 @@ class TodoForm(forms.ModelForm):
 
     class Meta:
         model = Todo
-        fields = ["title", "notes", "start_date", "end_date", "recurrence", "recurrence_until"]
+        fields = [
+            "title",
+            "notes",
+            "priority",
+            "tags",
+            "start_date",
+            "end_date",
+            "recurrence",
+            "recurrence_until",
+        ]
         widgets = {
             "notes": forms.Textarea(
                 attrs={
@@ -37,10 +47,19 @@ class TodoForm(forms.ModelForm):
                     "placeholder": "Optional notes or description...",
                 }
             ),
+            "priority": forms.Select(),
+            "tags": forms.CheckboxSelectMultiple(),
             "start_date": forms.DateInput(attrs={"type": "date"}),
             "end_date": forms.DateInput(attrs={"type": "date"}),
             "recurrence_until": forms.DateInput(attrs={"type": "date"}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        Tag.ensure_defaults()
+        self.fields["tags"].queryset = Tag.objects.all()
+        self.fields["tags"].required = False
+        self.fields["priority"].required = False
 
     def clean(self):
         cleaned = super().clean()
@@ -48,6 +67,9 @@ class TodoForm(forms.ModelForm):
         end_date = cleaned.get("end_date")
         recurrence = cleaned.get("recurrence")
         recurrence_until = cleaned.get("recurrence_until")
+
+        if not cleaned.get("priority"):
+            cleaned["priority"] = Todo.PRIORITY_MEDIUM
 
         if start_date and not end_date:
             cleaned["end_date"] = start_date
@@ -62,3 +84,22 @@ class TodoForm(forms.ModelForm):
             self.add_error("recurrence_until", "Repeat until cannot be before the start date.")
 
         return cleaned
+
+
+class SubtaskForm(forms.ModelForm):
+    class Meta:
+        model = Subtask
+        fields = ["title", "completed", "order"]
+        widgets = {
+            "title": forms.TextInput(attrs={"placeholder": "Checklist item..."}),
+            "order": forms.HiddenInput(),
+        }
+
+
+SubtaskFormSet = inlineformset_factory(
+    Todo,
+    Subtask,
+    form=SubtaskForm,
+    extra=3,
+    can_delete=True,
+)

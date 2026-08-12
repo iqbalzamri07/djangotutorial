@@ -403,6 +403,58 @@
         .completed { background: #dcfce7; color: #166534; }
         .pending { background: #ffedd5; color: #9a3412; }
 
+        .due-soon {
+            background: #fff;
+            border: 1px solid #fdba74;
+            border-radius: 18px;
+            padding: 16px 18px;
+            margin-bottom: 18px;
+        }
+
+        .due-soon h3 {
+            margin: 0 0 10px;
+            font-size: 16px;
+        }
+
+        .due-soon-list {
+            display: grid;
+            gap: 8px;
+        }
+
+        .due-soon a {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            text-decoration: none;
+            color: inherit;
+            padding: 10px 12px;
+            border-radius: 12px;
+            background: #fff7ed;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .meta-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 6px;
+        }
+
+        .prio, .tag-pill, .check-pill {
+            display: inline-flex;
+            padding: 3px 8px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .prio.high { background: #fee2e2; color: #b91c1c; }
+        .prio.medium { background: #ffedd5; color: #c2410c; }
+        .prio.low { background: #ecfdf5; color: #0f766e; }
+        .tag-pill { background: #eff6ff; color: #1d4ed8; }
+        .check-pill { background: #f5f5f4; color: #57534e; }
+
         .empty {
             text-align: center;
             padding: 40px 16px;
@@ -431,6 +483,7 @@
             <p>
                 {% if pending_tasks %}
                     You have {{ pending_tasks }} task{{ pending_tasks|pluralize }} still open.
+                    {% if streak %} Streak: {{ streak }} day{{ streak|pluralize }}.{% endif %}
                 {% else %}
                     No pending tasks. Nice work — add something new or enjoy the break.
                 {% endif %}
@@ -449,9 +502,23 @@
                 <div class="kicker" style="color:#ecfdf5;">Today</div>
                 <div class="date">{{ today|date:"l, M j" }}</div>
             </div>
-            <a href="{% url 'calendar' %}">Open calendar →</a>
+            <a href="{% url 'activity' %}">Open activity →</a>
         </div>
     </div>
+
+    {% if due_soon %}
+        <div class="due-soon">
+            <h3>Due soon · ending today or tomorrow</h3>
+            <div class="due-soon-list">
+                {% for todo in due_soon %}
+                    <a href="{% url 'edit' todo.id %}">
+                        <span>{{ todo.title }}</span>
+                        <span>{{ todo.end_date|date:"M j" }} · {{ todo.get_priority_display }}</span>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
 
     <div class="stats">
         <div class="stat-card total">
@@ -472,7 +539,7 @@
         <div class="panel">
             <div class="panel-head">
                 <h3>Add a todo</h3>
-                <p>Give it a title, optional notes, dates, and a repeat schedule.</p>
+                <p>Title, notes, priority, tags, dates, and optional repeats.</p>
             </div>
             <div class="todo-form">
                 <form method="POST">
@@ -498,7 +565,9 @@
                 <input type="hidden" name="status" value="{{ status }}">
                 <input type="hidden" name="when" value="{{ when }}">
                 <input type="hidden" name="sort" value="{{ sort }}">
-                <input type="search" name="q" value="{{ query }}" placeholder="Filter by title or notes...">
+                <input type="hidden" name="priority" value="{{ priority }}">
+                <input type="hidden" name="tag" value="{{ tag }}">
+                <input type="search" name="q" value="{{ query }}" placeholder="Filter by title, notes, or tags...">
                 <button type="submit">Filter</button>
             </form>
             <div class="filters">
@@ -514,12 +583,29 @@
                     <a class="chip {% if when == 'today' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=today&sort={{ sort }}">Today</a>
                     <a class="chip {% if when == 'week' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=week&sort={{ sort }}">Week</a>
                     <a class="chip {% if when == 'month' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=month&sort={{ sort }}">Month</a>
-                    <a class="chip {% if when == 'upcoming' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=upcoming&sort={{ sort }}">Upcoming</a>
-                    <a class="chip {% if when == 'undated' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=undated&sort={{ sort }}">No dates</a>
+                    <a class="chip {% if when == 'upcoming' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=upcoming&sort={{ sort }}&priority={{ priority }}&tag={{ tag }}">Upcoming</a>
+                    <a class="chip {% if when == 'due_soon' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=due_soon&sort={{ sort }}&priority={{ priority }}&tag={{ tag }}">Due soon</a>
+                    <a class="chip {% if when == 'undated' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=undated&sort={{ sort }}&priority={{ priority }}&tag={{ tag }}">No dates</a>
                     {% if filters_active %}
                         <a class="chip clear" href="{% url 'home' %}">Clear</a>
                     {% endif %}
                 </div>
+                <div class="filter-row">
+                    <span class="filter-label">Priority</span>
+                    <a class="chip {% if priority == 'all' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort={{ sort }}&priority=all&tag={{ tag }}">Any</a>
+                    <a class="chip {% if priority == 'high' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort={{ sort }}&priority=high&tag={{ tag }}">High</a>
+                    <a class="chip {% if priority == 'medium' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort={{ sort }}&priority=medium&tag={{ tag }}">Medium</a>
+                    <a class="chip {% if priority == 'low' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort={{ sort }}&priority=low&tag={{ tag }}">Low</a>
+                </div>
+                {% if all_tags %}
+                <div class="filter-row">
+                    <span class="filter-label">Tag</span>
+                    <a class="chip {% if not tag %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort={{ sort }}&priority={{ priority }}">Any</a>
+                    {% for item in all_tags %}
+                        <a class="chip {% if tag == item.slug %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort={{ sort }}&priority={{ priority }}&tag={{ item.slug }}">{{ item.name }}</a>
+                    {% endfor %}
+                </div>
+                {% endif %}
             </div>
             <div class="task-list">
                 {% for todo in todos %}
@@ -544,6 +630,17 @@
                                 {% if todo.recurrence_until %}
                                     · until {{ todo.recurrence_until|date:"M j, Y" }}
                                 {% endif %}
+                            </div>
+                            <div class="meta-row">
+                                <span class="prio {{ todo.priority }}">{{ todo.get_priority_display }}</span>
+                                {% for tag in todo.tags.all %}
+                                    <span class="tag-pill">{{ tag.name }}</span>
+                                {% endfor %}
+                                {% with progress=todo.checklist_progress %}
+                                    {% if progress %}
+                                        <span class="check-pill">{{ progress.0 }}/{{ progress.1 }} checklist</span>
+                                    {% endif %}
+                                {% endwith %}
                             </div>
                         </div>
                         {% if todo.completed %}

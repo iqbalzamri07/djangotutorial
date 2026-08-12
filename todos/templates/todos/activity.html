@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity</title>
+    {% include "todos/_nav_styles.html" %}
+    <style>
+        * { box-sizing: border-box; }
+        body { font-family: "Segoe UI", Tahoma, sans-serif; }
+        .container {
+            width: 94%;
+            max-width: 1120px;
+            margin: 36px auto 70px;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+        .stat-card {
+            background: #fff;
+            border: 1px solid #e7e5e4;
+            border-radius: 16px;
+            padding: 16px 18px;
+        }
+        .stat-label {
+            color: #78716c;
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+        .stat-number {
+            margin-top: 6px;
+            font-size: 28px;
+            font-weight: 800;
+        }
+        .layout {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 16px;
+        }
+        .panel {
+            background: #fff;
+            border: 1px solid #e7e5e4;
+            border-radius: 18px;
+            overflow: hidden;
+        }
+        .panel-head {
+            padding: 18px 20px 0;
+        }
+        .panel-head h3 { margin: 0; font-size: 18px; }
+        .panel-head p { margin: 4px 0 0; color: #78716c; font-size: 13px; }
+        .panel-body { padding: 18px 20px 22px; }
+        .chart {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+            align-items: end;
+            min-height: 160px;
+            padding-top: 12px;
+        }
+        .bar-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        .bar {
+            width: 100%;
+            max-width: 42px;
+            border-radius: 10px 10px 4px 4px;
+            background: linear-gradient(180deg, #5eead4, #0f766e);
+            min-height: 8px;
+        }
+        .bar-label {
+            font-size: 12px;
+            font-weight: 800;
+            color: #78716c;
+        }
+        .bar-count {
+            font-size: 12px;
+            font-weight: 800;
+            color: #0f766e;
+        }
+        .due-item, .history-item {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid #f5f5f4;
+        }
+        .due-item:last-child, .history-item:last-child { border-bottom: none; }
+        .item-title { font-weight: 800; }
+        .item-meta { margin-top: 4px; color: #78716c; font-size: 12px; font-weight: 700; }
+        .priority {
+            display: inline-flex;
+            padding: 4px 8px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 800;
+        }
+        .priority.high { background: #fee2e2; color: #b91c1c; }
+        .priority.medium { background: #ffedd5; color: #c2410c; }
+        .priority.low { background: #ecfdf5; color: #0f766e; }
+        .empty { color: #78716c; padding: 12px 0; }
+        @media (max-width: 860px) {
+            .stats, .layout { display: block; }
+            .stat-card, .panel { margin-bottom: 12px; }
+        }
+    </style>
+</head>
+<body>
+{% include "todos/_nav.html" with active_nav="activity" %}
+<div class="container">
+    {% url 'home' as home_url %}
+    {% url 'edit_todos' as edit_url %}
+    {% with week_label=week_total|stringformat:"s" streak_label=streak|stringformat:"s" %}
+        {% include "todos/_page_banner.html" with banner="profile" banner_mark="⌁" banner_chip_1="This week" banner_chip_2=week_label|add:" done" banner_chip_3=streak_label|add:" day streak" banner_title="Activity" action1_url=home_url action1_label="Home" action2_url=edit_url action2_label="Edit list" %}
+    {% endwith %}
+
+    <div class="stats">
+        <div class="stat-card">
+            <div class="stat-label">Week completed</div>
+            <div class="stat-number">{{ week_total }}</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Month completed</div>
+            <div class="stat-number">{{ month_total }}</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Streak</div>
+            <div class="stat-number">{{ streak }}</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Archived</div>
+            <div class="stat-number">{{ archived_count }}</div>
+        </div>
+    </div>
+
+    <div class="layout">
+        <div class="panel">
+            <div class="panel-head">
+                <h3>Completed this week</h3>
+                <p>Mon–Sun completions for the current week.</p>
+            </div>
+            <div class="panel-body">
+                <div class="chart">
+                    {% for day in week_chart %}
+                        <div class="bar-wrap">
+                            <div class="bar-count">{{ day.count }}</div>
+                            <div class="bar" style="height: {{ day.height }}px;"></div>
+                            <div class="bar-label">{{ day.label }}</div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-head">
+                <h3>Due soon</h3>
+                <p>Ending today or tomorrow.</p>
+            </div>
+            <div class="panel-body">
+                {% for todo in due_soon %}
+                    <a class="due-item" href="{% url 'edit' todo.id %}" style="text-decoration:none;color:inherit;">
+                        <div>
+                            <div class="item-title">{{ todo.title }}</div>
+                            <div class="item-meta">
+                                Ends {{ todo.end_date|date:"M j" }}
+                                · {{ todo.get_priority_display }}
+                            </div>
+                        </div>
+                        <span class="priority {{ todo.priority }}">{{ todo.get_priority_display }}</span>
+                    </a>
+                {% empty %}
+                    <div class="empty">Nothing due in the next day. Nice cushion.</div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="layout" style="margin-top:16px;">
+        <div class="panel">
+            <div class="panel-head">
+                <h3>Recent completions</h3>
+                <p>Latest finished tasks, including archived history.</p>
+            </div>
+            <div class="panel-body">
+                {% for todo in recent_completed %}
+                    <div class="history-item">
+                        <div>
+                            <div class="item-title">{{ todo.title }}</div>
+                            <div class="item-meta">
+                                {{ todo.completed_at|date:"M j, g:i A" }}
+                                {% if todo.archived %} · archived{% endif %}
+                            </div>
+                        </div>
+                        <span class="priority {{ todo.priority }}">{{ todo.get_priority_display }}</span>
+                    </div>
+                {% empty %}
+                    <div class="empty">Complete a task to start your history.</div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-head">
+                <h3>Open by priority</h3>
+                <p>What’s still on the board.</p>
+            </div>
+            <div class="panel-body">
+                <div class="history-item">
+                    <div class="item-title">High</div>
+                    <span class="priority high">{{ high_open }}</span>
+                </div>
+                <div class="history-item">
+                    <div class="item-title">Medium</div>
+                    <span class="priority medium">{{ medium_open }}</span>
+                </div>
+                <div class="history-item">
+                    <div class="item-title">Low</div>
+                    <span class="priority low">{{ low_open }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

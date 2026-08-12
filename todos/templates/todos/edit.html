@@ -82,6 +82,32 @@
         .pill.completed { background: #dcfce7; color: #166534; }
         .pill.dates { background: #ecfdf5; color: #0f766e; }
         .pill.repeat { background: #f5f3ff; color: #6d28d9; }
+        .pill.priority { background: #fee2e2; color: #b91c1c; }
+
+        .checklist {
+            margin-top: 18px;
+            padding-top: 18px;
+            border-top: 1px solid #e7e5e4;
+        }
+
+        .checklist h3 {
+            margin: 0 0 10px;
+            font-size: 15px;
+        }
+
+        .checklist .formset-row {
+            display: grid;
+            grid-template-columns: 28px 1fr auto;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .checklist .delete-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #b91c1c;
+        }
 
         .card-body { padding: 18px 24px 24px; }
 
@@ -213,8 +239,12 @@
             {% if todo.start_date %}
                 <span class="pill dates">{{ todo.duration_label }}</span>
             {% endif %}
+            <span class="pill priority">{{ todo.get_priority_display }}</span>
             {% if todo.recurrence %}
                 <span class="pill repeat">↻ {{ todo.get_recurrence_display }}{% if todo.recurrence_until %} until {{ todo.recurrence_until|date:"M j, Y" }}{% endif %}</span>
+            {% endif %}
+            {% if todo.archived %}
+                <span class="pill pending">Archived</span>
             {% endif %}
         </div>
 
@@ -222,6 +252,25 @@
             <form method="POST">
                 {% csrf_token %}
                 {{ form.as_p }}
+
+                <div class="checklist">
+                    <h3>Checklist / subtasks</h3>
+                    {{ formset.management_form }}
+                    {% for subform in formset %}
+                        <div class="formset-row">
+                            {{ subform.id }}
+                            {{ subform.completed }}
+                            <div>
+                                {{ subform.title }}
+                                {% if subform.instance.pk %}
+                                    <label class="delete-label">{{ subform.DELETE }} remove</label>
+                                {% endif %}
+                            </div>
+                            {{ subform.order }}
+                        </div>
+                    {% endfor %}
+                </div>
+
                 <div class="actions">
                     <button type="submit" class="save-button">Save Changes</button>
                     <a href="{% url 'edit_todos' %}" class="cancel-button">Cancel</a>

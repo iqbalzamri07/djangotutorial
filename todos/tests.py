@@ -76,6 +76,11 @@ class TodoAPITests(APITestCase):
 
         delete = self.client.delete(f"/api/todos/{todo_id}/")
         self.assertEqual(delete.status_code, 204)
+        self.assertTrue(Todo.objects.get(id=todo_id).archived)
+
+        restore = self.client.post(f"/api/todos/{todo_id}/restore/")
+        self.assertEqual(restore.status_code, 200)
+        self.assertFalse(Todo.objects.get(id=todo_id).archived)
 
     def test_posts_are_public(self):
         Post.objects.create(
@@ -208,3 +213,65 @@ class RecurringTodoTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Pay rent")
         self.assertContains(response, 'data-date="2026-09-12"')
+
+
+class TodoFeatureTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username="feature_user",
+            password="StrongPass123!",
+        )
+        self.client.login(username="feature_user", password="StrongPass123!")
+
+    def test_priority_tags_subtasks_and_archive(self):
+        from todos.models import Subtask, Tag
+
+        Tag.ensure_defaults()
+        work = Tag.objects.get(slug="work")
+        todo = Todo.objects.create(
+            user=self.user,
+            title="Ship feature pack",
+            priority=Todo.PRIORITY_HIGH,
+            start_date=date.today(),
+            end_date=date.today(),
+        )
+        todo.tags.add(work)
+        Subtask.objects.create(todo=todo, title="Write models", order=0)
+        Subtask.objects.create(todo=todo, title="Wire templates", order=1, completed=True)
+
+        response = self.client.get("/")
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Ship feature pack")
+        self.assertContains(response, "High")
+        self.assertContains(response, "Work")
+        self.assertContains(response, "1/2 checklist")
+
+        todo.archive()
+        response = self.client.get("/edit-todos/?archived=1")
+        self.assertContains(response, "Ship feature pack")
+        self.assertContains(response, "Archived")
+
+    def test_activity_page_and_due_soon(self):
+        from django.utils import timezone
+
+        today = date.today()
+        Todo.objects.create(
+            user=self.user,
+            title="Due tonight",
+            end_date=today,
+            priority=Todo.PRIORITY_HIGH,
+        )
+        done = Todo.objects.create(
+            user=self.user,
+            title="Finished earlier",
+            completed=True,
+            completed_at=timezone.now(),
+            end_date=today,
+        )
+        self.assertIsNotNone(done.completed_at)
+
+        response = self.client.get("/activity/")
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Due tonight")
+        self.assertContains(response, "Finished earlier")
+        self.assertContains(response, "Completed this week")

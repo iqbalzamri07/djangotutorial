@@ -7,6 +7,7 @@
             <a href="{% url 'blog:blog' %}" class="button blog {% if active_nav == 'blog' %}active{% endif %}">Blog</a>
             <a href="{% url 'calendar' %}" class="button calendar {% if active_nav == 'calendar' %}active{% endif %}">Calendar</a>
             <a href="{% url 'search' %}" class="button search {% if active_nav == 'search' %}active{% endif %}">Search</a>
+            <a href="{% url 'activity' %}" class="button profile {% if active_nav == 'activity' %}active{% endif %}">Activity</a>
             <a href="{% url 'edit_todos' %}" class="button edit {% if active_nav == 'edit' %}active{% endif %}">Edit Todos</a>
             {% if user.is_authenticated %}
                 <a href="{% url 'profile' %}" class="button profile {% if active_nav == 'profile' %}active{% endif %}">Profile</a>

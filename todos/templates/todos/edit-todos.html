@@ -411,12 +411,23 @@
         </div>
         <div class="filter-row">
             <span class="filter-label">When</span>
-            <a class="chip {% if when == 'all' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=all&sort={{ sort }}">Any date</a>
-            <a class="chip {% if when == 'today' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=today&sort={{ sort }}">Today</a>
-            <a class="chip {% if when == 'week' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=week&sort={{ sort }}">This week</a>
-            <a class="chip {% if when == 'month' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=month&sort={{ sort }}">This month</a>
-            <a class="chip {% if when == 'upcoming' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=upcoming&sort={{ sort }}">Upcoming</a>
-            <a class="chip {% if when == 'undated' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=undated&sort={{ sort }}">No dates</a>
+            <a class="chip {% if when == 'all' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=all&sort={{ sort }}&priority={{ priority }}&tag={{ tag }}{% if archived_view %}&archived=1{% endif %}">Any date</a>
+            <a class="chip {% if when == 'today' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=today&sort={{ sort }}&priority={{ priority }}&tag={{ tag }}{% if archived_view %}&archived=1{% endif %}">Today</a>
+            <a class="chip {% if when == 'due_soon' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=due_soon&sort={{ sort }}&priority={{ priority }}&tag={{ tag }}">Due soon</a>
+            <a class="chip {% if when == 'week' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=week&sort={{ sort }}&priority={{ priority }}&tag={{ tag }}{% if archived_view %}&archived=1{% endif %}">This week</a>
+            <a class="chip {% if when == 'upcoming' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=upcoming&sort={{ sort }}&priority={{ priority }}&tag={{ tag }}{% if archived_view %}&archived=1{% endif %}">Upcoming</a>
+        </div>
+        <div class="filter-row">
+            <span class="filter-label">Priority</span>
+            <a class="chip {% if priority == 'all' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort={{ sort }}&priority=all&tag={{ tag }}{% if archived_view %}&archived=1{% endif %}">Any</a>
+            <a class="chip {% if priority == 'high' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort={{ sort }}&priority=high&tag={{ tag }}{% if archived_view %}&archived=1{% endif %}">High</a>
+            <a class="chip {% if priority == 'medium' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort={{ sort }}&priority=medium&tag={{ tag }}{% if archived_view %}&archived=1{% endif %}">Medium</a>
+            <a class="chip {% if priority == 'low' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort={{ sort }}&priority=low&tag={{ tag }}{% if archived_view %}&archived=1{% endif %}">Low</a>
+            {% if archived_view %}
+                <a class="chip clear" href="{% url 'edit_todos' %}">Active list</a>
+            {% else %}
+                <a class="chip" href="?archived=1">Archived</a>
+            {% endif %}
         </div>
         <div class="filter-row">
             <span class="filter-label">Sort</span>
@@ -435,16 +446,18 @@
         {% csrf_token %}
         <div class="panel">
             <div class="panel-head">
-                <h2>Your task list</h2>
-                <p>{{ result_count }} task{{ result_count|pluralize }} · tick completed items, then save</p>
+                <h2>{% if archived_view %}Archived tasks{% else %}Your task list{% endif %}</h2>
+                <p>{{ result_count }} task{{ result_count|pluralize }} · select rows for archive/restore</p>
             </div>
 
             <div class="table-scroll">
                 <table>
                     <thead>
                         <tr>
+                            <th></th>
                             <th>#</th>
                             <th>Task</th>
+                            <th>Priority</th>
                             <th>Duration</th>
                             <th>Completed</th>
                             <th>Status</th>
@@ -454,13 +467,23 @@
                     <tbody>
                         {% for todo in todos %}
                             <tr class="{% if todo.completed %}done{% endif %}">
+                                <td>
+                                    <input type="checkbox" class="checkbox" name="selected_{{ todo.id }}">
+                                </td>
                                 <td><span class="number">{{ page_obj.start_index|add:forloop.counter0 }}</span></td>
                                 <td>
                                     <span class="task-title">{{ todo.title }}</span>
                                     {% if todo.notes %}
                                         <div class="task-notes">{{ todo.notes|truncatechars:90 }}</div>
                                     {% endif %}
+                                    <div class="task-notes">
+                                        {% for tag in todo.tags.all %}{{ tag.name }}{% if not forloop.last %}, {% endif %}{% endfor %}
+                                        {% with progress=todo.checklist_progress %}
+                                            {% if progress %} · {{ progress.0 }}/{{ progress.1 }} checklist{% endif %}
+                                        {% endwith %}
+                                    </div>
                                 </td>
+                                <td>{{ todo.get_priority_display }}</td>
                                 <td>
                                     <span class="duration">
                                         {% if todo.start_date %}
@@ -482,7 +505,9 @@
                                     >
                                 </td>
                                 <td>
-                                    {% if todo.completed %}
+                                    {% if todo.archived %}
+                                        <span class="status pending">Archived</span>
+                                    {% elif todo.completed %}
                                         <span class="status completed">✓ Completed</span>
                                     {% else %}
                                         <span class="status pending">⏳ Pending</span>
@@ -491,21 +516,17 @@
                                 <td>
                                     <div class="actions">
                                         <a href="{% url 'edit' todo.id %}" class="edit-button">Edit</a>
-                                        <button
-                                            type="submit"
-                                            class="delete-button"
-                                            formaction="{% url 'delete' todo.id %}"
-                                            formmethod="POST"
-                                            onclick="return confirm('Are you sure you want to delete this todo?');"
-                                        >
-                                            Delete
-                                        </button>
+                                        {% if todo.archived %}
+                                            <button type="submit" class="edit-button" formaction="{% url 'restore' todo.id %}" formmethod="POST">Restore</button>
+                                        {% else %}
+                                            <a href="{% url 'delete' todo.id %}" class="delete-button" style="display:inline-flex;align-items:center;justify-content:center;text-decoration:none;">Archive</a>
+                                        {% endif %}
                                     </div>
                                 </td>
                             </tr>
                         {% empty %}
                             <tr>
-                                <td colspan="6" class="empty">
+                                <td colspan="8" class="empty">
                                     <div class="empty-icon">📝</div>
                                     {% if filters_active %}
                                         <div class="empty-text">No tasks match these filters.</div>
@@ -524,8 +545,15 @@
             {% include "todos/_pagination.html" %}
 
             <div class="panel-footer">
-                <span class="footer-text">Check completed tasks, then save your changes.</span>
-                <button type="submit" class="save-button">Save Changes</button>
+                <span class="footer-text">Save completions, or archive/restore selected rows.</span>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                    <button type="submit" name="bulk_action" value="save" class="save-button">Save Changes</button>
+                    {% if archived_view %}
+                        <button type="submit" name="bulk_action" value="restore_selected" class="save-button" style="background:#1d4ed8;border-color:#1d4ed8;">Restore selected</button>
+                    {% else %}
+                        <button type="submit" name="bulk_action" value="archive_selected" class="save-button" style="background:#b91c1c;border-color:#b91c1c;">Archive selected</button>
+                    {% endif %}
+                </div>
             </div>
         </div>
     </form>

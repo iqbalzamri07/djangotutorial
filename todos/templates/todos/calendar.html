@@ -561,6 +561,15 @@
 
                 <div class="field-gap"></div>
 
+                <label for="priority_input">Priority</label>
+                <select id="priority_input" name="priority">
+                    {% for value, label in priority_choices %}
+                        <option value="{{ value }}" {% if priority_value == value %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+
+                <div class="field-gap"></div>
+
                 <label for="recurrence_input">Repeat</label>
                 <select id="recurrence_input" name="recurrence">
                     {% for value, label in recurrence_choices %}

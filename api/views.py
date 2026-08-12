@@ -54,6 +54,7 @@ def api_root(request, format=None):
             "auth_logout": reverse("api-logout", request=request, format=format),
             "auth_me": reverse("api-me", request=request, format=format),
             "todos": reverse("api-todo-list", request=request, format=format),
+            "tags": reverse("api-tags", request=request, format=format),
             "posts": reverse("api-post-list", request=request, format=format),
         }
     )

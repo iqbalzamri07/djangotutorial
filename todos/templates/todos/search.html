@@ -571,23 +571,48 @@
                     <a class="when-card {% if when == 'month' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=month&sort={{ sort }}">
                         <span class="icon">🌙</span>This month
                     </a>
-                    <a class="when-card {% if when == 'upcoming' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=upcoming&sort={{ sort }}">
+                    <a class="when-card {% if when == 'due_soon' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=due_soon&sort={{ sort }}&priority={{ priority }}&tag={{ tag }}">
+                        <span class="icon">⏰</span>Due soon
+                    </a>
+                    <a class="when-card {% if when == 'upcoming' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=upcoming&sort={{ sort }}&priority={{ priority }}&tag={{ tag }}">
                         <span class="icon">🚀</span>Upcoming
                     </a>
-                    <a class="when-card {% if when == 'undated' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=undated&sort={{ sort }}">
+                    <a class="when-card {% if when == 'undated' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=undated&sort={{ sort }}&priority={{ priority }}&tag={{ tag }}">
                         <span class="icon">📝</span>No dates
                     </a>
                 </div>
             </div>
 
             <div class="filter-group">
+                <p class="filter-title">Priority</p>
+                <div class="sort-grid">
+                    <a class="chip {% if priority == 'all' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort={{ sort }}&priority=all&tag={{ tag }}">Any</a>
+                    <a class="chip {% if priority == 'high' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort={{ sort }}&priority=high&tag={{ tag }}">High</a>
+                    <a class="chip {% if priority == 'medium' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort={{ sort }}&priority=medium&tag={{ tag }}">Medium</a>
+                    <a class="chip {% if priority == 'low' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort={{ sort }}&priority=low&tag={{ tag }}">Low</a>
+                </div>
+            </div>
+
+            {% if all_tags %}
+            <div class="filter-group">
+                <p class="filter-title">Tags</p>
+                <div class="sort-grid">
+                    <a class="chip {% if not tag %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort={{ sort }}&priority={{ priority }}">Any</a>
+                    {% for item in all_tags %}
+                        <a class="chip {% if tag == item.slug %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort={{ sort }}&priority={{ priority }}&tag={{ item.slug }}">{{ item.name }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="filter-group">
                 <p class="filter-title">Sort</p>
                 <div class="sort-grid">
-                    <a class="chip {% if sort == 'status' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort=status">Status</a>
-                    <a class="chip {% if sort == 'newest' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort=newest">Newest</a>
-                    <a class="chip {% if sort == 'oldest' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort=oldest">Oldest</a>
-                    <a class="chip {% if sort == 'title' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort=title">Title</a>
-                    <a class="chip {% if sort == 'start' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort=start">Start date</a>
+                    <a class="chip {% if sort == 'status' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort=status&priority={{ priority }}&tag={{ tag }}">Status</a>
+                    <a class="chip {% if sort == 'priority' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort=priority&priority={{ priority }}&tag={{ tag }}">Priority</a>
+                    <a class="chip {% if sort == 'newest' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort=newest&priority={{ priority }}&tag={{ tag }}">Newest</a>
+                    <a class="chip {% if sort == 'title' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort=title&priority={{ priority }}&tag={{ tag }}">Title</a>
+                    <a class="chip {% if sort == 'start' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort=start&priority={{ priority }}&tag={{ tag }}">Start date</a>
                     {% if filters_active %}
                         <a class="chip clear" href="{% url 'search' %}">Clear all</a>
                     {% endif %}
@@ -626,10 +651,14 @@
                                         No dates yet
                                     {% endif %}
                                 </span>
+                                <span class="meta-pill">{{ todo.get_priority_display }}</span>
                                 <span class="meta-pill">Added {{ todo.created_at|date:"M j" }}</span>
                                 {% if todo.recurrence %}
                                     <span class="meta-pill repeat">↻ {{ todo.get_recurrence_display }}</span>
                                 {% endif %}
+                                {% for tag in todo.tags.all %}
+                                    <span class="meta-pill repeat">{{ tag.name }}</span>
+                                {% endfor %}
                             </div>
                         </div>
                         <div class="side-actions">

@@ -2,7 +2,7 @@ from django.urls import path
 from rest_framework.routers import SimpleRouter
 
 from blog.api_views import PostViewSet
-from todos.api_views import TodoViewSet
+from todos.api_views import TagListAPIView, TodoViewSet
 
 from . import views
 
@@ -16,4 +16,5 @@ urlpatterns = [
     path("auth/login/", views.LoginAPIView.as_view(), name="api-login"),
     path("auth/logout/", views.LogoutAPIView.as_view(), name="api-logout"),
     path("auth/me/", views.MeAPIView.as_view(), name="api-me"),
+    path("tags/", TagListAPIView.as_view(), name="api-tags"),
 ] + router.urls

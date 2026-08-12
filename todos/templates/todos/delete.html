@@ -183,18 +183,18 @@
 {% include "todos/_nav.html" with active_nav="edit" %}
 <div class="page">
     {% url 'edit_todos' as edit_url %}
-    {% include "todos/_page_banner.html" with banner="edit" banner_mark="!" banner_chip_1="One-way door" banner_chip_2="Cannot undo" banner_title="Delete Todo" action1_url=edit_url action1_label="Keep it · go back" %}
+    {% include "todos/_page_banner.html" with banner="edit" banner_mark="🗄" banner_chip_1="Archive first" banner_chip_2="History stays" banner_title="Archive Todo" action1_url=edit_url action1_label="Keep it · go back" %}
 
 <div class="card">
 
 <div class="icon">
-    ⚠️
+    🗄
 </div>
 
-<h1>Delete Todo?</h1>
+<h1>Archive this todo?</h1>
 
 <p class="message">
-    Are you sure you want to delete this Todo?
+    Archiving hides it from your active lists but keeps history for Activity.
 </p>
 
 <div class="todo-title">
@@ -202,7 +202,7 @@
 </div>
 
 <div class="warning">
-    ⚠️ This action cannot be undone.
+    You can restore it later, or permanently delete it below.
 </div>
 
 
@@ -221,9 +221,22 @@
 
         <button
             type="submit"
+            name="action"
+            value="archive"
             class="action-button delete-button"
+            style="background:#0f766e;border-color:#0f766e;"
         >
-            Yes, Delete
+            Archive
+        </button>
+
+        <button
+            type="submit"
+            name="action"
+            value="delete_forever"
+            class="action-button delete-button"
+            onclick="return confirm('Permanently delete this todo? This cannot be undone.');"
+        >
+            Delete forever
         </button>
 
     </div>

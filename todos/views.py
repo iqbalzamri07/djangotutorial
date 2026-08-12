@@ -5,12 +5,14 @@ from django.contrib.auth import login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from django.core.paginator import Paginator
-from django.db.models import Q
+from django.db.models import Count, Q
+from django.db.models.functions import TruncDate
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
+from django.utils import timezone
 
-from .forms import ProfileForm, SignUpForm, TodoForm
-from .models import Todo
+from .forms import ProfileForm, SignUpForm, SubtaskFormSet, TodoForm
+from .models import Tag, Todo
 
 
 class CalendarItem:
@@ -19,6 +21,7 @@ class CalendarItem:
         self.id = todo.id
         self.title = todo.title
         self.notes = todo.notes
+        self.priority = todo.priority
         self.recurrence = todo.recurrence
         self.recurrence_until = todo.recurrence_until
         self.start_date = start_date
@@ -39,11 +42,16 @@ class CalendarItem:
     def get_recurrence_display(self):
         return self.todo.get_recurrence_display()
 
+    def get_priority_display(self):
+        return self.todo.get_priority_display()
+
+
 TODOS_PER_PAGE = 8
 
 STATUS_FILTERS = ("all", "pending", "completed")
-WHEN_FILTERS = ("all", "today", "week", "month", "upcoming", "undated")
-SORT_FILTERS = ("status", "newest", "oldest", "title", "start")
+WHEN_FILTERS = ("all", "today", "week", "month", "upcoming", "undated", "due_soon")
+SORT_FILTERS = ("status", "newest", "oldest", "title", "start", "priority")
+PRIORITY_FILTERS = ("all", "low", "medium", "high")
 STATUS_LABELS = {
     "all": "All tasks",
     "pending": "Pending",
@@ -56,6 +64,7 @@ WHEN_LABELS = {
     "month": "This month",
     "upcoming": "Upcoming",
     "undated": "No dates",
+    "due_soon": "Due soon",
 }
 SORT_LABELS = {
     "status": "Status",
@@ -63,6 +72,13 @@ SORT_LABELS = {
     "oldest": "Oldest",
     "title": "Title",
     "start": "Start date",
+    "priority": "Priority",
+}
+PRIORITY_LABELS = {
+    "all": "Any priority",
+    "low": "Low",
+    "medium": "Medium",
+    "high": "High",
 }
 
 
@@ -75,11 +91,31 @@ def month_bounds(today):
     return start, end
 
 
-def apply_todo_filters(todos, request):
+def user_todos(user, include_archived=False):
+    todos = Todo.objects.filter(user=user)
+    if not include_archived:
+        todos = todos.filter(archived=False)
+    return todos.prefetch_related("tags", "subtasks")
+
+
+def due_soon_todos(user, today=None):
+    today = today or date.today()
+    tomorrow = today + timedelta(days=1)
+    return (
+        user_todos(user)
+        .filter(completed=False, end_date__gte=today, end_date__lte=tomorrow)
+        .order_by("end_date", "priority", "title")
+    )
+
+
+def apply_todo_filters(todos, request, include_archived=False):
     query = request.GET.get("q", "").strip()
     status = request.GET.get("status", "all")
     when = request.GET.get("when", "all")
     sort = request.GET.get("sort", "status")
+    priority = request.GET.get("priority", "all")
+    tag_slug = request.GET.get("tag", "").strip()
+    show_archived = request.GET.get("archived", "") == "1" or include_archived
 
     if status not in STATUS_FILTERS:
         status = "all"
@@ -87,23 +123,46 @@ def apply_todo_filters(todos, request):
         when = "all"
     if sort not in SORT_FILTERS:
         sort = "status"
+    if priority not in PRIORITY_FILTERS:
+        priority = "all"
 
     today = date.today()
 
+    if not show_archived:
+        todos = todos.filter(archived=False)
+    elif request.GET.get("archived") == "1":
+        todos = todos.filter(archived=True)
+
     if query:
         todos = todos.filter(
-            Q(title__icontains=query) | Q(notes__icontains=query)
-        )
+            Q(title__icontains=query)
+            | Q(notes__icontains=query)
+            | Q(tags__name__icontains=query)
+            | Q(subtasks__title__icontains=query)
+        ).distinct()
 
     if status == "pending":
         todos = todos.filter(completed=False)
     elif status == "completed":
         todos = todos.filter(completed=True)
 
+    if priority != "all":
+        todos = todos.filter(priority=priority)
+
+    if tag_slug:
+        todos = todos.filter(tags__slug=tag_slug).distinct()
+
     if when == "today":
         todos = todos.filter(
             Q(start_date=today, end_date__isnull=True)
             | Q(start_date__lte=today, end_date__gte=today)
+        )
+    elif when == "due_soon":
+        tomorrow = today + timedelta(days=1)
+        todos = todos.filter(
+            completed=False,
+            end_date__gte=today,
+            end_date__lte=tomorrow,
         )
     elif when == "week":
         week_start = today - timedelta(days=today.weekday())
@@ -147,20 +206,50 @@ def apply_todo_filters(todos, request):
         todos = todos.order_by("title")
     elif sort == "start":
         todos = todos.order_by("start_date", "title")
+    elif sort == "priority":
+        todos = todos.order_by(
+            models_priority_order(),
+            "completed",
+            "start_date",
+            "title",
+        )
     else:
-        todos = todos.order_by("completed", "start_date", "title")
+        todos = todos.order_by("completed", models_priority_order(), "start_date", "title")
 
+    Tag.ensure_defaults()
     return {
         "todos": todos,
         "query": query,
         "status": status,
         "when": when,
         "sort": sort,
+        "priority": priority,
+        "tag": tag_slug,
+        "archived_view": request.GET.get("archived") == "1",
+        "all_tags": Tag.objects.all(),
         "filters_active": bool(
-            query or status != "all" or when != "all" or sort != "status"
+            query
+            or status != "all"
+            or when != "all"
+            or sort != "status"
+            or priority != "all"
+            or tag_slug
+            or request.GET.get("archived") == "1"
         ),
         "result_count": todos.count(),
     }
+
+
+def models_priority_order():
+    from django.db.models import Case, IntegerField, When
+
+    return Case(
+        When(priority=Todo.PRIORITY_HIGH, then=0),
+        When(priority=Todo.PRIORITY_MEDIUM, then=1),
+        When(priority=Todo.PRIORITY_LOW, then=2),
+        default=3,
+        output_field=IntegerField(),
+    )
 
 
 def paginate_todos(queryset, request, per_page=TODOS_PER_PAGE):
@@ -183,6 +272,7 @@ def mark_overdue_todos_completed(user=None):
     today = date.today()
     todos = Todo.objects.filter(
         completed=False,
+        archived=False,
         end_date__isnull=False,
         end_date__lt=today,
     )
@@ -193,10 +283,36 @@ def mark_overdue_todos_completed(user=None):
     if not overdue:
         return
 
-    Todo.objects.filter(pk__in=[todo.pk for todo in overdue]).update(completed=True)
+    now = timezone.now()
+    Todo.objects.filter(pk__in=[todo.pk for todo in overdue]).update(
+        completed=True,
+        completed_at=now,
+    )
     for todo in overdue:
         todo.completed = True
+        todo.completed_at = now
         todo.spawn_next_occurrence()
+
+
+def completion_streak(user, today=None):
+    today = today or date.today()
+    days = (
+        user_todos(user, include_archived=True)
+        .filter(completed=True, completed_at__isnull=False)
+        .annotate(day=TruncDate("completed_at"))
+        .values_list("day", flat=True)
+        .distinct()
+    )
+    completed_days = {d for d in days if d}
+    streak = 0
+    cursor = today
+    # If nothing completed today, allow streak to count from yesterday.
+    if cursor not in completed_days:
+        cursor = today - timedelta(days=1)
+    while cursor in completed_days:
+        streak += 1
+        cursor -= timedelta(days=1)
+    return streak
 
 
 def signup(request):
@@ -246,7 +362,7 @@ def logout_view(request):
 @login_required
 def profile(request):
     mark_overdue_todos_completed(request.user)
-    todos = Todo.objects.filter(user=request.user)
+    todos = user_todos(request.user)
     profile_form = ProfileForm(instance=request.user)
     password_form = PasswordChangeForm(request.user)
     profile_saved = False
@@ -279,6 +395,7 @@ def profile(request):
             "pending_tasks": todos.filter(completed=False).count(),
             "completed_tasks": todos.filter(completed=True).count(),
             "recent_todos": todos.order_by("-created_at")[:5],
+            "streak": completion_streak(request.user),
         },
     )
 
@@ -286,13 +403,14 @@ def profile(request):
 @login_required
 def home(request):
     mark_overdue_todos_completed(request.user)
-    all_todos = Todo.objects.filter(user=request.user)
+    all_todos = user_todos(request.user)
     completed_tasks = all_todos.filter(completed=True).count()
     pending_tasks = all_todos.filter(completed=False).count()
     total_tasks = all_todos.count()
     progress_percent = int((completed_tasks / total_tasks) * 100) if total_tasks else 0
     filtered = apply_todo_filters(all_todos, request)
     filtered.update(paginate_todos(filtered["todos"], request))
+    due_soon = due_soon_todos(request.user)
 
     hour = datetime.now().hour
     if hour < 12:
@@ -309,6 +427,7 @@ def home(request):
             todo = form.save(commit=False)
             todo.user = request.user
             todo.save()
+            form.save_m2m()
             return redirect("home")
     else:
         form = TodoForm()
@@ -324,6 +443,8 @@ def home(request):
             "progress_percent": progress_percent,
             "greeting": greeting,
             "today": date.today(),
+            "due_soon": due_soon,
+            "streak": completion_streak(request.user),
             **filtered,
         },
     )
@@ -332,13 +453,15 @@ def home(request):
 @login_required
 def search_todos(request):
     mark_overdue_todos_completed(request.user)
-    all_todos = Todo.objects.filter(user=request.user)
+    all_todos = user_todos(request.user, include_archived=True)
     filtered = apply_todo_filters(all_todos, request)
     filtered.update(paginate_todos(filtered["todos"], request))
 
-    counted = all_todos
+    counted = user_todos(request.user)
     if filtered["query"]:
-        counted = counted.filter(title__icontains=filtered["query"])
+        counted = counted.filter(
+            Q(title__icontains=filtered["query"]) | Q(notes__icontains=filtered["query"])
+        )
 
     filtered.update(
         {
@@ -348,6 +471,7 @@ def search_todos(request):
             "status_label": STATUS_LABELS[filtered["status"]],
             "when_label": WHEN_LABELS[filtered["when"]],
             "sort_label": SORT_LABELS[filtered["sort"]],
+            "priority_label": PRIORITY_LABELS[filtered["priority"]],
         }
     )
     return render(request, "todos/search.html", filtered)
@@ -357,14 +481,22 @@ def search_todos(request):
 def edit_todos(request):
     mark_overdue_todos_completed(request.user)
     filtered = apply_todo_filters(
-        Todo.objects.filter(user=request.user),
+        user_todos(request.user, include_archived=True),
         request,
     )
     filtered.update(paginate_todos(filtered["todos"], request))
-    todos = filtered["todos"]
+    todos = list(filtered["todos"])
 
     if request.method == "POST":
+        action = request.POST.get("bulk_action", "save")
         for todo in todos:
+            if action == "archive_selected" and f"selected_{todo.id}" in request.POST:
+                todo.archive()
+                continue
+            if action == "restore_selected" and f"selected_{todo.id}" in request.POST:
+                todo.restore()
+                continue
+
             was_completed = todo.completed
             todo.completed = f"completed_{todo.id}" in request.POST
             todo.save()
@@ -385,12 +517,24 @@ def delete(request, todo_id):
     todo = get_object_or_404(Todo, id=todo_id, user=request.user)
 
     if request.method == "POST":
-        todo.delete()
-        return redirect("home")
+        action = request.POST.get("action", "archive")
+        if action == "delete_forever":
+            todo.delete()
+        else:
+            todo.archive()
+        return redirect("edit_todos")
 
     return render(request, "todos/delete.html", {
         "todo": todo,
     })
+
+
+@login_required
+def restore_todo(request, todo_id):
+    todo = get_object_or_404(Todo, id=todo_id, user=request.user)
+    if request.method == "POST":
+        todo.restore()
+    return redirect("edit_todos")
 
 
 @login_required
@@ -399,25 +543,90 @@ def edit(request, todo_id):
 
     if request.method == "POST":
         form = TodoForm(request.POST, instance=todo)
-
-        if form.is_valid():
+        formset = SubtaskFormSet(request.POST, instance=todo)
+        if form.is_valid() and formset.is_valid():
             form.save()
+            formset.save()
             return redirect("edit_todos")
-
     else:
         form = TodoForm(instance=todo)
+        formset = SubtaskFormSet(instance=todo)
 
     return render(request, "todos/edit.html", {
         "form": form,
+        "formset": formset,
         "todo": todo,
     })
+
+
+@login_required
+def activity(request):
+    mark_overdue_todos_completed(request.user)
+    today = date.today()
+    week_start = today - timedelta(days=today.weekday())
+    week_days = [week_start + timedelta(days=i) for i in range(7)]
+
+    completed_qs = (
+        user_todos(request.user, include_archived=True)
+        .filter(completed=True, completed_at__isnull=False)
+    )
+    week_completed = completed_qs.filter(
+        completed_at__date__gte=week_start,
+        completed_at__date__lte=today,
+    )
+    by_day = {
+        row["day"]: row["total"]
+        for row in week_completed.annotate(day=TruncDate("completed_at"))
+        .values("day")
+        .annotate(total=Count("id"))
+    }
+    week_chart = [
+        {
+            "date": day,
+            "label": day.strftime("%a"),
+            "count": by_day.get(day, 0),
+            "height": max(8, by_day.get(day, 0) * 18),
+        }
+        for day in week_days
+    ]
+    max_count = max((item["count"] for item in week_chart), default=0) or 1
+    for item in week_chart:
+        item["height"] = max(8, int((item["count"] / max_count) * 120))
+
+    month_start, _ = month_bounds(today)
+    recent = completed_qs.order_by("-completed_at")[:12]
+    priority_breakdown = (
+        user_todos(request.user)
+        .filter(completed=False)
+        .values("priority")
+        .annotate(total=Count("id"))
+    )
+    priority_map = {row["priority"]: row["total"] for row in priority_breakdown}
+
+    return render(
+        request,
+        "todos/activity.html",
+        {
+            "today": today,
+            "week_chart": week_chart,
+            "week_total": week_completed.count(),
+            "month_total": completed_qs.filter(completed_at__date__gte=month_start).count(),
+            "streak": completion_streak(request.user, today),
+            "recent_completed": recent,
+            "due_soon": due_soon_todos(request.user, today),
+            "high_open": priority_map.get(Todo.PRIORITY_HIGH, 0),
+            "medium_open": priority_map.get(Todo.PRIORITY_MEDIUM, 0),
+            "low_open": priority_map.get(Todo.PRIORITY_LOW, 0),
+            "archived_count": Todo.objects.filter(user=request.user, archived=True).count(),
+        },
+    )
 
 
 def about(request):
     from blog.models import Post
 
     if request.user.is_authenticated:
-        todos = Todo.objects.filter(user=request.user)
+        todos = user_todos(request.user)
     else:
         todos = Todo.objects.none()
 
@@ -461,16 +670,14 @@ def calendar(request):
     window_start = month_start_date - timedelta(days=7)
     window_end = month_end_date + timedelta(days=7)
 
-    actual_todos = Todo.objects.filter(
-        user=request.user,
+    actual_todos = user_todos(request.user).filter(
         start_date__isnull=False,
     ).filter(
         Q(end_date__isnull=True, start_date__gte=window_start, start_date__lte=window_end)
         | Q(end_date__isnull=False, start_date__lte=window_end, end_date__gte=window_start)
     ).order_by("start_date", "end_date", "title")
 
-    recurring_todos = Todo.objects.filter(
-        user=request.user,
+    recurring_todos = user_todos(request.user).filter(
         start_date__isnull=False,
         recurrence__gt="",
     ).order_by("start_date", "id")
@@ -538,6 +745,7 @@ def calendar(request):
     end_date_value = ""
     recurrence_value = ""
     recurrence_until_value = ""
+    priority_value = Todo.PRIORITY_MEDIUM
     form = None
     if request.method == "POST":
         form = TodoForm(request.POST)
@@ -545,6 +753,7 @@ def calendar(request):
             todo = form.save(commit=False)
             todo.user = request.user
             todo.save()
+            form.save_m2m()
             calendar_url = reverse("calendar")
             redirect_date = todo.start_date or date(year, month, 1)
             return redirect(
@@ -558,6 +767,7 @@ def calendar(request):
         end_date_value = request.POST.get("end_date", "")
         recurrence_value = request.POST.get("recurrence", "")
         recurrence_until_value = request.POST.get("recurrence_until", "")
+        priority_value = request.POST.get("priority", Todo.PRIORITY_MEDIUM)
 
     return render(
         request,
@@ -578,6 +788,8 @@ def calendar(request):
             "end_date_value": end_date_value,
             "recurrence_value": recurrence_value,
             "recurrence_until_value": recurrence_until_value,
+            "priority_value": priority_value,
+            "priority_choices": Todo.PRIORITY_CHOICES,
             "recurrence_choices": Todo.RECURRENCE_CHOICES,
             "form": form,
         },
@@ -602,6 +814,7 @@ def calendar_add(request):
             todo = form.save(commit=False)
             todo.user = request.user
             todo.save()
+            form.save_m2m()
             redirect_date = todo.start_date or selected_date
             calendar_url = reverse("calendar")
             return redirect(
