@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Notes from Building</title>
+    {% include "todos/_nav_styles.html" %}
     <style>
         * { box-sizing: border-box; }
 
@@ -21,11 +22,7 @@
             margin: 36px auto 70px;
         }
 
-        .top {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            gap: 16px;
+        .header {
             margin-bottom: 28px;
         }
 
@@ -51,18 +48,6 @@
             color: #57534e;
             font-size: 17px;
             line-height: 1.5;
-        }
-
-        .nav-link {
-            font-family: "Segoe UI", sans-serif;
-            text-decoration: none;
-            color: #1c1917;
-            border: 1px solid #d6d3d1;
-            background: #fff;
-            border-radius: 999px;
-            padding: 10px 16px;
-            font-weight: 700;
-            font-size: 14px;
         }
 
         .filters {
@@ -190,7 +175,7 @@
         }
 
         @media (max-width: 800px) {
-            .top, .featured, .grid { display: block; }
+            .header, .featured, .grid { display: block; }
             h1 { font-size: 32px; }
             .featured-art { min-height: 160px; }
             .card { margin-bottom: 12px; }
@@ -199,7 +184,7 @@
 </head>
 <body>
 <div class="wrap">
-    <div class="top">
+    <div class="header">
         <div>
             <p class="kicker">A learning journal</p>
             <h1>Notes from Building</h1>
@@ -208,19 +193,7 @@
                 popups, and all the tiny mistakes that taught me the most.
             </p>
         </div>
-        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
-            {% if user.is_authenticated %}
-                <a class="nav-link" href="{% url 'profile' %}">👤 {{ user.username }}</a>
-                <form method="post" action="{% url 'logout' %}" style="margin:0;">
-                    {% csrf_token %}
-                    <button type="submit" class="nav-link" style="cursor:pointer;font-family:inherit;">Log out</button>
-                </form>
-            {% else %}
-                <a class="nav-link" href="{% url 'login' %}">Log in</a>
-                <a class="nav-link" href="{% url 'signup' %}">Sign up</a>
-            {% endif %}
-            <a class="nav-link" href="{% url 'home' %}">← Todo App</a>
-        </div>
+        {% include "todos/_nav.html" with active_nav="blog" %}
     </div>
 
     <div class="filters">

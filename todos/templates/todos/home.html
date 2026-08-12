@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Todo App</title>
+    {% include "todos/_nav_styles.html" %}
     <style>
         * { box-sizing: border-box; }
 
@@ -47,98 +48,6 @@
         .title-section p {
             margin: 6px 0 0;
             color: #57534e;
-        }
-
-        .nav {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: flex-end;
-        }
-
-        .nav form { margin: 0; }
-
-        .button {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 9px 14px;
-            background: #fff;
-            color: #44403c;
-            text-decoration: none;
-            border: 1px solid #d6d3d1;
-            border-radius: 999px;
-            font-size: 13px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 16px rgba(28, 25, 23, 0.1);
-        }
-
-        .button.about:hover {
-            background: #fff7ed;
-            color: #c2410c;
-            border-color: #fdba74;
-        }
-
-        .button.blog:hover {
-            background: #f5f3ff;
-            color: #6d28d9;
-            border-color: #c4b5fd;
-        }
-
-        .button.calendar:hover {
-            background: #ecfdf5;
-            color: #0f766e;
-            border-color: #5eead4;
-        }
-
-        .button.edit:hover {
-            background: #f8eaff;
-            color: #651f83;
-            border-color: #bf59eb;
-        }
-
-        .button.search:hover {
-            background: #fffbeb;
-            color: #b45309;
-            border-color: #fcd34d;
-        }
-
-        .button.login:hover {
-            background: #eff6ff;
-            color: #1d4ed8;
-            border-color: #93c5fd;
-        }
-
-        .button.signup:hover {
-            background: #0f766e;
-            color: #fff;
-            border-color: #0f766e;
-        }
-
-        .button.logout {
-            font-family: inherit;
-            background: #fef2f2;
-            color: #b91c1c;
-            border-color: #fecaca;
-        }
-
-        .button.logout:hover {
-            background: #b91c1c;
-            color: #fff;
-            border-color: #b91c1c;
-        }
-
-        .button.profile:hover {
-            background: #eff6ff;
-            color: #1d4ed8;
-            border-color: #93c5fd;
         }
 
         .pagination {
@@ -516,24 +425,7 @@
             <p>Plan tasks, track progress, and keep your calendar in one place.</p>
         </div>
 
-        <div class="nav">
-            <a href="{% url 'about' %}" class="button about">About</a>
-            <a href="{% url 'blog:blog' %}" class="button blog">Blog</a>
-            <a href="{% url 'calendar' %}" class="button calendar">Calendar</a>
-            <a href="{% url 'search' %}" class="button search">Search</a>
-            <a href="{% url 'edit_todos' %}" class="button edit">Edit Todos</a>
-
-            {% if user.is_authenticated %}
-                <a href="{% url 'profile' %}" class="button profile">Profile</a>
-                <form method="post" action="{% url 'logout' %}">
-                    {% csrf_token %}
-                    <button type="submit" class="button logout">Log out</button>
-                </form>
-            {% else %}
-                <a href="{% url 'login' %}" class="button login">Log in</a>
-                <a href="{% url 'signup' %}" class="button signup">Sign up</a>
-            {% endif %}
-        </div>
+        {% include "todos/_nav.html" with active_nav="home" %}
     </div>
 
     <div class="hero">

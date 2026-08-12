@@ -9,7 +9,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Delete Todo</title>
-
+{% include "todos/_nav_styles.html" %}
 <style>
 
     * {
@@ -19,24 +19,40 @@
     body {
         margin: 0;
         min-height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        font-family: "Segoe UI", Tahoma, sans-serif;
+        background: #f6f1e8;
+        color: #1c1917;
+    }
 
-        font-family: Arial, Helvetica, sans-serif;
+    .page {
+        width: 94%;
+        max-width: 1080px;
+        margin: 36px auto 70px;
+    }
 
-        background: linear-gradient(
-            135deg,
-            #eff6ff,
-            #f8fafc
-        );
+    .kicker {
+        margin: 0 0 6px;
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: #0f766e;
+    }
 
-        color: #1f2937;
+    .header h1 {
+        margin: 0;
+        font-size: 32px;
+    }
+
+    .header p {
+        margin: 6px 0 0;
+        color: #57534e;
     }
 
     .card {
-        width: 90%;
+        width: 100%;
         max-width: 500px;
+        margin: 0 auto;
 
         background: white;
 
@@ -107,19 +123,17 @@
         gap: 10px;
     }
 
-    .button {
+    .action-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
         padding: 11px 20px;
-
-        border-radius: 8px;
-
+        border-radius: 999px;
         font-size: 14px;
-
         font-weight: 700;
-
         text-decoration: none;
-
         cursor: pointer;
-
+        font-family: inherit;
         transition: all 0.2s ease;
     }
 
@@ -159,7 +173,7 @@
             flex-direction: column;
         }
 
-        .button {
+        .action-button {
             width: 100%;
         }
 
@@ -170,6 +184,15 @@
 </head>
 
 <body>
+<div class="page">
+    <div class="header">
+        <div>
+            <p class="kicker">Manage tasks</p>
+            <h1>Delete Todo</h1>
+            <p>Confirm before this task is removed.</p>
+        </div>
+        {% include "todos/_nav.html" with active_nav="edit" %}
+    </div>
 
 <div class="card">
 
@@ -200,22 +223,23 @@
 
         <a
             href="{% url 'edit_todos' %}"
-            class="button cancel-button"
+            class="action-button cancel-button"
         >
             Cancel
         </a>
 
         <button
             type="submit"
-            class="button delete-button"
+            class="action-button delete-button"
         >
-            🗑️ Yes, Delete
+            Yes, Delete
         </button>
 
     </div>
 
 </form>
 
+</div>
 </div>
 
 </body>

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ post.title }}</title>
+    {% include "todos/_nav_styles.html" %}
     <style>
         * { box-sizing: border-box; }
 
@@ -16,28 +17,17 @@
         }
 
         .wrap {
-            width: 92%;
-            max-width: 760px;
+            width: 94%;
+            max-width: 1080px;
             margin: 36px auto 70px;
         }
 
-        .top-nav {
-            display: flex;
-            justify-content: space-between;
-            gap: 10px;
+        .header {
             margin-bottom: 28px;
-            font-family: "Segoe UI", sans-serif;
         }
 
-        .top-nav a {
-            text-decoration: none;
-            color: #1c1917;
-            background: #fff;
-            border: 1px solid #d6d3d1;
-            border-radius: 999px;
-            padding: 9px 14px;
-            font-size: 13px;
-            font-weight: 700;
+        .article {
+            max-width: 760px;
         }
 
         .meta {
@@ -123,11 +113,15 @@
 </head>
 <body>
 <div class="wrap">
-    <div class="top-nav">
-        <a href="{% url 'blog:blog' %}">← All posts</a>
-        <a href="{% url 'home' %}">Todo App</a>
+    <div class="header">
+        <div>
+            <p class="kicker" style="margin:0 0 6px;font-family:'Segoe UI',sans-serif;font-size:12px;font-weight:800;letter-spacing:0.14em;text-transform:uppercase;color:#b45309;">Blog</p>
+            <h2 style="margin:0;font-size:28px;font-family:'Segoe UI',sans-serif;">Reading</h2>
+        </div>
+        {% include "todos/_nav.html" with active_nav="blog" %}
     </div>
 
+    <article class="article">
     <div class="meta">
         {{ post.get_category_display }} · {{ post.created_at|date:"M j, Y" }} · {{ post.reading_time }} min read
     </div>
@@ -149,6 +143,7 @@
             {% endfor %}
         </div>
     {% endif %}
+    </article>
 </div>
 </body>
 </html>

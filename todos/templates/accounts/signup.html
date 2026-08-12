@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign up</title>
+    {% include "todos/_nav_styles.html" %}
     <style>
         * { box-sizing: border-box; }
         body {
@@ -13,13 +14,26 @@
             background: #f6f1e8;
             color: #1c1917;
         }
-        .wrap {
-            width: 92%;
-            max-width: 500px;
-            margin: 60px auto;
+        .page {
+            width: 94%;
+            max-width: 1080px;
+            margin: 36px auto 70px;
         }
-        h1 { margin: 0 0 8px; font-size: 32px; }
-        p { color: #57534e; }
+        .kicker {
+            margin: 0 0 6px;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: #0f766e;
+        }
+        .header h1 { margin: 0; font-size: 32px; }
+        .header p { margin: 6px 0 0; color: #57534e; }
+        .wrap {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+        }
         .card {
             background: #fff;
             border: 1px solid #e7e5e4;
@@ -60,7 +74,7 @@
             line-height: 1;
         }
         .helptext { display: block; color: #78716c; font-size: 12px; margin: -8px 0 12px; }
-        button[type="submit"] {
+        .card button[type="submit"] {
             width: 100%;
             border: none;
             background: #0f766e;
@@ -77,9 +91,16 @@
     </style>
 </head>
 <body>
-<div class="wrap">
-    <h1>Create an account</h1>
-    <p>Sign up to keep your todos private to you.</p>
+<div class="page">
+    <div class="header">
+        <div>
+            <p class="kicker">Account</p>
+            <h1>Create an account</h1>
+            <p>Sign up to keep your todos private to you.</p>
+        </div>
+        {% include "todos/_nav.html" with active_nav="signup" %}
+    </div>
+    <div class="wrap">
     <div class="card">
         <form method="POST">
             {% csrf_token %}
@@ -89,6 +110,7 @@
         <div class="alt">
             Already have an account? <a href="{% url 'login' %}">Log in</a>
         </div>
+    </div>
     </div>
 </div>
 <script>

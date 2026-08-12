@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Todo</title>
+    {% include "todos/_nav_styles.html" %}
     <style>
         * { box-sizing: border-box; }
 
@@ -19,14 +20,6 @@
             width: 94%;
             max-width: 680px;
             margin: 36px auto 70px;
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 16px;
-            margin-bottom: 20px;
         }
 
         .kicker {
@@ -47,37 +40,6 @@
         .header p {
             margin: 6px 0 0;
             color: #57534e;
-        }
-
-        .nav {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            justify-content: flex-end;
-        }
-
-        .button {
-            display: inline-flex;
-            align-items: center;
-            padding: 9px 14px;
-            background: #fff;
-            color: #44403c;
-            text-decoration: none;
-            border: 1px solid #d6d3d1;
-            border-radius: 999px;
-            font-size: 13px;
-            font-weight: 700;
-            cursor: pointer;
-            font-family: inherit;
-            transition: all 0.2s ease;
-        }
-
-        .button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 16px rgba(28, 25, 23, 0.1);
-            background: #ecfdf5;
-            color: #0f766e;
-            border-color: #5eead4;
         }
 
         .card {
@@ -242,12 +204,7 @@
             <h1>Edit Todo</h1>
             <p>Change the title or date range, then save.</p>
         </div>
-        <div class="nav">
-            <a href="{% url 'edit_todos' %}" class="button">← All todos</a>
-            <a href="{% url 'search' %}" class="button">Search</a>
-            <a href="{% url 'profile' %}" class="button">Profile</a>
-            <a href="{% url 'home' %}" class="button">Home</a>
-        </div>
+        {% include "todos/_nav.html" with active_nav="edit" %}
     </div>
 
     <div class="card">

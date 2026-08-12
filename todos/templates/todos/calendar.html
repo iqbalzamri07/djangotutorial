@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Todo Calendar</title>
-
+    {% include "todos/_nav_styles.html" %}
     <style>
         * {
             box-sizing: border-box;
@@ -26,41 +26,16 @@
             margin: 40px auto 60px;
         }
 
-        .topbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 16px;
-            margin-bottom: 18px;
-        }
-
-        .topbar h1 {
+        .header h1 {
             margin: 0;
             font-size: 28px;
             letter-spacing: -0.03em;
         }
 
-        .topbar p {
+        .header p {
             margin: 4px 0 0;
             color: #78716c;
             font-size: 14px;
-        }
-
-        .ghost-btn {
-            display: inline-flex;
-            align-items: center;
-            padding: 10px 16px;
-            background: #fff;
-            color: #44403c;
-            text-decoration: none;
-            border: 1px solid #d6d3d1;
-            border-radius: 999px;
-            font-size: 14px;
-            font-weight: 600;
-        }
-
-        .ghost-btn:hover {
-            background: #fafaf9;
         }
 
         .planner {
@@ -421,7 +396,6 @@
                 margin: 20px auto 40px;
             }
 
-            .topbar,
             .planner-head {
                 flex-direction: column;
                 align-items: flex-start;
@@ -441,27 +415,12 @@
 
 <body>
     <div class="container">
-        <div class="topbar">
+        <div class="header">
             <div>
                 <h1>Todo Calendar</h1>
                 <p>Click a day to schedule a todo across a date range</p>
             </div>
-
-            <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
-                {% if user.is_authenticated %}
-                    <a href="{% url 'profile' %}" class="ghost-btn">👤 {{ user.username }}</a>
-                    <form method="post" action="{% url 'logout' %}" style="margin:0;">
-                        {% csrf_token %}
-                        <button type="submit" class="ghost-btn" style="cursor:pointer;font-family:inherit;">Log out</button>
-                    </form>
-                {% else %}
-                    <a href="{% url 'login' %}" class="ghost-btn">Log in</a>
-                {% endif %}
-                <a href="{% url 'search' %}" class="ghost-btn">Search</a>
-                <a href="{% url 'home' %}" class="ghost-btn">
-                    ← Back to Todos
-                </a>
-            </div>
+            {% include "todos/_nav.html" with active_nav="calendar" %}
         </div>
 
         <div class="planner">
