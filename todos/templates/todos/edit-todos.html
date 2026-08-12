@@ -386,6 +386,7 @@
                     <tr>
                         <th>#</th>
                         <th>Task</th>
+                        <th>Duration</th>
                         <th>Completed</th>
                         <th>Status</th>
                         <th>Actions</th>
@@ -415,6 +416,15 @@
                                 <span class="task-title">
                                     {{ todo.title }}
                                 </span>
+                            </td>
+
+
+                            <td>
+                                {% if todo.start_date %}
+                                    {{ todo.duration_label }}
+                                {% else %}
+                                    —
+                                {% endif %}
                             </td>
 
 
@@ -489,7 +499,7 @@
 
                         <tr>
 
-                            <td colspan="5" class="empty">
+                            <td colspan="6" class="empty">
 
                                 <div class="empty-icon">
                                     📝

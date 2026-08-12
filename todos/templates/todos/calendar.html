@@ -15,250 +15,235 @@
         body {
             margin: 0;
             min-height: 100vh;
-            font-family: Arial, Helvetica, sans-serif;
-            /* Color only the calendar month card/grid. */
-            background: #f8fafc;
-            color: #1f2937;
+            font-family: "Segoe UI", Tahoma, sans-serif;
+            background: #f4f1ea;
+            color: #1c1917;
         }
 
         .container {
-            width: 92%;
-            max-width: 1050px;
-            margin: 55px auto;
+            width: 94%;
+            max-width: 1120px;
+            margin: 40px auto 60px;
         }
 
-        .header {
+        .topbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 15px;
-            margin-bottom: 25px;
+            gap: 16px;
+            margin-bottom: 18px;
         }
 
-        .header h1 {
+        .topbar h1 {
             margin: 0;
-            font-size: 30px;
-            color: #111827;
+            font-size: 28px;
+            letter-spacing: -0.03em;
         }
 
-        .header p {
-            margin: 7px 0 0;
-            color: #6b7280;
+        .topbar p {
+            margin: 4px 0 0;
+            color: #78716c;
             font-size: 14px;
         }
 
-        .nav {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            justify-content: flex-end;
-        }
-
-        .button {
+        .ghost-btn {
             display: inline-flex;
             align-items: center;
-            gap: 7px;
-            padding: 11px 18px;
-            background-color: white;
-            color: #374151;
+            padding: 10px 16px;
+            background: #fff;
+            color: #44403c;
             text-decoration: none;
-            border: 1px solid #e5e7eb;
-            border-radius: 9px;
+            border: 1px solid #d6d3d1;
+            border-radius: 999px;
             font-size: 14px;
             font-weight: 600;
-            transition: all 0.2s ease;
         }
 
-        .button:hover {
-            background-color: #f9fafb;
-            border-color: #d1d5db;
-            transform: translateY(-1px);
+        .ghost-btn:hover {
+            background: #fafaf9;
         }
 
-        .card {
-            background-color: white;
-            border-radius: 16px;
-            border: 1px solid #e5e7eb;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
+        .planner {
+            background: #fff;
+            border: 1px solid #e7e5e4;
+            border-radius: 18px;
             overflow: hidden;
+            box-shadow: 0 18px 40px rgba(28, 25, 23, 0.08);
         }
 
-        .card-header {
-            padding: 20px 24px;
-            border-bottom: 0;
-            background: linear-gradient(135deg, #8b5cf6, #ec4899, #f97316);
-        }
-
-        .card-header h2 {
-            margin: 0;
-            font-size: 18px;
-            color: #ffffff;
-            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
-        }
-
-        .card-header p {
-            margin: 6px 0 0;
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 14px;
-        }
-
-        .month-nav {
-            padding: 16px 24px;
+        .planner-head {
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            gap: 12px;
-            border-bottom: 1px solid #e5e7eb;
-            flex-wrap: wrap;
-        }
-
-        .month-nav .nav-buttons {
-            display: flex;
-            gap: 10px;
             align-items: center;
-            flex-wrap: wrap;
+            gap: 12px;
+            padding: 18px 22px;
+            background: #0f766e;
+            color: #fff;
         }
 
-        .grid {
-            padding: 18px 24px 28px;
+        .planner-head h2 {
+            margin: 0;
+            font-size: 26px;
+            font-weight: 700;
         }
 
-        .dow {
+        .planner-head p {
+            margin: 4px 0 0;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .month-switch {
+            display: flex;
+            gap: 8px;
+        }
+
+        .month-switch a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 42px;
+            height: 42px;
+            padding: 0 14px;
+            background: rgba(255, 255, 255, 0.12);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 700;
+        }
+
+        .month-switch a:hover {
+            background: rgba(255, 255, 255, 0.22);
+        }
+
+        .calendar-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .dow-row {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 8px;
-            margin-bottom: 10px;
+            background: #fafaf9;
+            border-bottom: 1px solid #e7e5e4;
         }
 
-        .dow div {
-            font-size: 12px;
-            font-weight: 800;
-            color: #111827;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
+        .dow-row div {
+            padding: 10px 8px;
             text-align: center;
-            padding: 8px 0;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #78716c;
         }
 
-        .dow div:nth-child(1) { background: #fee2e2; color: #dc2626; }
-        .dow div:nth-child(2) { background: #ffedd5; color: #ea580c; }
-        .dow div:nth-child(3) { background: #fef9c3; color: #ca8a04; }
-        .dow div:nth-child(4) { background: #dcfce7; color: #16a34a; }
-        .dow div:nth-child(5) { background: #dbeafe; color: #2563eb; }
-        .dow div:nth-child(6) { background: #e0e7ff; color: #4f46e5; }
-        .dow div:nth-child(7) { background: #f3e8ff; color: #9333ea; }
+        .dow-row div:nth-child(6),
+        .dow-row div:nth-child(7) {
+            color: #b45309;
+        }
 
         .month-cells {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 8px;
         }
 
         .day-cell {
-            background: linear-gradient(160deg, #ffffff, #f8faff);
-            border: 1px solid #e5e7eb;
-            border-radius: 12px;
-            padding: 10px 10px;
-            min-height: 92px;
+            min-height: 118px;
+            padding: 10px 8px 8px;
+            border-right: 1px solid #e7e5e4;
+            border-bottom: 1px solid #e7e5e4;
+            background: #fff;
             display: flex;
             flex-direction: column;
             gap: 6px;
-            transition: all 0.2s ease;
         }
 
-        .day-cell.has-todos {
-            border-color: #a78bfa;
-            background: linear-gradient(160deg, #faf5ff, #ede9fe);
-            box-shadow: 0 10px 30px rgba(167, 139, 250, 0.15);
+        .day-cell:nth-child(7n) {
+            border-right: none;
         }
 
-        .day-cell:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(17, 24, 39, 0.08);
-            border-color: #c7d2fe;
+        .day-cell.clickable {
+            cursor: pointer;
+        }
+
+        .day-cell.clickable:hover {
+            background: #f0fdfa;
         }
 
         .day-cell.outside {
-            background-color: #f8fafc;
-            opacity: 0.7;
-            box-shadow: none;
+            background: #fafaf9;
+            color: #a8a29e;
+        }
+
+        .day-cell.is-today {
+            background: #ecfdf5;
         }
 
         .day-number {
-            font-weight: 900;
-            color: #111827;
-            font-size: 13px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 8px;
+            font-size: 13px;
+            font-weight: 800;
         }
 
-        .day-todos {
-            margin-top: 2px;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
+        .day-number .num {
+            width: 28px;
+            height: 28px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 999px;
         }
 
-        .todo-entry {
-            padding-bottom: 6px;
-            border-bottom: 1px dashed rgba(107, 114, 128, 0.25);
-        }
-
-        .todo-entry:last-child {
-            border-bottom: none;
-            padding-bottom: 0;
-        }
-
-        .mini-todo {
-            font-size: 12px;
-            color: #1f2937;
-            font-weight: 700;
-            line-height: 1.2;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-        }
-
-        .mini-meta {
-            font-size: 11px;
-            color: #6b7280;
-            font-weight: 700;
+        .day-cell.is-today .num {
+            background: #0f766e;
+            color: #fff;
         }
 
         .todo-count {
             font-size: 11px;
-            font-weight: 900;
-            color: #ffffff;
-            background: linear-gradient(135deg, #8b5cf6, #6366f1);
-            padding: 2px 8px;
-            border-radius: 999px;
+            color: #0f766e;
+            font-weight: 800;
         }
 
-        .status {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            padding: 6px 11px;
-            border-radius: 999px;
-            font-size: 12px;
+        .day-todos {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .todo-chip {
+            display: block;
+            padding: 5px 7px;
+            border-radius: 6px;
+            font-size: 11px;
             font-weight: 700;
+            line-height: 1.25;
+            overflow: hidden;
             white-space: nowrap;
+            text-overflow: ellipsis;
+            border-left: 3px solid transparent;
         }
 
-        .completed {
-            background-color: #dcfce7;
+        .todo-chip.pending {
+            background: #fff7ed;
+            color: #9a3412;
+            border-left-color: #f97316;
+        }
+
+        .todo-chip.completed {
+            background: #ecfdf5;
             color: #166534;
+            border-left-color: #22c55e;
         }
 
-        .pending {
-            background-color: #fef3c7;
-            color: #92400e;
+        .more-count {
+            font-size: 11px;
+            color: #78716c;
+            font-weight: 700;
+            padding-left: 2px;
         }
 
         .modal-overlay {
@@ -266,26 +251,124 @@
             position: fixed;
             inset: 0;
             z-index: 50;
-            background: rgba(0, 0, 0, 0.45);
+            background: rgba(28, 25, 23, 0.45);
         }
 
         .modal-overlay.modal-visible {
             display: block;
         }
 
-        @media (max-width: 700px) {
+        .modal-card {
+            max-width: 520px;
+            margin: 8vh auto;
+            background: #fff;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 24px 70px rgba(0, 0, 0, 0.25);
+        }
+
+        .modal-head {
+            padding: 18px 22px;
+            background: #0f766e;
+            color: #fff;
+        }
+
+        .modal-head h2 {
+            margin: 0;
+            font-size: 18px;
+        }
+
+        .modal-head p {
+            margin: 6px 0 0;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        .modal-form {
+            padding: 22px;
+        }
+
+        .modal-form label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 13px;
+            font-weight: 800;
+            color: #44403c;
+        }
+
+        .modal-form input {
+            width: 100%;
+            padding: 11px 13px;
+            border: 1px solid #d6d3d1;
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: inherit;
+            outline: none;
+        }
+
+        .modal-form input:focus {
+            border-color: #0f766e;
+            box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.15);
+        }
+
+        .field-gap {
+            height: 12px;
+        }
+
+        .form-error {
+            margin-top: 14px;
+            color: #b91c1c;
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+        .modal-actions {
+            margin-top: 18px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .btn-cancel,
+        .btn-save {
+            border-radius: 10px;
+            padding: 11px 18px;
+            font-weight: 800;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .btn-cancel {
+            border: 1px solid #e7e5e4;
+            background: #fafaf9;
+            color: #44403c;
+        }
+
+        .btn-save {
+            border: none;
+            background: #0f766e;
+            color: #fff;
+        }
+
+        @media (max-width: 800px) {
             .container {
-                width: 95%;
-                margin: 30px auto;
+                width: 96%;
+                margin: 20px auto 40px;
             }
 
-            .header {
+            .topbar,
+            .planner-head {
                 flex-direction: column;
                 align-items: flex-start;
             }
 
-            .nav {
-                justify-content: flex-start;
+            .day-cell {
+                min-height: 86px;
+                padding: 6px 4px;
+            }
+
+            .todo-chip {
+                font-size: 10px;
             }
         }
     </style>
@@ -293,144 +376,124 @@
 
 <body>
     <div class="container">
-        <div class="header">
+        <div class="topbar">
             <div>
-                <h1>📅 Todo Calendar</h1>
-                <p>Monthly grid of scheduled todos</p>
+                <h1>Todo Calendar</h1>
+                <p>Click a day to schedule a todo across a date range</p>
             </div>
 
-            <div class="nav">
-                <a href="{% url 'home' %}" class="button">
-                    ← Back to Todos
-                </a>
-            </div>
+            <a href="{% url 'home' %}" class="ghost-btn">
+                ← Back to Todos
+            </a>
         </div>
 
-        <div class="card">
-            <div class="card-header">
-                <h2>{{ month_title }}</h2>
-                <p>Todos are grouped by their due date</p>
-            </div>
-            <div class="month-nav">
-                <div class="nav-buttons">
-                    <a
-                        href="?year={{ prev_year }}&month={{ prev_month }}"
-                        class="button"
-                    >
-                        ← Prev
-                    </a>
-                    <a
-                        href="?year={{ next_year }}&month={{ next_month }}"
-                        class="button"
-                    >
-                        Next →
-                    </a>
+        <div class="planner">
+            <div class="planner-head">
+                <div>
+                    <h2>{{ month_title }}</h2>
+                    <p>Todos appear on every day between start and end date</p>
+                </div>
+
+                <div class="month-switch">
+                    <a href="?year={{ prev_year }}&month={{ prev_month }}">←</a>
+                    <a href="?year={{ next_year }}&month={{ next_month }}">→</a>
                 </div>
             </div>
 
-            <div class="grid">
-                <div class="dow">
-                    <div>Mon</div>
-                    <div>Tue</div>
-                    <div>Wed</div>
-                    <div>Thu</div>
-                    <div>Fri</div>
-                    <div>Sat</div>
-                    <div>Sun</div>
-                </div>
+            <div class="dow-row">
+                <div>Mon</div>
+                <div>Tue</div>
+                <div>Wed</div>
+                <div>Thu</div>
+                <div>Fri</div>
+                <div>Sat</div>
+                <div>Sun</div>
+            </div>
 
-                <div class="month-cells">
-                    {% for week in weeks %}
-                        {% for cell in week %}
-                            <div
-                                class="day-cell {% if not cell.in_month %}outside{% else %}clickable{% endif %} {% if cell.todos %}has-todos{% endif %}"
-                                data-date="{{ cell.date|date:'Y-m-d' }}"
-                            >
-                                <div class="day-number">
-                                    <span>{{ cell.date.day }}</span>
-                                    {% if cell.todos %}
-                                        <span class="todo-count">
-                                            {{ cell.todos|length }}
-                                        </span>
-                                    {% endif %}
-                                </div>
-
-                                <div class="day-todos">
-                                    {% for todo in cell.todos %}
-                                        {% if forloop.counter <= 3 %}
-                                            <div class="todo-entry">
-                                                <div class="mini-todo">
-                                                    {{ todo.title }}
-                                                </div>
-                                                <div class="mini-meta">
-                                                    ⏰ {{ todo.due_datetime|date:"H:i" }}
-                                                    {% if todo.completed %}✓{% endif %}
-                                                </div>
-                                            </div>
-                                        {% endif %}
-                                    {% endfor %}
-                                </div>
+            <div class="month-cells">
+                {% for week in weeks %}
+                    {% for cell in week %}
+                        <div
+                            class="day-cell {% if not cell.in_month %}outside{% else %}clickable{% endif %} {% if cell.is_today %}is-today{% endif %}"
+                            data-date="{{ cell.date|date:'Y-m-d' }}"
+                        >
+                            <div class="day-number">
+                                <span class="num">{{ cell.date.day }}</span>
+                                {% if cell.todos %}
+                                    <span class="todo-count">{{ cell.todos|length }}</span>
+                                {% endif %}
                             </div>
-                        {% endfor %}
+
+                            <div class="day-todos">
+                                {% for todo in cell.todos %}
+                                    {% if forloop.counter <= 3 %}
+                                        <div class="todo-chip {% if todo.completed %}completed{% else %}pending{% endif %}">
+                                            {{ todo.title }}
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% if cell.todos|length > 3 %}
+                                    <div class="more-count">+{{ cell.todos|length|add:"-3" }} more</div>
+                                {% endif %}
+                            </div>
+                        </div>
                     {% endfor %}
-                </div>
+                {% endfor %}
             </div>
         </div>
     </div>
 
-    <!-- Add Todo Modal -->
     <div
         id="addTodoModal"
         class="modal-overlay {% if show_modal %}modal-visible{% endif %}"
     >
-        <div
-            style="max-width:560px;margin:7vh auto;background:#ffffff;border-radius:18px;overflow:hidden;box-shadow:0 20px 80px rgba(0,0,0,0.3);"
-        >
-            <div
-                style="padding:18px 22px;background:linear-gradient(135deg,#8b5cf6,#ec4899,#f97316);color:#fff;"
-            >
-                <h2 style="margin:0;font-size:18px;">
-                    ➕ Add Todo
-                </h2>
-                <p style="margin:6px 0 0;color:rgba(255,255,255,0.9);font-size:13px;">
-                    Click a day to prefill the due date.
-                </p>
+        <div class="modal-card">
+            <div class="modal-head">
+                <h2>Add Todo</h2>
+                <p>Set a start date and end date for this task.</p>
             </div>
 
             <form
                 method="POST"
                 action="{% url 'calendar' %}?year={{ selected_year }}&month={{ selected_month }}"
-                style="padding:22px;"
+                class="modal-form"
             >
                 {% csrf_token %}
 
-                <label style="display:block;margin-bottom:6px;font-size:14px;font-weight:700;color:#374151;">
-                    Title
-                </label>
+                <label for="title_input">Title</label>
                 <input
+                    id="title_input"
                     type="text"
                     name="title"
                     value="{{ title_value }}"
                     required
-                    style="width:100%;padding:11px 13px;border:1px solid #d1d5db;border-radius:9px;font-size:14px;font-family:inherit;outline:none;"
-                />
+                >
 
-                <div style="height:10px;"></div>
+                <div class="field-gap"></div>
 
-                <label style="display:block;margin-bottom:6px;font-size:14px;font-weight:700;color:#374151;">
-                    Due datetime
-                </label>
+                <label for="start_date_input">Start date</label>
                 <input
-                    id="due_datetime_input"
-                    type="datetime-local"
-                    name="due_datetime"
-                    value="{{ due_datetime_value }}"
+                    id="start_date_input"
+                    type="date"
+                    name="start_date"
+                    value="{{ start_date_value }}"
                     required
-                    style="width:100%;padding:11px 13px;border:1px solid #d1d5db;border-radius:9px;font-size:14px;font-family:inherit;outline:none;"
-                />
+                >
+
+                <div class="field-gap"></div>
+
+                <label for="end_date_input">End date</label>
+                <input
+                    id="end_date_input"
+                    type="date"
+                    name="end_date"
+                    value="{{ end_date_value }}"
+                    required
+                >
 
                 {% if form and form.errors %}
-                    <div style="margin-top:14px;color:#b91c1c;font-weight:700;font-size:13px;">
+                    <div class="form-error">
                         {% for field, errors in form.errors.items %}
                             {% for error in errors %}
                                 <div>{{ error }}</div>
@@ -439,19 +502,12 @@
                     </div>
                 {% endif %}
 
-                <div style="margin-top:18px;display:flex;justify-content:flex-end;gap:12px;align-items:center;">
-                    <button
-                        type="button"
-                        onclick="closeAddTodoModal()"
-                        style="border:1px solid #e5e7eb;background:#f3f4f6;border-radius:10px;padding:11px 18px;font-weight:800;cursor:pointer;"
-                    >
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel" onclick="closeAddTodoModal()">
                         Cancel
                     </button>
-                    <button
-                        type="submit"
-                        style="border:none;border-radius:10px;padding:11px 18px;font-weight:800;cursor:pointer;color:#fff;background:linear-gradient(135deg,#2563eb,#7c3aed);box-shadow:0 6px 18px rgba(124,58,237,0.25);"
-                    >
-                        💾 Save
+                    <button type="submit" class="btn-save">
+                        Save
                     </button>
                 </div>
             </form>
@@ -460,32 +516,23 @@
 
     <script>
         const modalEl = document.getElementById('addTodoModal');
-        const dueInputEl = document.getElementById('due_datetime_input');
-
-        function pad2(n) {
-            return String(n).padStart(2, '0');
-        }
+        const startDateInputEl = document.getElementById('start_date_input');
+        const endDateInputEl = document.getElementById('end_date_input');
 
         function openAddTodoModal(dateISO) {
-            // dateISO: YYYY-MM-DD
-            // default time: 09:00
-            const value = dateISO + 'T09:00';
-            dueInputEl.value = value;
-            modalEl.style.display = 'block';
+            startDateInputEl.value = dateISO;
+            endDateInputEl.value = dateISO;
+            modalEl.classList.add('modal-visible');
         }
 
         function closeAddTodoModal() {
-            modalEl.style.display = 'none';
+            modalEl.classList.remove('modal-visible');
         }
 
-        // Prefill and open modal on day-cell click (in-month only).
         document.querySelectorAll('.day-cell.clickable').forEach((cell) => {
-            cell.style.cursor = 'pointer';
-            cell.addEventListener('click', (e) => {
+            cell.addEventListener('click', () => {
                 const dateISO = cell.getAttribute('data-date');
                 if (!dateISO) return;
-
-                // Avoid triggering when clicking inside text nodes.
                 openAddTodoModal(dateISO);
             });
         });
@@ -493,4 +540,3 @@
 </body>
 
 </html>
-

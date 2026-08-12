@@ -1,7 +1,6 @@
 import calendar as py_calendar
-from datetime import date, datetime, time, timedelta
+from datetime import date, datetime, timedelta
 
-from django.utils import timezone
 from django.urls import reverse
 
 from django.shortcuts import get_object_or_404, render, redirect
@@ -11,16 +10,16 @@ from .forms import TodoForm
 
 def mark_overdue_todos_completed():
     """
-    Auto-complete todos whose due_datetime is in the past.
+    Auto-complete todos whose end_date is in the past.
 
     This is a "lazy" approach: it runs when pages are visited (home/calendar),
     avoiding extra background jobs for this tutorial project.
     """
-    now = timezone.now()
+    today = date.today()
     Todo.objects.filter(
         completed=False,
-        due_datetime__isnull=False,
-        due_datetime__lt=now,
+        end_date__isnull=False,
+        end_date__lt=today,
     ).update(completed=True)
 
 
@@ -131,19 +130,23 @@ def calendar(request):
         date(year + 1, 1, 1) if month == 12 else date(year, month + 1, 1)
     )
 
-    tz = timezone.get_current_timezone()
-    start_dt = timezone.make_aware(datetime.combine(month_start_date, time.min), tz)
-    end_dt = timezone.make_aware(datetime.combine(next_month_date, time.min), tz)
+    month_end_date = next_month_date - timedelta(days=1)
 
-    todos_in_month = (
-        Todo.objects.filter(due_datetime__gte=start_dt, due_datetime__lt=end_dt)
-        .order_by("due_datetime")
-    )
+    todos_in_month = Todo.objects.filter(
+        start_date__isnull=False,
+        end_date__isnull=False,
+        start_date__lte=month_end_date,
+        end_date__gte=month_start_date,
+    ).order_by("start_date", "end_date", "title")
 
     todos_by_date = {}
     for todo in todos_in_month:
-        local_day = timezone.localtime(todo.due_datetime).date()
-        todos_by_date.setdefault(local_day, []).append(todo)
+        span_start = max(todo.start_date, month_start_date - timedelta(days=7))
+        span_end = min(todo.end_date, month_end_date + timedelta(days=7))
+        current = span_start
+        while current <= span_end:
+            todos_by_date.setdefault(current, []).append(todo)
+            current += timedelta(days=1)
 
     cal = py_calendar.Calendar(firstweekday=0)  # Monday
     weeks = []
@@ -154,6 +157,7 @@ def calendar(request):
                 {
                     "date": day_date,
                     "in_month": day_date.month == month,
+                    "is_today": day_date == today,
                     "todos": todos_by_date.get(day_date, []),
                 }
             )
@@ -169,21 +173,23 @@ def calendar(request):
     # Handle "add todo" popup submit without leaving the calendar page.
     show_modal = False
     title_value = ""
-    due_datetime_value = ""
+    start_date_value = ""
+    end_date_value = ""
     form = None
     if request.method == "POST":
         form = TodoForm(request.POST)
         if form.is_valid():
             todo = form.save()
-            local_due = timezone.localtime(todo.due_datetime)
             calendar_url = reverse("calendar")
+            redirect_date = todo.start_date or date(year, month, 1)
             return redirect(
-                f"{calendar_url}?year={local_due.year}&month={local_due.month}"
+                f"{calendar_url}?year={redirect_date.year}&month={redirect_date.month}"
             )
 
         show_modal = True
         title_value = request.POST.get("title", "")
-        due_datetime_value = request.POST.get("due_datetime", "")
+        start_date_value = request.POST.get("start_date", "")
+        end_date_value = request.POST.get("end_date", "")
 
     return render(
         request,
@@ -199,7 +205,8 @@ def calendar(request):
             "next_month": next_month,
             "show_modal": show_modal,
             "title_value": title_value,
-            "due_datetime_value": due_datetime_value,
+            "start_date_value": start_date_value,
+            "end_date_value": end_date_value,
             "form": form,
         },
     )
@@ -207,7 +214,7 @@ def calendar(request):
 
 def calendar_add(request):
     """
-    Add a Todo with its due_datetime prefilled from a day clicked in the calendar.
+    Add a Todo with start/end dates prefilled from a day clicked in the calendar.
     GET params:
       - date=YYYY-MM-DD
     """
@@ -225,18 +232,16 @@ def calendar_add(request):
         form = TodoForm(request.POST)
         if form.is_valid():
             todo = form.save()
-            local_due = timezone.localtime(todo.due_datetime)
+            redirect_date = todo.start_date or selected_date
+            calendar_url = reverse("calendar")
             return redirect(
-                "calendar",
-                year=local_due.year,
-                month=local_due.month,
+                f"{calendar_url}?year={redirect_date.year}&month={redirect_date.month}"
             )
     else:
-        # Prefill time so user only needs to type the title (adjust as you like).
-        tz = timezone.get_current_timezone()
-        due_local = datetime.combine(selected_date, time(9, 0))
-        due_aware = timezone.make_aware(due_local, tz)
-        form = TodoForm(initial={"due_datetime": due_aware})
+        form = TodoForm(initial={
+            "start_date": selected_date,
+            "end_date": selected_date,
+        })
 
     return render(
         request,
