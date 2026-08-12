@@ -13,9 +13,8 @@
         }
 
         .container {
-            width: 94%;
-            max-width: 1120px;
-            margin: 36px auto 70px;
+            margin-top: 28px;
+            margin-bottom: 70px;
         }
 
         .title-section h1 {
@@ -186,59 +185,62 @@
 
         .workspace {
             display: grid;
-            grid-template-columns: 0.9fr 1.1fr;
-            gap: 16px;
+            gap: 20px;
         }
 
         .panel {
             background: #fff;
             border: 1px solid #e7e5e4;
-            border-radius: 18px;
+            border-radius: 22px;
             overflow: hidden;
+            box-shadow: 0 12px 32px rgba(28, 25, 23, 0.04);
         }
 
         .panel-head {
-            padding: 18px 20px 0;
+            padding: 22px 28px 0;
         }
 
         .panel-head h3 {
             margin: 0;
-            font-size: 18px;
+            font-size: 20px;
+            letter-spacing: -0.02em;
         }
 
         .panel-head p {
-            margin: 4px 0 0;
+            margin: 6px 0 0;
             color: #78716c;
-            font-size: 13px;
+            font-size: 14px;
         }
 
         .task-search {
             display: flex;
-            gap: 8px;
-            padding: 14px 20px 0;
+            gap: 10px;
+            padding: 18px 28px 0;
         }
 
         .task-search input {
             flex: 1;
-            padding: 10px 12px;
+            padding: 12px 14px;
             border: 1px solid #d6d3d1;
-            border-radius: 10px;
+            border-radius: 12px;
             font-family: inherit;
             font-size: 14px;
+            background: #fafaf9;
         }
 
         .task-search input:focus {
             outline: none;
             border-color: #0f766e;
+            background: #fff;
             box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.15);
         }
 
         .task-search button {
-            padding: 10px 14px;
+            padding: 12px 18px;
             background: #0f766e;
             color: #fff;
             border: none;
-            border-radius: 10px;
+            border-radius: 12px;
             font-family: inherit;
             font-weight: 800;
             cursor: pointer;
@@ -246,19 +248,19 @@
 
         .filters {
             display: grid;
-            gap: 8px;
-            padding: 12px 20px 0;
+            gap: 10px;
+            padding: 16px 28px 0;
         }
 
         .filter-row {
             display: flex;
             flex-wrap: wrap;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
         }
 
         .filter-label {
-            min-width: 48px;
+            min-width: 58px;
             font-size: 11px;
             font-weight: 800;
             letter-spacing: 0.06em;
@@ -268,14 +270,14 @@
 
         .chip {
             display: inline-flex;
-            padding: 5px 10px;
+            padding: 6px 12px;
             border-radius: 999px;
             text-decoration: none;
             font-size: 12px;
             font-weight: 800;
-            background: #fff;
+            background: #fafaf9;
             color: #44403c;
-            border: 1px solid #d6d3d1;
+            border: 1px solid #e7e5e4;
         }
 
         .chip.active {
@@ -291,27 +293,29 @@
         }
 
         .todo-form {
-            padding: 18px 20px 22px;
+            padding: 20px 28px 28px;
         }
 
-        .todo-form p { margin: 0 0 14px; }
+        .todo-form p { margin: 0 0 16px; }
 
         .todo-form label {
             display: block;
-            margin-bottom: 6px;
+            margin-bottom: 7px;
             font-size: 13px;
             font-weight: 800;
+            color: #44403c;
         }
 
         .todo-form input,
         .todo-form select,
         .todo-form textarea {
             width: 100%;
-            padding: 11px 13px;
+            padding: 12px 14px;
             border: 1px solid #d6d3d1;
-            border-radius: 10px;
+            border-radius: 12px;
             font-family: inherit;
             font-size: 14px;
+            background: #fafaf9;
         }
 
         .todo-form input:focus,
@@ -319,7 +323,49 @@
         .todo-form textarea:focus {
             outline: none;
             border-color: #0f766e;
+            background: #fff;
             box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.15);
+        }
+
+        .todo-form ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 16px;
+        }
+
+        .todo-form ul li {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .todo-form ul label {
+            margin: 0;
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+        .todo-form ul input {
+            width: auto;
+            padding: 0;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 18px 22px;
+            align-items: start;
+        }
+
+        .form-grid .span-2 { grid-column: 1 / -1; }
+
+        .form-pair {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
         }
 
         .repeat-pill {
@@ -337,23 +383,40 @@
             border: none;
             background: #0f766e;
             color: #fff;
-            border-radius: 10px;
-            padding: 11px 18px;
+            border-radius: 999px;
+            padding: 12px 22px;
             font-weight: 800;
             cursor: pointer;
+            font-family: inherit;
+            font-size: 14px;
+        }
+
+        .add-button:hover {
+            background: #115e59;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 4px;
         }
 
         .task-list {
-            padding: 8px 12px 16px;
+            padding: 12px 18px 20px;
         }
 
         .task-row {
             display: grid;
             grid-template-columns: 28px 1fr auto;
-            gap: 10px;
-            align-items: center;
-            padding: 12px 10px;
+            gap: 14px;
+            align-items: start;
+            padding: 16px 12px;
             border-bottom: 1px solid #f5f5f4;
+            border-radius: 12px;
+        }
+
+        .task-row:hover {
+            background: #fafaf9;
         }
 
         .task-row:last-child { border-bottom: none; }
@@ -366,6 +429,7 @@
         .dot {
             width: 12px;
             height: 12px;
+            margin-top: 5px;
             border-radius: 50%;
             background: #f97316;
         }
@@ -374,27 +438,28 @@
 
         .task-title {
             font-weight: 800;
-            font-size: 14px;
+            font-size: 15px;
         }
 
         .task-meta {
-            margin-top: 3px;
+            margin-top: 4px;
             font-size: 12px;
             color: #78716c;
             font-weight: 700;
         }
 
         .task-notes {
-            margin-top: 4px;
-            font-size: 12px;
+            margin-top: 5px;
+            font-size: 13px;
             color: #78716c;
             font-weight: 600;
-            line-height: 1.4;
+            line-height: 1.45;
         }
 
         .status {
             display: inline-flex;
-            padding: 5px 10px;
+            margin-top: 2px;
+            padding: 6px 11px;
             border-radius: 999px;
             font-size: 11px;
             font-weight: 800;
@@ -407,12 +472,12 @@
             background: #fff;
             border: 1px solid #fdba74;
             border-radius: 18px;
-            padding: 16px 18px;
+            padding: 18px 20px;
             margin-bottom: 18px;
         }
 
         .due-soon h3 {
-            margin: 0 0 10px;
+            margin: 0 0 12px;
             font-size: 16px;
         }
 
@@ -427,7 +492,7 @@
             gap: 10px;
             text-decoration: none;
             color: inherit;
-            padding: 10px 12px;
+            padding: 12px 14px;
             border-radius: 12px;
             background: #fff7ed;
             font-weight: 700;
@@ -438,7 +503,7 @@
             display: flex;
             flex-wrap: wrap;
             gap: 6px;
-            margin-top: 6px;
+            margin-top: 8px;
         }
 
         .prio, .tag-pill, .check-pill {
@@ -457,13 +522,23 @@
 
         .empty {
             text-align: center;
-            padding: 40px 16px;
+            padding: 48px 16px;
             color: #78716c;
         }
 
+        .kicker {
+            margin: 0 0 6px;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+        }
+
         @media (max-width: 860px) {
-            .hero, .workspace, .stats { display: block; }
-            .hero-side, .panel { margin-top: 12px; }
+            .hero, .stats, .form-grid, .form-pair { display: block; }
+            .hero-side { margin-top: 12px; min-height: 140px; }
+            .stat-card { margin-bottom: 10px; }
+            .todo-form, .panel-head, .task-search, .filters { padding-left: 18px; padding-right: 18px; }
         }
     </style>
 </head>
@@ -536,28 +611,82 @@
     </div>
 
     <div class="workspace">
-        <div class="panel">
+        <div class="panel composer">
             <div class="panel-head">
                 <h3>Add a todo</h3>
-                <p>Title, notes, priority, tags, dates, and optional repeats.</p>
+                <p>Capture it here — priority, tags, dates, and repeats all in one place.</p>
             </div>
             <div class="todo-form">
                 <form method="POST">
                     {% csrf_token %}
-                    {{ form.as_p }}
-                    <button type="submit" class="add-button">Add Todo</button>
+                    <div class="form-grid">
+                        <p class="span-2">
+                            <label for="{{ form.title.id_for_label }}">Title</label>
+                            {{ form.title }}
+                            {{ form.title.errors }}
+                        </p>
+                        <p class="span-2">
+                            <label for="{{ form.notes.id_for_label }}">Notes</label>
+                            {{ form.notes }}
+                            {{ form.notes.errors }}
+                        </p>
+                        <div>
+                            <p>
+                                <label for="{{ form.priority.id_for_label }}">Priority</label>
+                                {{ form.priority }}
+                                {{ form.priority.errors }}
+                            </p>
+                            <p>
+                                <label>Tags</label>
+                                {{ form.tags }}
+                                {{ form.tags.errors }}
+                            </p>
+                        </div>
+                        <div>
+                            <div class="form-pair">
+                                <p>
+                                    <label for="{{ form.start_date.id_for_label }}">Start date</label>
+                                    {{ form.start_date }}
+                                    {{ form.start_date.errors }}
+                                </p>
+                                <p>
+                                    <label for="{{ form.end_date.id_for_label }}">End date</label>
+                                    {{ form.end_date }}
+                                    {{ form.end_date.errors }}
+                                </p>
+                            </div>
+                            <div class="form-pair">
+                                <p>
+                                    <label for="{{ form.recurrence.id_for_label }}">Repeat</label>
+                                    {{ form.recurrence }}
+                                    {{ form.recurrence.errors }}
+                                </p>
+                                <p>
+                                    <label for="{{ form.recurrence_until.id_for_label }}">Repeat until</label>
+                                    {{ form.recurrence_until }}
+                                    {{ form.recurrence_until.errors }}
+                                </p>
+                            </div>
+                        </div>
+                        {% if form.non_field_errors %}
+                            <div class="span-2">{{ form.non_field_errors }}</div>
+                        {% endif %}
+                        <div class="span-2 form-actions">
+                            <button type="submit" class="add-button">Add Todo</button>
+                        </div>
+                    </div>
                 </form>
             </div>
         </div>
 
-        <div class="panel">
+        <div class="panel tasks-panel">
             <div class="panel-head">
                 <h3>Your tasks</h3>
                 <p>
                     {% if filters_active %}
                         Showing {{ result_count }} of {{ total_tasks }} task{{ total_tasks|pluralize }}.
                     {% else %}
-                        Pending first, then completed.
+                        Full-width list — pending first, then completed.
                     {% endif %}
                 </p>
             </div>
@@ -573,16 +702,16 @@
             <div class="filters">
                 <div class="filter-row">
                     <span class="filter-label">Status</span>
-                    <a class="chip {% if status == 'all' %}active{% endif %}" href="?q={{ query|urlencode }}&status=all&when={{ when }}&sort={{ sort }}">All</a>
-                    <a class="chip {% if status == 'pending' %}active{% endif %}" href="?q={{ query|urlencode }}&status=pending&when={{ when }}&sort={{ sort }}">Pending</a>
-                    <a class="chip {% if status == 'completed' %}active{% endif %}" href="?q={{ query|urlencode }}&status=completed&when={{ when }}&sort={{ sort }}">Done</a>
+                    <a class="chip {% if status == 'all' %}active{% endif %}" href="?q={{ query|urlencode }}&status=all&when={{ when }}&sort={{ sort }}&priority={{ priority }}&tag={{ tag }}">All</a>
+                    <a class="chip {% if status == 'pending' %}active{% endif %}" href="?q={{ query|urlencode }}&status=pending&when={{ when }}&sort={{ sort }}&priority={{ priority }}&tag={{ tag }}">Pending</a>
+                    <a class="chip {% if status == 'completed' %}active{% endif %}" href="?q={{ query|urlencode }}&status=completed&when={{ when }}&sort={{ sort }}&priority={{ priority }}&tag={{ tag }}">Done</a>
                 </div>
                 <div class="filter-row">
                     <span class="filter-label">When</span>
-                    <a class="chip {% if when == 'all' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=all&sort={{ sort }}">Any</a>
-                    <a class="chip {% if when == 'today' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=today&sort={{ sort }}">Today</a>
-                    <a class="chip {% if when == 'week' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=week&sort={{ sort }}">Week</a>
-                    <a class="chip {% if when == 'month' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=month&sort={{ sort }}">Month</a>
+                    <a class="chip {% if when == 'all' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=all&sort={{ sort }}&priority={{ priority }}&tag={{ tag }}">Any</a>
+                    <a class="chip {% if when == 'today' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=today&sort={{ sort }}&priority={{ priority }}&tag={{ tag }}">Today</a>
+                    <a class="chip {% if when == 'week' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=week&sort={{ sort }}&priority={{ priority }}&tag={{ tag }}">Week</a>
+                    <a class="chip {% if when == 'month' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=month&sort={{ sort }}&priority={{ priority }}&tag={{ tag }}">Month</a>
                     <a class="chip {% if when == 'upcoming' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=upcoming&sort={{ sort }}&priority={{ priority }}&tag={{ tag }}">Upcoming</a>
                     <a class="chip {% if when == 'due_soon' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=due_soon&sort={{ sort }}&priority={{ priority }}&tag={{ tag }}">Due soon</a>
                     <a class="chip {% if when == 'undated' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=undated&sort={{ sort }}&priority={{ priority }}&tag={{ tag }}">No dates</a>
@@ -657,7 +786,7 @@
                             <p>Clear filters or try another title.</p>
                         {% else %}
                             <div><strong>No tasks yet</strong></div>
-                            <p>Add your first one on the left.</p>
+                            <p>Add your first one in the composer above.</p>
                         {% endif %}
                     </div>
                 {% endfor %}
