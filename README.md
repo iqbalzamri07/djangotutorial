@@ -18,25 +18,123 @@ A first Django project: personal todos, a monthly calendar, search and filters, 
 - Magazine-style blog
 - Token-authenticated REST API for auth, todos, tags, and posts
 
-## Setup
+## How to run
 
-Use Python 3.12+ and a virtual environment.
+### Prerequisites
+
+- **Python 3.12+**
+- **pip** (usually included with Python)
+- A terminal in the project root (`djangotutorial/`)
+
+### 1. Get the project
 
 ```bash
-python -m venv .venv
+cd djangotutorial
+```
+
+If you cloned the repo, `cd` into the folder where `manage.py` lives.
+
+### 2. Create and activate a virtual environment
+
+**Linux / macOS**
+
+```bash
+python3 -m venv .venv
 source .venv/bin/activate
+```
+
+**Windows (PowerShell)**
+
+```powershell
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+```
+
+**Windows (Command Prompt)**
+
+```cmd
+python -m venv .venv
+.venv\Scripts\activate.bat
+```
+
+You should see `(.venv)` at the start of your terminal prompt.
+
+### 3. Install dependencies
+
+```bash
 pip install -r requirements.txt
+```
+
+### 4. Set up the database
+
+The app uses SQLite by default (`db.sqlite3` in the project root). Create the tables with:
+
+```bash
 python manage.py migrate
+```
+
+### 5. Start the development server
+
+```bash
 python manage.py runserver
 ```
 
-Open [http://127.0.0.1:8000/](http://127.0.0.1:8000/).
+You should see output like:
 
-Create a superuser for `/admin/` if you want:
+```text
+Starting development server at http://127.0.0.1:8000/
+```
+
+Open the app in your browser:
+
+- **Web app:** [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
+- **Admin:** [http://127.0.0.1:8000/admin/](http://127.0.0.1:8000/admin/)
+- **API:** [http://127.0.0.1:8000/api/](http://127.0.0.1:8000/api/)
+
+To use a different port:
+
+```bash
+python manage.py runserver 8080
+```
+
+Then visit [http://127.0.0.1:8080/](http://127.0.0.1:8080/).
+
+### 6. Create an account
+
+1. Go to [http://127.0.0.1:8000/signup/](http://127.0.0.1:8000/signup/) and register, **or**
+2. Create a superuser for the Django admin:
 
 ```bash
 python manage.py createsuperuser
 ```
+
+Then log in at [http://127.0.0.1:8000/login/](http://127.0.0.1:8000/login/) or `/admin/`.
+
+### 7. Stop the server
+
+In the terminal where `runserver` is running, press **Ctrl+C**.
+
+To run again later:
+
+```bash
+source .venv/bin/activate   # or Windows equivalent
+python manage.py runserver
+```
+
+### Run tests
+
+```bash
+python manage.py test
+```
+
+### Troubleshooting
+
+| Problem | What to try |
+| --- | --- |
+| `python: command not found` | Use `python3` instead of `python` |
+| `No module named django` | Activate the virtual environment and run `pip install -r requirements.txt` |
+| Port already in use | Run on another port: `python manage.py runserver 8080` |
+| Database errors after pulling changes | Run `python manage.py migrate` again |
 
 ## Pages
 
@@ -112,11 +210,6 @@ curl http://127.0.0.1:8000/api/todos/ \
   -H "Authorization: Token YOUR_TOKEN"
 ```
 
-## Tests
-
-```bash
-python manage.py test
-```
 
 ## Project layout
 
@@ -127,5 +220,5 @@ todos/               Todo models, services, views package, and todo API
 blog/                Blog app and post API viewset
 api/                 REST API root and URL routes
 templates/partials/  Shared nav, banner, pagination
-static/css/          Shared stylesheet (nav/base)
+static/                Favicon and shared CSS
 ```
