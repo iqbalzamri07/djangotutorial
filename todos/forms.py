@@ -41,10 +41,13 @@ class TodoForm(forms.ModelForm):
             "recurrence_until",
         ]
         widgets = {
+            "title": forms.TextInput(
+                attrs={"placeholder": "What needs doing?"}
+            ),
             "notes": forms.Textarea(
                 attrs={
-                    "rows": 3,
-                    "placeholder": "Optional notes or description...",
+                    "rows": 2,
+                    "placeholder": "Optional notes...",
                 }
             ),
             "priority": forms.Select(),

@@ -213,54 +213,34 @@
         }
 
         .task-search {
-            display: flex;
-            gap: 10px;
-            padding: 18px 28px 0;
-        }
-
-        .task-search input {
-            flex: 1;
-            padding: 12px 14px;
-            border: 1px solid #d6d3d1;
-            border-radius: 12px;
-            font-family: inherit;
-            font-size: 14px;
-            background: #fafaf9;
-        }
-
-        .task-search input:focus {
-            outline: none;
-            border-color: #0f766e;
-            background: #fff;
-            box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.15);
-        }
-
-        .task-search button {
-            padding: 12px 18px;
-            background: #0f766e;
-            color: #fff;
-            border: none;
-            border-radius: 12px;
-            font-family: inherit;
-            font-weight: 800;
-            cursor: pointer;
+            display: none;
         }
 
         .filters {
+            padding: 16px 28px 4px;
+        }
+
+        .filter-bar {
             display: grid;
+            grid-template-columns: minmax(0, 1.4fr) auto;
+            gap: 12px;
+            align-items: end;
+            padding: 14px;
+            border: 1px solid #e7e5e4;
+            border-radius: 16px;
+            background: #fafaf9;
+        }
+
+        .filter-fields {
+            display: grid;
+            grid-template-columns: minmax(140px, 1.6fr) repeat(4, minmax(100px, 0.9fr));
             gap: 10px;
-            padding: 16px 28px 0;
+            align-items: end;
         }
 
-        .filter-row {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .filter-label {
-            min-width: 58px;
+        .filter-field label {
+            display: block;
+            margin-bottom: 6px;
             font-size: 11px;
             font-weight: 800;
             letter-spacing: 0.06em;
@@ -268,104 +248,223 @@
             color: #78716c;
         }
 
-        .chip {
-            display: inline-flex;
-            padding: 6px 12px;
-            border-radius: 999px;
-            text-decoration: none;
-            font-size: 12px;
-            font-weight: 800;
-            background: #fafaf9;
-            color: #44403c;
-            border: 1px solid #e7e5e4;
+        .filter-field input,
+        .filter-field select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #d6d3d1;
+            border-radius: 10px;
+            background: #fff;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 600;
+            color: #1c1917;
         }
 
-        .chip.active {
+        .filter-field input:focus,
+        .filter-field select:focus {
+            outline: none;
+            border-color: #0f766e;
+            box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.12);
+        }
+
+        .filter-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        .filter-actions button,
+        .filter-actions a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 40px;
+            padding: 0 16px;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 800;
+            text-decoration: none;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+
+        .filter-actions button {
             background: #0f766e;
             color: #fff;
             border-color: #0f766e;
         }
 
-        .chip.clear {
-            background: #fef2f2;
+        .filter-actions a {
+            background: #fff;
+            color: #78716c;
+            border-color: #d6d3d1;
+        }
+
+        .filter-actions a:hover {
             color: #b91c1c;
             border-color: #fecaca;
+            background: #fef2f2;
+        }
+
+        .active-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+            min-height: 0;
+        }
+
+        .active-filters:empty {
+            display: none;
+        }
+
+        .active-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 10px;
+            border-radius: 999px;
+            background: #ecfdf5;
+            color: #0f766e;
+            font-size: 12px;
+            font-weight: 800;
         }
 
         .todo-form {
-            padding: 20px 28px 28px;
+            padding: 16px 28px 24px;
         }
 
-        .todo-form p { margin: 0 0 16px; }
-
-        .todo-form label {
-            display: block;
-            margin-bottom: 7px;
-            font-size: 13px;
-            font-weight: 800;
-            color: #44403c;
-        }
-
-        .todo-form input,
-        .todo-form select,
-        .todo-form textarea {
-            width: 100%;
-            padding: 12px 14px;
-            border: 1px solid #d6d3d1;
-            border-radius: 12px;
-            font-family: inherit;
-            font-size: 14px;
+        .composer-card {
+            padding: 16px;
+            border: 1px solid #e7e5e4;
+            border-radius: 16px;
             background: #fafaf9;
         }
 
-        .todo-form input:focus,
-        .todo-form select:focus,
-        .todo-form textarea:focus {
-            outline: none;
-            border-color: #0f766e;
-            background: #fff;
-            box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.15);
+        .composer-card .field {
+            margin: 0 0 12px;
         }
 
-        .todo-form ul {
+        .composer-card .field:last-child {
+            margin-bottom: 0;
+        }
+
+        .composer-card label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: #78716c;
+        }
+
+        .composer-card input,
+        .composer-card select,
+        .composer-card textarea {
+            width: 100%;
+            padding: 11px 12px;
+            border: 1px solid #d6d3d1;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 14px;
+            background: #fff;
+            color: #1c1917;
+        }
+
+        .composer-card textarea {
+            resize: vertical;
+            min-height: 64px;
+        }
+
+        .composer-card input:focus,
+        .composer-card select:focus,
+        .composer-card textarea:focus {
+            outline: none;
+            border-color: #0f766e;
+            box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.12);
+        }
+
+        .composer-main {
+            display: grid;
+            gap: 12px;
+        }
+
+        .composer-options {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .composer-tags ul {
             list-style: none;
             margin: 0;
             padding: 0;
             display: flex;
             flex-wrap: wrap;
-            gap: 10px 16px;
+            gap: 8px;
         }
 
-        .todo-form ul li {
+        .composer-tags li {
+            margin: 0;
+        }
+
+        .composer-tags label {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-        }
-
-        .todo-form ul label {
+            gap: 7px;
             margin: 0;
-            font-weight: 700;
-            font-size: 13px;
+            padding: 8px 12px;
+            border: 1px solid #d6d3d1;
+            border-radius: 999px;
+            background: #fff;
+            color: #44403c;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0;
+            text-transform: none;
+            cursor: pointer;
         }
 
-        .todo-form ul input {
+        .composer-tags input {
             width: auto;
+            margin: 0;
+            accent-color: #0f766e;
+        }
+
+        .composer-tags input:checked + span,
+        .composer-tags label:has(input:checked) {
+            background: #ecfdf5;
+            border-color: #5eead4;
+            color: #0f766e;
+        }
+
+        .composer-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid #e7e5e4;
+        }
+
+        .composer-hint {
+            color: #a8a29e;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .errorlist {
+            margin: 6px 0 0;
             padding: 0;
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1.2fr 0.8fr;
-            gap: 18px 22px;
-            align-items: start;
-        }
-
-        .form-grid .span-2 { grid-column: 1 / -1; }
-
-        .form-pair {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 14px;
+            list-style: none;
+            color: #b91c1c;
+            font-size: 12px;
+            font-weight: 700;
         }
 
         .repeat-pill {
@@ -383,22 +482,20 @@
             border: none;
             background: #0f766e;
             color: #fff;
-            border-radius: 999px;
-            padding: 12px 22px;
+            border-radius: 10px;
+            padding: 11px 18px;
             font-weight: 800;
             cursor: pointer;
             font-family: inherit;
-            font-size: 14px;
+            font-size: 13px;
         }
 
         .add-button:hover {
             background: #115e59;
         }
 
-        .form-actions {
-            display: flex;
-            justify-content: flex-end;
-            margin-top: 4px;
+        .until-field.is-hidden {
+            display: none;
         }
 
         .tasks-panel {
@@ -539,10 +636,16 @@
         }
 
         @media (max-width: 860px) {
-            .hero, .stats, .form-grid, .form-pair { display: block; }
+            .hero, .stats, .composer-options, .filter-bar, .filter-fields { display: block; }
             .hero-side { margin-top: 12px; min-height: 140px; }
             .stat-card { margin-bottom: 10px; }
-            .todo-form, .panel-head, .task-search, .filters { padding-left: 18px; padding-right: 18px; }
+            .todo-form, .panel-head, .filters { padding-left: 18px; padding-right: 18px; }
+            .filter-field, .filter-actions, .composer-options .field { margin-top: 10px; }
+            .filter-actions { justify-content: stretch; }
+            .filter-actions button,
+            .filter-actions a { width: 100%; }
+            .composer-footer { flex-direction: column; align-items: stretch; }
+            .add-button { width: 100%; }
         }
     </style>
 </head>
@@ -618,66 +721,61 @@
         <div class="panel composer">
             <div class="panel-head">
                 <h3>Add a todo</h3>
-                <p>Capture it here — priority, tags, dates, and repeats all in one place.</p>
+                <p>Quick capture — details stay optional.</p>
             </div>
             <div class="todo-form">
-                <form method="POST">
+                <form method="POST" class="composer-card" id="add-todo-form">
                     {% csrf_token %}
-                    <div class="form-grid">
-                        <p class="span-2">
+                    <div class="composer-main">
+                        <div class="field">
                             <label for="{{ form.title.id_for_label }}">Title</label>
                             {{ form.title }}
                             {{ form.title.errors }}
-                        </p>
-                        <p class="span-2">
+                        </div>
+                        <div class="field">
                             <label for="{{ form.notes.id_for_label }}">Notes</label>
                             {{ form.notes }}
                             {{ form.notes.errors }}
-                        </p>
-                        <div>
-                            <p>
+                        </div>
+                        <div class="composer-options">
+                            <div class="field">
                                 <label for="{{ form.priority.id_for_label }}">Priority</label>
                                 {{ form.priority }}
                                 {{ form.priority.errors }}
-                            </p>
-                            <p>
-                                <label>Tags</label>
-                                {{ form.tags }}
-                                {{ form.tags.errors }}
-                            </p>
+                            </div>
+                            <div class="field">
+                                <label for="{{ form.start_date.id_for_label }}">Start</label>
+                                {{ form.start_date }}
+                                {{ form.start_date.errors }}
+                            </div>
+                            <div class="field">
+                                <label for="{{ form.end_date.id_for_label }}">End</label>
+                                {{ form.end_date }}
+                                {{ form.end_date.errors }}
+                            </div>
+                            <div class="field">
+                                <label for="{{ form.recurrence.id_for_label }}">Repeat</label>
+                                {{ form.recurrence }}
+                                {{ form.recurrence.errors }}
+                            </div>
+                            <div class="field until-field {% if not form.recurrence.value %}is-hidden{% endif %}" id="until-field">
+                                <label for="{{ form.recurrence_until.id_for_label }}">Until</label>
+                                {{ form.recurrence_until }}
+                                {{ form.recurrence_until.errors }}
+                            </div>
                         </div>
-                        <div>
-                            <div class="form-pair">
-                                <p>
-                                    <label for="{{ form.start_date.id_for_label }}">Start date</label>
-                                    {{ form.start_date }}
-                                    {{ form.start_date.errors }}
-                                </p>
-                                <p>
-                                    <label for="{{ form.end_date.id_for_label }}">End date</label>
-                                    {{ form.end_date }}
-                                    {{ form.end_date.errors }}
-                                </p>
-                            </div>
-                            <div class="form-pair">
-                                <p>
-                                    <label for="{{ form.recurrence.id_for_label }}">Repeat</label>
-                                    {{ form.recurrence }}
-                                    {{ form.recurrence.errors }}
-                                </p>
-                                <p>
-                                    <label for="{{ form.recurrence_until.id_for_label }}">Repeat until</label>
-                                    {{ form.recurrence_until }}
-                                    {{ form.recurrence_until.errors }}
-                                </p>
-                            </div>
+                        <div class="field composer-tags">
+                            <label>Tags</label>
+                            {{ form.tags }}
+                            {{ form.tags.errors }}
                         </div>
                         {% if form.non_field_errors %}
-                            <div class="span-2">{{ form.non_field_errors }}</div>
+                            {{ form.non_field_errors }}
                         {% endif %}
-                        <div class="span-2 form-actions">
-                            <button type="submit" class="add-button">Add Todo</button>
-                        </div>
+                    </div>
+                    <div class="composer-footer">
+                        <span class="composer-hint">Dates, tags, and repeats are optional.</span>
+                        <button type="submit" class="add-button">Add Todo</button>
                     </div>
                 </form>
             </div>
@@ -694,52 +792,70 @@
                     {% endif %}
                 </p>
             </div>
-            <form class="task-search" method="get" action="{% url 'home' %}#tasks">
-                <input type="hidden" name="status" value="{{ status }}">
-                <input type="hidden" name="when" value="{{ when }}">
+            <form class="filters" method="get" action="{% url 'home' %}#tasks">
                 <input type="hidden" name="sort" value="{{ sort }}">
-                <input type="hidden" name="priority" value="{{ priority }}">
-                <input type="hidden" name="tag" value="{{ tag }}">
-                <input type="search" name="q" value="{{ query }}" placeholder="Filter by title, notes, or tags...">
-                <button type="submit">Filter</button>
-            </form>
-            <div class="filters">
-                <div class="filter-row">
-                    <span class="filter-label">Status</span>
-                    <a class="chip {% if status == 'all' %}active{% endif %}" href="?q={{ query|urlencode }}&status=all&when={{ when }}&sort={{ sort }}&priority={{ priority }}&tag={{ tag }}#tasks">All</a>
-                    <a class="chip {% if status == 'pending' %}active{% endif %}" href="?q={{ query|urlencode }}&status=pending&when={{ when }}&sort={{ sort }}&priority={{ priority }}&tag={{ tag }}#tasks">Pending</a>
-                    <a class="chip {% if status == 'completed' %}active{% endif %}" href="?q={{ query|urlencode }}&status=completed&when={{ when }}&sort={{ sort }}&priority={{ priority }}&tag={{ tag }}#tasks">Done</a>
+                <div class="filter-bar">
+                    <div class="filter-fields">
+                        <div class="filter-field">
+                            <label for="home-q">Search</label>
+                            <input id="home-q" type="search" name="q" value="{{ query }}" placeholder="Title, notes, or tags">
+                        </div>
+                        <div class="filter-field">
+                            <label for="home-status">Status</label>
+                            <select id="home-status" name="status">
+                                <option value="all" {% if status == 'all' %}selected{% endif %}>All</option>
+                                <option value="pending" {% if status == 'pending' %}selected{% endif %}>Pending</option>
+                                <option value="completed" {% if status == 'completed' %}selected{% endif %}>Done</option>
+                            </select>
+                        </div>
+                        <div class="filter-field">
+                            <label for="home-when">When</label>
+                            <select id="home-when" name="when">
+                                <option value="all" {% if when == 'all' %}selected{% endif %}>Any date</option>
+                                <option value="today" {% if when == 'today' %}selected{% endif %}>Today</option>
+                                <option value="due_soon" {% if when == 'due_soon' %}selected{% endif %}>Due soon</option>
+                                <option value="week" {% if when == 'week' %}selected{% endif %}>This week</option>
+                                <option value="month" {% if when == 'month' %}selected{% endif %}>This month</option>
+                                <option value="upcoming" {% if when == 'upcoming' %}selected{% endif %}>Upcoming</option>
+                                <option value="undated" {% if when == 'undated' %}selected{% endif %}>No dates</option>
+                            </select>
+                        </div>
+                        <div class="filter-field">
+                            <label for="home-priority">Priority</label>
+                            <select id="home-priority" name="priority">
+                                <option value="all" {% if priority == 'all' %}selected{% endif %}>Any</option>
+                                <option value="high" {% if priority == 'high' %}selected{% endif %}>High</option>
+                                <option value="medium" {% if priority == 'medium' %}selected{% endif %}>Medium</option>
+                                <option value="low" {% if priority == 'low' %}selected{% endif %}>Low</option>
+                            </select>
+                        </div>
+                        <div class="filter-field">
+                            <label for="home-tag">Tag</label>
+                            <select id="home-tag" name="tag">
+                                <option value="">Any tag</option>
+                                {% for item in all_tags %}
+                                    <option value="{{ item.slug }}" {% if tag == item.slug %}selected{% endif %}>{{ item.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="filter-actions">
+                        <button type="submit">Apply</button>
+                        {% if filters_active %}
+                            <a href="{% url 'home' %}#tasks">Clear</a>
+                        {% endif %}
+                    </div>
                 </div>
-                <div class="filter-row">
-                    <span class="filter-label">When</span>
-                    <a class="chip {% if when == 'all' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=all&sort={{ sort }}&priority={{ priority }}&tag={{ tag }}#tasks">Any</a>
-                    <a class="chip {% if when == 'today' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=today&sort={{ sort }}&priority={{ priority }}&tag={{ tag }}#tasks">Today</a>
-                    <a class="chip {% if when == 'week' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=week&sort={{ sort }}&priority={{ priority }}&tag={{ tag }}#tasks">Week</a>
-                    <a class="chip {% if when == 'month' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=month&sort={{ sort }}&priority={{ priority }}&tag={{ tag }}#tasks">Month</a>
-                    <a class="chip {% if when == 'upcoming' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=upcoming&sort={{ sort }}&priority={{ priority }}&tag={{ tag }}#tasks">Upcoming</a>
-                    <a class="chip {% if when == 'due_soon' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=due_soon&sort={{ sort }}&priority={{ priority }}&tag={{ tag }}#tasks">Due soon</a>
-                    <a class="chip {% if when == 'undated' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=undated&sort={{ sort }}&priority={{ priority }}&tag={{ tag }}#tasks">No dates</a>
-                    {% if filters_active %}
-                        <a class="chip clear" href="{% url 'home' %}#tasks">Clear</a>
-                    {% endif %}
-                </div>
-                <div class="filter-row">
-                    <span class="filter-label">Priority</span>
-                    <a class="chip {% if priority == 'all' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort={{ sort }}&priority=all&tag={{ tag }}#tasks">Any</a>
-                    <a class="chip {% if priority == 'high' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort={{ sort }}&priority=high&tag={{ tag }}#tasks">High</a>
-                    <a class="chip {% if priority == 'medium' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort={{ sort }}&priority=medium&tag={{ tag }}#tasks">Medium</a>
-                    <a class="chip {% if priority == 'low' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort={{ sort }}&priority=low&tag={{ tag }}#tasks">Low</a>
-                </div>
-                {% if all_tags %}
-                <div class="filter-row">
-                    <span class="filter-label">Tag</span>
-                    <a class="chip {% if not tag %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort={{ sort }}&priority={{ priority }}#tasks">Any</a>
-                    {% for item in all_tags %}
-                        <a class="chip {% if tag == item.slug %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort={{ sort }}&priority={{ priority }}&tag={{ item.slug }}#tasks">{{ item.name }}</a>
-                    {% endfor %}
-                </div>
+                {% if filters_active %}
+                    <div class="active-filters">
+                        {% if query %}<span class="active-pill">Search: {{ query }}</span>{% endif %}
+                        {% if status != 'all' %}<span class="active-pill">{{ status|title }}</span>{% endif %}
+                        {% if when != 'all' %}<span class="active-pill">{{ when|cut:"_"|title }}</span>{% endif %}
+                        {% if priority != 'all' %}<span class="active-pill">{{ priority|title }} priority</span>{% endif %}
+                        {% if tag %}<span class="active-pill">Tag: {{ tag|title }}</span>{% endif %}
+                    </div>
                 {% endif %}
-            </div>
+            </form>
             <div class="task-list">
                 {% for todo in todos %}
                     <div class="task-row {% if todo.completed %}done{% endif %}">
@@ -805,6 +921,16 @@
         const percent = Number(bar.getAttribute('data-progress') || 0);
         fill.style.width = Math.max(0, Math.min(100, percent)) + '%';
     });
+
+    const recurrenceSelect = document.getElementById('{{ form.recurrence.id_for_label }}');
+    const untilField = document.getElementById('until-field');
+    if (recurrenceSelect && untilField) {
+        const syncUntil = () => {
+            untilField.classList.toggle('is-hidden', !recurrenceSelect.value);
+        };
+        recurrenceSelect.addEventListener('change', syncUntil);
+        syncUntil();
+    }
 </script>
 </body>
 </html>
