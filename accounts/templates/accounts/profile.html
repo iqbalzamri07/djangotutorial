@@ -12,142 +12,130 @@
             font-family: "Segoe UI", Tahoma, sans-serif;
         }
 
-        .container {
+        .page {
             margin: 36px auto 70px;
+            max-width: 640px;
         }
 
-        .kicker {
-            margin: 0 0 6px;
-            font-size: 12px;
-            font-weight: 800;
-            letter-spacing: 0.14em;
-            text-transform: uppercase;
-            color: #0f766e;
+        .page-head {
+            margin-bottom: 24px;
         }
 
-        .page-header h1 {
+        .page-head h1 {
             margin: 0;
-            font-size: 34px;
+            font-size: 32px;
             letter-spacing: -0.04em;
         }
 
-        .page-header p { margin: 6px 0 0; color: #57534e; }
-
-        .hero {
-            display: grid;
-            grid-template-columns: auto 1fr;
-            gap: 20px;
-            align-items: center;
-            background: #1c1917;
-            color: #fafaf9;
-            border-radius: 22px;
-            padding: 24px 28px;
-            margin-bottom: 18px;
+        .page-head p {
+            margin: 6px 0 0;
+            color: #57534e;
+            font-size: 15px;
         }
 
-        .avatar {
-            width: 84px;
-            height: 84px;
-            border-radius: 50%;
+        .identity {
             display: flex;
             align-items: center;
-            justify-content: center;
-            background: #0f766e;
-            color: #fff;
-            font-size: 32px;
-            font-weight: 800;
-        }
-
-        .hero h2 { margin: 0 0 4px; font-size: 26px; }
-        .hero p { margin: 0; color: #d6d3d1; font-size: 14px; }
-
-        .meta {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 12px;
-        }
-
-        .pill {
-            display: inline-flex;
-            padding: 5px 10px;
-            border-radius: 999px;
-            background: rgba(255,255,255,0.1);
-            color: #ecfdf5;
-            font-size: 12px;
-            font-weight: 800;
-        }
-
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin-bottom: 18px;
-        }
-
-        .stat-card {
-            background: #fff;
-            border: 1px solid #e7e5e4;
-            border-radius: 16px;
-            padding: 16px 18px;
-        }
-
-        .stat-card.total { border-top: 4px solid #0f766e; }
-        .stat-card.pending { border-top: 4px solid #f97316; }
-        .stat-card.done { border-top: 4px solid #16a34a; }
-
-        .stat-label { color: #78716c; font-size: 13px; font-weight: 700; }
-        .stat-number { margin-top: 6px; font-size: 28px; font-weight: 800; }
-
-        .workspace {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
             gap: 16px;
-        }
-
-        .panel {
+            padding: 20px 22px;
+            margin-bottom: 16px;
             background: #fff;
             border: 1px solid #e7e5e4;
             border-radius: 18px;
-            overflow: hidden;
         }
 
-        .panel.full { grid-column: 1 / -1; }
-
-        .panel-head {
-            padding: 18px 20px;
-            background: #0f766e;
-            color: #fff;
+        .avatar {
+            flex-shrink: 0;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            background: #ecfdf5;
+            color: #0f766e;
+            font-size: 22px;
+            font-weight: 800;
         }
 
-        .panel-head h3 { margin: 0; font-size: 18px; }
-        .panel-head p { margin: 4px 0 0; color: rgba(255,255,255,0.85); font-size: 13px; }
+        .identity h2 {
+            margin: 0 0 2px;
+            font-size: 18px;
+            letter-spacing: -0.02em;
+        }
 
-        .panel-body { padding: 18px 20px 22px; }
+        .identity .handle {
+            margin: 0;
+            color: #78716c;
+            font-size: 14px;
+        }
 
-        form p { margin: 0 0 14px; }
-        form label {
+        .identity .meta {
+            margin-top: 6px;
+            font-size: 12px;
+            color: #a8a29e;
+        }
+
+        .card {
+            background: #fff;
+            border: 1px solid #e7e5e4;
+            border-radius: 18px;
+            padding: 24px 24px 8px;
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            margin: 0 0 4px;
+            font-size: 16px;
+            font-weight: 800;
+        }
+
+        .section-note {
+            margin: 0 0 18px;
+            color: #78716c;
+            font-size: 13px;
+        }
+
+        .field {
+            margin-bottom: 16px;
+        }
+
+        .field label {
             display: block;
             margin-bottom: 6px;
             font-size: 13px;
-            font-weight: 800;
+            font-weight: 700;
+            color: #44403c;
         }
-        form input {
+
+        .field input {
             width: 100%;
             padding: 11px 13px;
             border: 1px solid #d6d3d1;
             border-radius: 10px;
             font-family: inherit;
             font-size: 14px;
-        }
-        form input:focus {
-            outline: none;
-            border-color: #0f766e;
-            box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.15);
+            background: #fff;
         }
 
-        .password-wrap { position: relative; }
-        .password-wrap input { padding-right: 46px; }
+        .field input:focus {
+            outline: none;
+            border-color: #0f766e;
+            box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.12);
+        }
+
+        .field input[readonly] {
+            background: #fafaf9;
+            color: #78716c;
+        }
+
+        .password-wrap {
+            position: relative;
+        }
+
+        .password-wrap input {
+            padding-right: 44px;
+        }
+
         .eye-btn {
             position: absolute;
             right: 8px;
@@ -156,204 +144,178 @@
             border: none;
             background: transparent;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 15px;
+            line-height: 1;
         }
 
-        .helptext { display: block; margin-top: 6px; color: #78716c; font-size: 12px; }
-        .errorlist { margin: 6px 0 0; padding: 0; list-style: none; color: #dc2626; font-size: 13px; }
+        .helptext {
+            display: block;
+            margin-top: 6px;
+            color: #a8a29e;
+            font-size: 12px;
+        }
 
-        .save-button {
+        .errorlist {
+            margin: 6px 0 0;
+            padding: 0;
+            list-style: none;
+            color: #dc2626;
+            font-size: 13px;
+        }
+
+        .actions {
+            padding: 4px 0 16px;
+        }
+
+        .btn {
             border: none;
             background: #0f766e;
             color: #fff;
             border-radius: 10px;
             padding: 11px 18px;
             font-weight: 800;
+            font-size: 14px;
             cursor: pointer;
             font-family: inherit;
         }
 
-        .save-button:hover { background: #0d9488; }
+        .btn:hover {
+            background: #0d9488;
+        }
 
-        .banner {
-            margin-bottom: 14px;
-            padding: 10px 12px;
+        .toast {
+            margin-bottom: 16px;
+            padding: 10px 14px;
             border-radius: 10px;
-            background: #dcfce7;
-            color: #166534;
+            background: #ecfdf5;
+            border: 1px solid #99f6e4;
+            color: #0f766e;
             font-size: 13px;
             font-weight: 700;
         }
 
-        .task-row {
-            display: grid;
-            grid-template-columns: 1fr auto;
-            gap: 10px;
-            align-items: center;
-            padding: 12px 0;
-            border-bottom: 1px solid #f5f5f4;
-            text-decoration: none;
-            color: inherit;
-        }
+        @media (max-width: 640px) {
+            .page {
+                margin-top: 24px;
+            }
 
-        .task-row:last-child { border-bottom: none; }
-        .task-title { font-weight: 800; font-size: 14px; }
-        .task-meta { margin-top: 3px; font-size: 12px; color: #78716c; font-weight: 700; }
-        .status {
-            display: inline-flex;
-            padding: 5px 10px;
-            border-radius: 999px;
-            font-size: 11px;
-            font-weight: 800;
-        }
-        .completed { background: #dcfce7; color: #166534; }
-        .pending { background: #ffedd5; color: #9a3412; }
-        .empty { text-align: center; padding: 24px 8px; color: #78716c; }
-
-        @media (max-width: 800px) {
-            .header, .hero, .workspace, .stats { display: block; }
-            .avatar { margin-bottom: 12px; }
-            .stat-card, .panel { margin-top: 12px; }
+            .identity {
+                align-items: flex-start;
+            }
         }
     </style>
 </head>
 <body>
 {% include "partials/nav.html" with active_nav="profile" %}
-<div class="container">
-    {% url 'home' as home_url %}
-    {% url 'edit_todos' as edit_url %}
-    {% with mark=user.username|slice:":1"|upper total_label=total_tasks|stringformat:"s" pending_label=pending_tasks|stringformat:"s" %}
-        {% include "partials/page_banner.html" with banner="profile" banner_mark=mark banner_chip_1=user.username banner_chip_2=total_label|add:" tasks" banner_chip_3=pending_label|add:" open" banner_title="Profile" action1_url=home_url action1_label="Home" action2_url=edit_url action2_label="Edit list" %}
-    {% endwith %}
+<div class="page">
+    <div class="page-head">
+        <h1>Profile</h1>
+        <p>Manage your account details and password.</p>
+    </div>
 
-    <div class="hero">
+    <div class="identity">
         <div class="avatar">{{ user.username|slice:":1"|upper }}</div>
         <div>
             <h2>
                 {% if user.first_name %}
-                    {{ user.first_name }} {{ user.last_name }}
+                    {{ user.first_name }}{% if user.last_name %} {{ user.last_name }}{% endif %}
                 {% else %}
                     {{ user.username }}
                 {% endif %}
             </h2>
-            <p>@{{ user.username }}{% if user.email %} · {{ user.email }}{% endif %}</p>
+            <p class="handle">@{{ user.username }}{% if user.email %} · {{ user.email }}{% endif %}</p>
             <div class="meta">
-                <span class="pill">Joined {{ user.date_joined|date:"M j, Y" }}</span>
-                {% if user.last_login %}
-                    <span class="pill">Last login {{ user.last_login|date:"M j, Y" }}</span>
-                {% endif %}
+                Joined {{ user.date_joined|date:"M j, Y" }}
+                {% if user.last_login %} · Last login {{ user.last_login|date:"M j, Y" }}{% endif %}
             </div>
         </div>
     </div>
 
-    <div class="stats">
-        <div class="stat-card total">
-            <div class="stat-label">Total tasks</div>
-            <div class="stat-number">{{ total_tasks }}</div>
-        </div>
-        <div class="stat-card pending">
-            <div class="stat-label">Pending</div>
-            <div class="stat-number">{{ pending_tasks }}</div>
-        </div>
-        <div class="stat-card done">
-            <div class="stat-label">Completed</div>
-            <div class="stat-number">{{ completed_tasks }}</div>
-        </div>
+    {% if profile_saved %}
+        <div class="toast">Profile saved.</div>
+    {% endif %}
+
+    <div class="card">
+        <h3 class="section-title">Personal info</h3>
+        <p class="section-note">Your username can’t be changed here.</p>
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="profile">
+
+            <div class="field">
+                <label for="id_username">Username</label>
+                <input type="text" id="id_username" value="{{ user.username }}" readonly>
+            </div>
+
+            {% for field in profile_form %}
+                <div class="field">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <ul class="errorlist">
+                            {% for error in field.errors %}<li>{{ error }}</li>{% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            <div class="actions">
+                <button type="submit" class="btn">Save changes</button>
+            </div>
+        </form>
     </div>
 
-    <div class="workspace">
-        <div class="panel">
-            <div class="panel-head">
-                <h3>Profile details</h3>
-                <p>Username stays the same. You can update your name and email.</p>
-            </div>
-            <div class="panel-body">
-                {% if profile_saved %}
-                    <div class="banner">Profile saved.</div>
-                {% endif %}
-                <form method="POST">
-                    {% csrf_token %}
-                    <input type="hidden" name="action" value="profile">
-                    {{ profile_form.as_p }}
-                    <button type="submit" class="save-button">Save profile</button>
-                </form>
-            </div>
-        </div>
+    {% if password_saved %}
+        <div class="toast">Password updated.</div>
+    {% endif %}
 
-        <div class="panel">
-            <div class="panel-head">
-                <h3>Change password</h3>
-                <p>Use a strong password you don’t reuse elsewhere.</p>
-            </div>
-            <div class="panel-body">
-                {% if password_saved %}
-                    <div class="banner">Password updated.</div>
-                {% endif %}
-                <form method="POST">
-                    {% csrf_token %}
-                    <input type="hidden" name="action" value="password">
-                    {{ password_form.as_p }}
-                    <button type="submit" class="save-button">Update password</button>
-                </form>
-            </div>
-        </div>
+    <div class="card">
+        <h3 class="section-title">Password</h3>
+        <p class="section-note">Choose a strong password you don’t use elsewhere.</p>
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="password">
 
-        <div class="panel full">
-            <div class="panel-head">
-                <h3>Recent todos</h3>
-                <p>Your five newest tasks.</p>
-            </div>
-            <div class="panel-body">
-                {% for todo in recent_todos %}
-                    <a href="{% url 'edit' todo.id %}" class="task-row">
-                        <div>
-                            <div class="task-title">{{ todo.title }}</div>
-                            {% if todo.notes %}
-                                <div class="task-meta">{{ todo.notes|truncatechars:80 }}</div>
-                            {% endif %}
-                            <div class="task-meta">
-                                {% if todo.start_date %}
-                                    {{ todo.duration_label }}
-                                {% else %}
-                                    No dates yet
-                                {% endif %}
-                                {% if todo.recurrence %}
-                                    · ↻ {{ todo.get_recurrence_display }}
-                                {% endif %}
-                            </div>
+            {% for field in password_form %}
+                <div class="field">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {% if field.field.widget.input_type == "password" %}
+                        <div class="password-wrap">
+                            {{ field }}
+                            <button type="button" class="eye-btn" aria-label="Show password">👁️</button>
                         </div>
-                        {% if todo.completed %}
-                            <span class="status completed">Done</span>
-                        {% else %}
-                            <span class="status pending">Pending</span>
-                        {% endif %}
-                    </a>
-                {% empty %}
-                    <div class="empty">No todos yet. Add one from Home.</div>
-                {% endfor %}
+                    {% else %}
+                        {{ field }}
+                    {% endif %}
+                    {% if field.help_text %}
+                        <span class="helptext">{{ field.help_text|safe }}</span>
+                    {% endif %}
+                    {% if field.errors %}
+                        <ul class="errorlist">
+                            {% for error in field.errors %}<li>{{ error }}</li>{% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            <div class="actions">
+                <button type="submit" class="btn">Update password</button>
             </div>
-        </div>
+        </form>
     </div>
 </div>
 <script>
-    document.querySelectorAll('input[type="password"]').forEach((input) => {
-        const wrap = document.createElement('div');
-        wrap.className = 'password-wrap';
-        input.parentNode.insertBefore(wrap, input);
-        wrap.appendChild(input);
+    document.querySelectorAll(".password-wrap").forEach((wrap) => {
+        const input = wrap.querySelector('input[type="password"], input[type="text"]');
+        const btn = wrap.querySelector(".eye-btn");
+        if (!input || !btn) return;
 
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = 'eye-btn';
-        btn.setAttribute('aria-label', 'Show password');
-        btn.textContent = '👁️';
-        btn.addEventListener('click', () => {
-            const showing = input.type === 'text';
-            input.type = showing ? 'password' : 'text';
-            btn.textContent = showing ? '👁️' : '🙈';
-            btn.setAttribute('aria-label', showing ? 'Show password' : 'Hide password');
+        btn.addEventListener("click", () => {
+            const showing = input.type === "text";
+            input.type = showing ? "password" : "text";
+            btn.textContent = showing ? "👁️" : "🙈";
+            btn.setAttribute("aria-label", showing ? "Show password" : "Hide password");
         });
-        wrap.appendChild(btn);
     });
 </script>
 </body>

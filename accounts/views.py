@@ -3,8 +3,6 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from django.shortcuts import redirect, render
 
-from todos.services import completion_streak, mark_overdue_todos_completed, user_todos
-
 from .forms import ProfileForm, SignUpForm
 
 
@@ -54,8 +52,6 @@ def logout_view(request):
 
 @login_required
 def profile(request):
-    mark_overdue_todos_completed(request.user)
-    todos = user_todos(request.user)
     profile_form = ProfileForm(instance=request.user)
     password_form = PasswordChangeForm(request.user)
     profile_saved = False
@@ -84,10 +80,5 @@ def profile(request):
             "password_form": password_form,
             "profile_saved": profile_saved,
             "password_saved": password_saved,
-            "total_tasks": todos.count(),
-            "pending_tasks": todos.filter(completed=False).count(),
-            "completed_tasks": todos.filter(completed=True).count(),
-            "recent_todos": todos.order_by("-created_at")[:5],
-            "streak": completion_streak(request.user),
         },
     )
