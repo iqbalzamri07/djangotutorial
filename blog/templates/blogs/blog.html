@@ -1,295 +1,267 @@
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>My Blog</title>
-
-<style>
-    * {
-        box-sizing: border-box;
-    }
-
-    body {
-        margin: 0;
-        min-height: 100vh;
-        font-family: Arial, Helvetica, sans-serif;
-
-        background:
-            linear-gradient(135deg, #eff6ff, #f5f3ff);
-
-        color: #1f2937;
-    }
-
-    /* Main container */
-
-    .container {
-        width: 92%;
-        max-width: 1000px;
-        margin: 60px auto;
-    }
-
-    /* Header */
-
-    .header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-
-        margin-bottom: 30px;
-    }
-
-    .logo {
-        font-size: 30px;
-        font-weight: 800;
-        color: #111827;
-    }
-
-    .subtitle {
-        margin-top: 6px;
-        color: #6b7280;
-        font-size: 14px;
-    }
-
-    /* Back button */
-
-    .back-button {
-        display: inline-flex;
-        align-items: center;
-        gap: 7px;
-
-        padding: 11px 18px;
-
-        background-color: white;
-        color: #374151;
-
-        text-decoration: none;
-
-        border: 1px solid #e5e7eb;
-        border-radius: 9px;
-
-        font-size: 14px;
-        font-weight: 600;
-
-        transition: all 0.2s ease;
-    }
-
-    .back-button:hover {
-        background-color: #f9fafb;
-        border-color: #d1d5db;
-        transform: translateY(-1px);
-    }
-
-    /* Blog card */
-
-    .blog-card {
-        background-color: white;
-
-        padding: 45px;
-
-        border-radius: 18px;
-
-        border: 1px solid #e5e7eb;
-
-        box-shadow:
-            0 15px 40px rgba(0, 0, 0, 0.07);
-    }
-
-    .blog-icon {
-        width: 65px;
-        height: 65px;
-
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        background: linear-gradient(
-            135deg,
-            #2563eb,
-            #7c3aed
-        );
-
-        color: white;
-
-        border-radius: 15px;
-
-        font-size: 30px;
-
-        margin-bottom: 25px;
-    }
-
-    .blog-card h1 {
-        margin: 0;
-
-        font-size: 38px;
-
-        color: #111827;
-    }
-
-    .description {
-        margin-top: 15px;
-
-        font-size: 17px;
-
-        line-height: 1.7;
-
-        color: #6b7280;
-    }
-
-    /* Divider */
-
-    .divider {
-        height: 1px;
-
-        background-color: #e5e7eb;
-
-        margin: 30px 0;
-    }
-
-    /* Welcome section */
-
-    .welcome {
-        background-color: #f8fafc;
-
-        padding: 22px;
-
-        border-radius: 12px;
-
-        border-left: 4px solid #2563eb;
-    }
-
-    .welcome h2 {
-        margin-top: 0;
-
-        color: #1f2937;
-
-        font-size: 20px;
-    }
-
-    .welcome p {
-        margin-bottom: 0;
-
-        color: #6b7280;
-
-        line-height: 1.6;
-    }
-
-    /* Footer */
-
-    .footer {
-        text-align: center;
-
-        margin-top: 30px;
-
-        color: #9ca3af;
-
-        font-size: 13px;
-    }
-
-    /* Mobile */
-
-    @media (max-width: 700px) {
-
-        .container {
+    <title>Notes from Building</title>
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Georgia, "Times New Roman", serif;
+            background: #f6f1e8;
+            color: #1c1917;
+        }
+
+        .wrap {
             width: 94%;
-            margin: 30px auto;
+            max-width: 1080px;
+            margin: 36px auto 70px;
         }
 
-        .header {
-            flex-direction: column;
-            align-items: flex-start;
-
-            gap: 15px;
+        .top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: 16px;
+            margin-bottom: 28px;
         }
 
-        .back-button {
-            width: 100%;
+        .kicker {
+            margin: 0 0 6px;
+            font-family: "Segoe UI", sans-serif;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: #b45309;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 42px;
+            letter-spacing: -0.04em;
+        }
+
+        .intro {
+            margin: 8px 0 0;
+            max-width: 520px;
+            color: #57534e;
+            font-size: 17px;
+            line-height: 1.5;
+        }
+
+        .nav-link {
+            font-family: "Segoe UI", sans-serif;
+            text-decoration: none;
+            color: #1c1917;
+            border: 1px solid #d6d3d1;
+            background: #fff;
+            border-radius: 999px;
+            padding: 10px 16px;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 22px;
+            font-family: "Segoe UI", sans-serif;
+        }
+
+        .chip {
+            text-decoration: none;
+            color: #44403c;
+            background: #fff;
+            border: 1px solid #e7e5e4;
+            border-radius: 999px;
+            padding: 7px 12px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .chip.active {
+            background: #1c1917;
+            color: #fff;
+            border-color: #1c1917;
+        }
+
+        .featured {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            background: #1c1917;
+            color: #fafaf9;
+            border-radius: 22px;
+            overflow: hidden;
+            min-height: 280px;
+            text-decoration: none;
+            margin-bottom: 22px;
+        }
+
+        .featured-copy {
+            padding: 36px;
+        }
+
+        .featured-copy .meta {
+            font-family: "Segoe UI", sans-serif;
+            font-size: 12px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #fdba74;
+            margin-bottom: 12px;
+        }
+
+        .featured-copy h2 {
+            margin: 0;
+            font-size: 34px;
+            line-height: 1.15;
+        }
+
+        .featured-copy p {
+            color: #d6d3d1;
+            font-size: 17px;
+            line-height: 1.6;
+        }
+
+        .featured-art {
+            display: flex;
+            align-items: center;
             justify-content: center;
+            font-size: 90px;
+            background: radial-gradient(circle at 30% 30%, #f59e0b, #9a3412 70%);
         }
 
-        .blog-card {
-            padding: 30px 22px;
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
         }
 
-        .blog-card h1 {
-            font-size: 30px;
+        .card {
+            background: #fff;
+            border: 1px solid #e7e5e4;
+            border-radius: 18px;
+            padding: 22px;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
         }
 
-        .description {
-            font-size: 15px;
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 16px 30px rgba(28, 25, 23, 0.08);
         }
-    }
-</style>
 
+        .card .emoji {
+            font-size: 28px;
+        }
+
+        .card .meta {
+            font-family: "Segoe UI", sans-serif;
+            font-size: 12px;
+            font-weight: 800;
+            color: #0f766e;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin: 10px 0 8px;
+        }
+
+        .card h3 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .card p {
+            color: #57534e;
+            line-height: 1.55;
+        }
+
+        .empty {
+            background: #fff;
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+            color: #78716c;
+        }
+
+        @media (max-width: 800px) {
+            .top, .featured, .grid { display: block; }
+            h1 { font-size: 32px; }
+            .featured-art { min-height: 160px; }
+            .card { margin-bottom: 12px; }
+        }
+    </style>
 </head>
-
 <body>
-
-<div class="container">
-
-<!-- Header -->
-
-<div class="header">
-
-    <div>
-        <div class="logo">
-            📝 My Blog
+<div class="wrap">
+    <div class="top">
+        <div>
+            <p class="kicker">A learning journal</p>
+            <h1>Notes from Building</h1>
+            <p class="intro">
+                Short stories from my first Django project: todos, calendars,
+                popups, and all the tiny mistakes that taught me the most.
+            </p>
         </div>
-
-        <div class="subtitle">
-            Thoughts, ideas, and stories
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+            {% if user.is_authenticated %}
+                <span class="nav-link">👤 {{ user.username }}</span>
+                <form method="post" action="{% url 'logout' %}" style="margin:0;">
+                    {% csrf_token %}
+                    <button type="submit" class="nav-link" style="cursor:pointer;font-family:inherit;">Log out</button>
+                </form>
+            {% else %}
+                <a class="nav-link" href="{% url 'login' %}">Log in</a>
+                <a class="nav-link" href="{% url 'signup' %}">Sign up</a>
+            {% endif %}
+            <a class="nav-link" href="{% url 'home' %}">← Todo App</a>
         </div>
     </div>
 
-    <a href="{% url 'home' %}" class="back-button">
-        ← Back to Todo App
-    </a>
-
-</div>
-
-
-<!-- Blog content -->
-
-<div class="blog-card">
-
-    <div class="blog-icon">
-        ✍️
+    <div class="filters">
+        <a class="chip {% if not active_category %}active{% endif %}" href="{% url 'blog:blog' %}">All</a>
+        {% for category in categories %}
+            <a
+                class="chip {% if active_category == category %}active{% endif %}"
+                href="{% url 'blog:blog' %}?category={{ category }}"
+            >
+                {{ category|title }}
+            </a>
+        {% endfor %}
     </div>
 
-    <h1>
-        Welcome to My Blog
-    </h1>
+    {% if featured %}
+        <a class="featured" href="{% url 'blog:post_detail' featured.slug %}">
+            <div class="featured-copy">
+                <div class="meta">
+                    Featured · {{ featured.get_category_display }} · {{ featured.reading_time }} min read
+                </div>
+                <h2>{{ featured.title }}</h2>
+                <p>{{ featured.excerpt }}</p>
+            </div>
+            <div class="featured-art">{{ featured.emoji }}</div>
+        </a>
+    {% endif %}
 
-    <p class="description">
-        Welcome to my personal blog. This is where I'll share
-        thoughts, ideas, projects, and things I'm learning along
-        the way.
-    </p>
-
-    <div class="divider"></div>
-
-    <div class="welcome">
-
-        <h2>
-            🚀 My Django Journey
-        </h2>
-
-        <p>
-            I'm currently learning Django and building my first
-            web applications. This blog will grow alongside my
-            journey as I learn more about Python, Django,
-            databases, and web development.
-        </p>
-
-    </div>
-
+    {% if posts %}
+        <div class="grid">
+            {% for post in posts %}
+                <a class="card" href="{% url 'blog:post_detail' post.slug %}">
+                    <div class="emoji">{{ post.emoji }}</div>
+                    <div class="meta">{{ post.get_category_display }} · {{ post.reading_time }} min</div>
+                    <h3>{{ post.title }}</h3>
+                    <p>{{ post.excerpt }}</p>
+                </a>
+            {% endfor %}
+        </div>
+    {% elif not featured %}
+        <div class="empty">No posts yet. Add one from the Django admin.</div>
+    {% endif %}
 </div>
-
-</div>
-
 </body>
-
 </html>

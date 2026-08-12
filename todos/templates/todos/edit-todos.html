@@ -351,9 +351,18 @@
         <p>Manage your tasks and keep track of your progress.</p>
     </div>
 
-    <a href="{% url 'home' %}" class="home-button">
-        ← Home
-    </a>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+        {% if user.is_authenticated %}
+            <span class="home-button" style="cursor:default;">👤 {{ user.username }}</span>
+            <form method="post" action="{% url 'logout' %}" style="margin:0;">
+                {% csrf_token %}
+                <button type="submit" class="home-button" style="cursor:pointer;font-family:inherit;">Log out</button>
+            </form>
+        {% endif %}
+        <a href="{% url 'home' %}" class="home-button">
+            ← Home
+        </a>
+    </div>
 
 </div>
 

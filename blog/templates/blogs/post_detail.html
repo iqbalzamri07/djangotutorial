@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ post.title }}</title>
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Georgia, "Times New Roman", serif;
+            background: #f6f1e8;
+            color: #1c1917;
+        }
+
+        .wrap {
+            width: 92%;
+            max-width: 760px;
+            margin: 36px auto 70px;
+        }
+
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 28px;
+            font-family: "Segoe UI", sans-serif;
+        }
+
+        .top-nav a {
+            text-decoration: none;
+            color: #1c1917;
+            background: #fff;
+            border: 1px solid #d6d3d1;
+            border-radius: 999px;
+            padding: 9px 14px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .meta {
+            font-family: "Segoe UI", sans-serif;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #b45309;
+        }
+
+        h1 {
+            margin: 10px 0 12px;
+            font-size: 42px;
+            line-height: 1.15;
+            letter-spacing: -0.04em;
+        }
+
+        .excerpt {
+            font-size: 20px;
+            color: #57534e;
+            line-height: 1.55;
+        }
+
+        .hero {
+            margin: 22px 0 28px;
+            border-radius: 20px;
+            min-height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 72px;
+            background: radial-gradient(circle at 30% 20%, #fbbf24, #0f766e 70%);
+        }
+
+        .content {
+            font-size: 18px;
+            line-height: 1.8;
+        }
+
+        .content p {
+            margin: 0 0 18px;
+        }
+
+        .related {
+            margin-top: 40px;
+            padding-top: 24px;
+            border-top: 1px solid #e7e5e4;
+        }
+
+        .related h2 {
+            font-size: 22px;
+            margin: 0 0 14px;
+        }
+
+        .related a {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+            background: #fff;
+            border: 1px solid #e7e5e4;
+            border-radius: 14px;
+            padding: 14px 16px;
+            margin-bottom: 10px;
+        }
+
+        .related a strong {
+            display: block;
+            font-size: 18px;
+        }
+
+        .related a span {
+            font-family: "Segoe UI", sans-serif;
+            font-size: 12px;
+            color: #0f766e;
+            font-weight: 800;
+        }
+
+        @media (max-width: 700px) {
+            h1 { font-size: 32px; }
+        }
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <div class="top-nav">
+        <a href="{% url 'blog:blog' %}">← All posts</a>
+        <a href="{% url 'home' %}">Todo App</a>
+    </div>
+
+    <div class="meta">
+        {{ post.get_category_display }} · {{ post.created_at|date:"M j, Y" }} · {{ post.reading_time }} min read
+    </div>
+    <h1>{{ post.title }}</h1>
+    <p class="excerpt">{{ post.excerpt }}</p>
+    <div class="hero">{{ post.emoji }}</div>
+    <div class="content">
+        {{ post.content|linebreaks }}
+    </div>
+
+    {% if related %}
+        <div class="related">
+            <h2>Keep reading</h2>
+            {% for item in related %}
+                <a href="{% url 'blog:post_detail' item.slug %}">
+                    <span>{{ item.get_category_display }}</span>
+                    <strong>{{ item.emoji }} {{ item.title }}</strong>
+                </a>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+</body>
+</html>

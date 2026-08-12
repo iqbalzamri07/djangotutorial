@@ -1,31 +1,79 @@
 import calendar as py_calendar
 from datetime import date, datetime, timedelta
 
+from django.contrib.auth import login, logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import AuthenticationForm
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 
-from django.shortcuts import get_object_or_404, render, redirect
+from .forms import SignUpForm, TodoForm
 from .models import Todo
-from .forms import TodoForm
 
 
-def mark_overdue_todos_completed():
+def mark_overdue_todos_completed(user=None):
     """
     Auto-complete todos whose end_date is in the past.
-
-    This is a "lazy" approach: it runs when pages are visited (home/calendar),
-    avoiding extra background jobs for this tutorial project.
     """
     today = date.today()
-    Todo.objects.filter(
+    todos = Todo.objects.filter(
         completed=False,
         end_date__isnull=False,
         end_date__lt=today,
-    ).update(completed=True)
+    )
+    if user is not None:
+        todos = todos.filter(user=user)
+    todos.update(completed=True)
 
 
+def signup(request):
+    if request.user.is_authenticated:
+        return redirect("home")
+
+    if request.method == "POST":
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect("home")
+    else:
+        form = SignUpForm()
+
+    return render(request, "accounts/signup.html", {"form": form})
+
+
+def login_view(request):
+    if request.user.is_authenticated:
+        return redirect("home")
+
+    if request.method == "POST":
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            login(request, form.get_user())
+            next_url = request.GET.get("next") or request.POST.get("next") or "home"
+            return redirect(next_url)
+    else:
+        form = AuthenticationForm(request)
+
+    return render(
+        request,
+        "accounts/login.html",
+        {
+            "form": form,
+            "next": request.GET.get("next", ""),
+        },
+    )
+
+
+def logout_view(request):
+    logout(request)
+    return redirect("login")
+
+
+@login_required
 def home(request):
-    mark_overdue_todos_completed()
-    todos = Todo.objects.all()
+    mark_overdue_todos_completed(request.user)
+    todos = Todo.objects.filter(user=request.user)
     completed_tasks = todos.filter(completed=True).count()
     pending_tasks = todos.filter(completed=False).count()
 
@@ -33,7 +81,9 @@ def home(request):
         form = TodoForm(request.POST)
 
         if form.is_valid():
-            form.save()
+            todo = form.save(commit=False)
+            todo.user = request.user
+            todo.save()
             return redirect("home")
     else:
         form = TodoForm()
@@ -50,12 +100,12 @@ def home(request):
     )
 
 
+@login_required
 def edit_todos(request):
-    mark_overdue_todos_completed()
-    todos = Todo.objects.all()
+    mark_overdue_todos_completed(request.user)
+    todos = Todo.objects.filter(user=request.user)
 
     if request.method == "POST":
-
         for todo in todos:
             todo.completed = f"completed_{todo.id}" in request.POST
             todo.save()
@@ -67,8 +117,9 @@ def edit_todos(request):
     })
 
 
-def delete(request,todo_id):
-    todo = get_object_or_404(Todo, id=todo_id)
+@login_required
+def delete(request, todo_id):
+    todo = get_object_or_404(Todo, id=todo_id, user=request.user)
 
     if request.method == "POST":
         todo.delete()
@@ -79,8 +130,9 @@ def delete(request,todo_id):
     })
 
 
+@login_required
 def edit(request, todo_id):
-    todo = get_object_or_404(Todo, id=todo_id)
+    todo = get_object_or_404(Todo, id=todo_id, user=request.user)
 
     if request.method == "POST":
         form = TodoForm(request.POST, instance=todo)
@@ -99,18 +151,31 @@ def edit(request, todo_id):
 
 
 def about(request):
-    return render(request, "todos/about.html")
+    from blog.models import Post
+
+    if request.user.is_authenticated:
+        todos = Todo.objects.filter(user=request.user)
+    else:
+        todos = Todo.objects.none()
+
+    return render(
+        request,
+        "todos/about.html",
+        {
+            "total_tasks": todos.count(),
+            "completed_tasks": todos.filter(completed=True).count(),
+            "pending_tasks": todos.filter(completed=False).count(),
+            "post_count": Post.objects.filter(published=True).count(),
+        },
+    )
 
 
+@login_required
 def calendar(request):
     """
     Monthly grid for todos scheduled on a given month.
-
-    GET params:
-    - year (YYYY)
-    - month (1-12)
     """
-    mark_overdue_todos_completed()
+    mark_overdue_todos_completed(request.user)
     today = date.today()
     try:
         year = int(request.GET.get("year", today.year))
@@ -122,17 +187,16 @@ def calendar(request):
     except (TypeError, ValueError):
         month = today.month
 
-    # Normalize out-of-range values.
     month = max(1, min(12, month))
 
     month_start_date = date(year, month, 1)
     next_month_date = (
         date(year + 1, 1, 1) if month == 12 else date(year, month + 1, 1)
     )
-
     month_end_date = next_month_date - timedelta(days=1)
 
     todos_in_month = Todo.objects.filter(
+        user=request.user,
         start_date__isnull=False,
         end_date__isnull=False,
         start_date__lte=month_end_date,
@@ -148,7 +212,7 @@ def calendar(request):
             todos_by_date.setdefault(current, []).append(todo)
             current += timedelta(days=1)
 
-    cal = py_calendar.Calendar(firstweekday=0)  # Monday
+    cal = py_calendar.Calendar(firstweekday=0)
     weeks = []
     for week in cal.monthdatescalendar(year, month):
         week_cells = []
@@ -170,7 +234,6 @@ def calendar(request):
 
     month_title = datetime(year, month, 1).strftime("%B %Y")
 
-    # Handle "add todo" popup submit without leaving the calendar page.
     show_modal = False
     title_value = ""
     start_date_value = ""
@@ -179,7 +242,9 @@ def calendar(request):
     if request.method == "POST":
         form = TodoForm(request.POST)
         if form.is_valid():
-            todo = form.save()
+            todo = form.save(commit=False)
+            todo.user = request.user
+            todo.save()
             calendar_url = reverse("calendar")
             redirect_date = todo.start_date or date(year, month, 1)
             return redirect(
@@ -212,12 +277,8 @@ def calendar(request):
     )
 
 
+@login_required
 def calendar_add(request):
-    """
-    Add a Todo with start/end dates prefilled from a day clicked in the calendar.
-    GET params:
-      - date=YYYY-MM-DD
-    """
     selected_date_str = request.GET.get("date")
     today = date.today()
 
@@ -231,7 +292,9 @@ def calendar_add(request):
     if request.method == "POST":
         form = TodoForm(request.POST)
         if form.is_valid():
-            todo = form.save()
+            todo = form.save(commit=False)
+            todo.user = request.user
+            todo.save()
             redirect_date = todo.start_date or selected_date
             calendar_url = reverse("calendar")
             return redirect(

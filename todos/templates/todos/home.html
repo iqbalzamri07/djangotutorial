@@ -55,6 +55,21 @@
     .nav {
         display: flex;
         gap: 10px;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: flex-end;
+    }
+
+    .nav form {
+        margin: 0;
+    }
+
+    .button.logout {
+        cursor: pointer;
+        font-family: inherit;
+        background: #fef2f2;
+        color: #b91c1c;
+        border-color: #fecaca;
     }
 
     .button {
@@ -382,7 +397,7 @@
             ℹ️ About
         </a>
 
-        <a href="{% url 'blog' %}" class="button">
+        <a href="{% url 'blog:blog' %}" class="button">
             📝 Blog
         </a>
 
@@ -393,6 +408,17 @@
         <a href="{% url 'edit_todos' %}" class="button edit">
             ✏️ Edit Todos
         </a>
+
+        {% if user.is_authenticated %}
+            <span class="button" style="cursor:default;">👤 {{ user.username }}</span>
+            <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="button logout">Log out</button>
+            </form>
+        {% else %}
+            <a href="{% url 'login' %}" class="button">Log in</a>
+            <a href="{% url 'signup' %}" class="button">Sign up</a>
+        {% endif %}
     </div>
 
 </div>

@@ -1,582 +1,384 @@
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>About - My Todo App</title>
-
-<style>
-    * {
-        box-sizing: border-box;
-    }
-
-    body {
-        margin: 0;
-        min-height: 100vh;
-
-        font-family: Arial, Helvetica, sans-serif;
-
-        background:
-            linear-gradient(135deg, #eff6ff, #f5f3ff);
-
-        color: #1f2937;
-    }
-
-    /* Main container */
-
-    .container {
-        width: 92%;
-        max-width: 1000px;
-
-        margin: 60px auto;
-    }
-
-    /* Header */
-
-    .header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-
-        margin-bottom: 25px;
-    }
-
-    .brand {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-    }
-
-    .brand-icon {
-        width: 48px;
-        height: 48px;
-
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        background: linear-gradient(
-            135deg,
-            #2563eb,
-            #7c3aed
-        );
-
-        color: white;
-
-        border-radius: 12px;
-
-        font-size: 23px;
-
-        box-shadow:
-            0 6px 15px rgba(37, 99, 235, 0.25);
-    }
-
-    .brand-text h1 {
-        margin: 0;
-
-        font-size: 24px;
-
-        color: #111827;
-    }
-
-    .brand-text p {
-        margin: 3px 0 0;
-
-        font-size: 13px;
-
-        color: #6b7280;
-    }
-
-    /* Home button */
-
-    .home-button {
-        display: inline-flex;
-        align-items: center;
-        gap: 7px;
-
-        padding: 11px 18px;
-
-        background-color: white;
-
-        color: #374151;
-
-        text-decoration: none;
-
-        border: 1px solid #e5e7eb;
-
-        border-radius: 9px;
-
-        font-size: 14px;
-
-        font-weight: 600;
-
-        transition: all 0.2s ease;
-    }
-
-    .home-button:hover {
-        background-color: #f9fafb;
-
-        border-color: #d1d5db;
-
-        transform: translateY(-1px);
-    }
-
-    /* Main card */
-
-    .card {
-        background-color: white;
-
-        padding: 50px;
-
-        border-radius: 20px;
-
-        border: 1px solid #e5e7eb;
-
-        box-shadow:
-            0 15px 40px rgba(0, 0, 0, 0.07);
-    }
-
-    /* Hero */
-
-    .hero {
-        text-align: center;
-
-        padding-bottom: 35px;
-    }
-
-    .hero-icon {
-        width: 75px;
-        height: 75px;
-
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        margin: 0 auto 20px;
-
-        background: linear-gradient(
-            135deg,
-            #2563eb,
-            #7c3aed
-        );
-
-        color: white;
-
-        border-radius: 20px;
-
-        font-size: 36px;
-
-        box-shadow:
-            0 10px 25px rgba(37, 99, 235, 0.25);
-    }
-
-    .hero h2 {
-        margin: 0;
-
-        font-size: 38px;
-
-        color: #111827;
-    }
-
-    .hero p {
-        max-width: 650px;
-
-        margin: 15px auto 0;
-
-        font-size: 17px;
-
-        line-height: 1.7;
-
-        color: #6b7280;
-    }
-
-    /* Divider */
-
-    .divider {
-        height: 1px;
-
-        background-color: #e5e7eb;
-
-        margin: 10px 0 35px;
-    }
-
-    /* Section */
-
-    .section-title {
-        margin-bottom: 20px;
-    }
-
-    .section-title h3 {
-        margin: 0;
-
-        font-size: 22px;
-
-        color: #111827;
-    }
-
-    .section-title p {
-        margin: 6px 0 0;
-
-        color: #6b7280;
-
-        font-size: 14px;
-    }
-
-    /* Feature grid */
-
-    .features {
-        display: grid;
-
-        grid-template-columns:
-            repeat(2, 1fr);
-
-        gap: 15px;
-    }
-
-    .feature {
-        padding: 22px;
-
-        background-color: #f8fafc;
-
-        border: 1px solid #e5e7eb;
-
-        border-radius: 12px;
-
-        transition: all 0.2s ease;
-    }
-
-    /* Make feature cards clickable links */
-    .feature-link {
-        display: block;
-
-        color: inherit;
-
-        text-decoration: none;
-    }
-
-    .feature:hover {
-        transform: translateY(-3px);
-
-        background-color: white;
-
-        box-shadow:
-            0 8px 20px rgba(0, 0, 0, 0.06);
-    }
-
-    .feature-icon {
-        font-size: 25px;
-
-        margin-bottom: 10px;
-    }
-
-    .feature h4 {
-        margin: 0 0 7px;
-
-        font-size: 16px;
-
-        color: #1f2937;
-    }
-
-    .feature p {
-        margin: 0;
-
-        font-size: 14px;
-
-        line-height: 1.6;
-
-        color: #6b7280;
-    }
-
-    /* Django section */
-
-    .django-section {
-        margin-top: 35px;
-
-        padding: 25px;
-
-        background:
-            linear-gradient(
-                135deg,
-                #eff6ff,
-                #eef2ff
-            );
-
-        border: 1px solid #dbeafe;
-
-        border-radius: 14px;
-    }
-
-    .django-section h3 {
-        margin-top: 0;
-
-        color: #1e3a8a;
-
-        font-size: 20px;
-    }
-
-    .django-section p {
-        margin-bottom: 0;
-
-        color: #4b5563;
-
-        line-height: 1.7;
-
-        font-size: 14px;
-    }
-
-    .django-badge {
-        display: inline-block;
-
-        margin-top: 15px;
-
-        padding: 6px 11px;
-
-        background-color: #2563eb;
-
-        color: white;
-
-        border-radius: 999px;
-
-        font-size: 12px;
-
-        font-weight: 700;
-    }
-
-    /* Footer */
-
-    .footer {
-        text-align: center;
-
-        margin-top: 25px;
-
-        color: #9ca3af;
-
-        font-size: 13px;
-    }
-
-    /* Mobile */
-
-    @media (max-width: 700px) {
-
-        .container {
+    <title>About - My Todo App</title>
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Georgia, "Times New Roman", serif;
+            background: #f6f1e8;
+            color: #1c1917;
+        }
+
+        .wrap {
             width: 94%;
-
-            margin: 30px auto;
+            max-width: 1080px;
+            margin: 36px auto 70px;
         }
 
-        .header {
-            flex-direction: column;
-
-            align-items: stretch;
-
-            gap: 15px;
+        .top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: 16px;
+            margin-bottom: 24px;
         }
 
-        .home-button {
+        .kicker {
+            margin: 0 0 6px;
+            font-family: "Segoe UI", sans-serif;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: #0f766e;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 42px;
+            letter-spacing: -0.04em;
+        }
+
+        .lede {
+            margin: 8px 0 0;
+            max-width: 560px;
+            color: #57534e;
+            font-size: 18px;
+            line-height: 1.55;
+        }
+
+        .ghost {
+            font-family: "Segoe UI", sans-serif;
+            text-decoration: none;
+            color: #1c1917;
+            background: #fff;
+            border: 1px solid #d6d3d1;
+            border-radius: 999px;
+            padding: 10px 16px;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .hero {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            background: #1c1917;
+            color: #fafaf9;
+            border-radius: 24px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .hero-copy {
+            padding: 36px;
+        }
+
+        .hero-copy h2 {
+            margin: 0 0 12px;
+            font-size: 34px;
+            line-height: 1.15;
+        }
+
+        .hero-copy p {
+            color: #d6d3d1;
+            font-size: 17px;
+            line-height: 1.65;
+        }
+
+        .hero-art {
+            display: flex;
+            align-items: center;
             justify-content: center;
+            font-size: 92px;
+            background: radial-gradient(circle at 30% 20%, #5eead4, #0f766e 62%, #1c1917);
         }
 
-        .card {
-            padding: 30px 22px;
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 22px;
+            font-family: "Segoe UI", sans-serif;
         }
 
-        .hero h2 {
-            font-size: 30px;
+        .stat {
+            background: #fff;
+            border: 1px solid #e7e5e4;
+            border-radius: 16px;
+            padding: 16px;
         }
 
-        .hero p {
-            font-size: 15px;
+        .stat b {
+            display: block;
+            font-size: 28px;
+            letter-spacing: -0.04em;
+        }
+
+        .stat span {
+            color: #78716c;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .section-title {
+            margin: 8px 0 14px;
+        }
+
+        .section-title h3 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        .section-title p {
+            margin: 6px 0 0;
+            color: #57534e;
         }
 
         .features {
-            grid-template-columns: 1fr;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
         }
-    }
-</style>
 
+        .feature {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+            background: #fff;
+            border: 1px solid #e7e5e4;
+            border-radius: 18px;
+            padding: 20px;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .feature:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 16px 30px rgba(28, 25, 23, 0.08);
+        }
+
+        .feature .icon {
+            font-size: 28px;
+        }
+
+        .feature h4 {
+            margin: 10px 0 8px;
+            font-size: 20px;
+        }
+
+        .feature p {
+            margin: 0;
+            color: #57534e;
+            line-height: 1.55;
+            font-size: 15px;
+        }
+
+        .go {
+            display: inline-block;
+            margin-top: 14px;
+            font-family: "Segoe UI", sans-serif;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: #0f766e;
+        }
+
+        .story {
+            margin-top: 22px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .story-card {
+            background: #fff;
+            border: 1px solid #e7e5e4;
+            border-radius: 18px;
+            padding: 22px;
+        }
+
+        .story-card h3 {
+            margin: 0 0 10px;
+            font-size: 22px;
+        }
+
+        .story-card p {
+            margin: 0;
+            color: #57534e;
+            line-height: 1.65;
+        }
+
+        .timeline {
+            margin: 16px 0 0;
+            padding: 0;
+            list-style: none;
+            font-family: "Segoe UI", sans-serif;
+        }
+
+        .timeline li {
+            padding: 10px 0 10px 16px;
+            border-left: 3px solid #0f766e;
+            color: #44403c;
+            font-weight: 600;
+        }
+
+        .badge {
+            display: inline-block;
+            margin-top: 14px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: #0f766e;
+            color: #fff;
+            font-family: "Segoe UI", sans-serif;
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        @media (max-width: 800px) {
+            .top, .hero, .stats, .features, .story {
+                display: block;
+            }
+
+            h1 { font-size: 32px; }
+            .hero-art { min-height: 160px; }
+            .stat, .feature, .story-card { margin-bottom: 12px; }
+        }
+    </style>
 </head>
-
 <body>
-
-<div class="container">
-
-<!-- Header -->
-
-<div class="header">
-
-    <div class="brand">
-
-        <div class="brand-icon">
-            ✓
+<div class="wrap">
+    <div class="top">
+        <div>
+            <p class="kicker">A first Django project</p>
+            <h1>About this app</h1>
+            <p class="lede">
+                A todo list that grew into a calendar, popups, durations,
+                and a tiny blog. Built while learning Python and Django.
+            </p>
         </div>
-
-        <div class="brand-text">
-
-            <h1>My Todo App</h1>
-
-            <p>Simple tasks. Better productivity.</p>
-
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+            {% if user.is_authenticated %}
+                <span class="ghost" style="cursor:default;">👤 {{ user.username }}</span>
+                <form method="post" action="{% url 'logout' %}" style="margin:0;">
+                    {% csrf_token %}
+                    <button type="submit" class="ghost" style="cursor:pointer;font-family:inherit;">Log out</button>
+                </form>
+            {% else %}
+                <a class="ghost" href="{% url 'login' %}">Log in</a>
+                <a class="ghost" href="{% url 'signup' %}">Sign up</a>
+            {% endif %}
+            <a class="ghost" href="{% url 'home' %}">← Back to Todos</a>
         </div>
-
     </div>
-
-    <a href="{% url 'home' %}" class="home-button">
-        ← Back to Home
-    </a>
-
-</div>
-
-
-<!-- Main card -->
-
-<div class="card">
-
-    <!-- Hero -->
 
     <div class="hero">
-
-        <div class="hero-icon">
-            📝
+        <div class="hero-copy">
+            <h2>From a simple list to a little product.</h2>
+            <p>
+                It started as “add a task, see a task.” Then came edit, delete,
+                completed status, a monthly calendar, start/end dates, and
+                a journal of what I learned along the way.
+            </p>
         </div>
-
-        <h2>
-            About My Todo App
-        </h2>
-
-        <p>
-            Welcome to my Todo application!
-            This is my first Django project, built while
-            learning Python, Django, databases, and web
-            development.
-        </p>
-
+        <div class="hero-art">📝</div>
     </div>
 
-
-    <div class="divider"></div>
-
-
-    <!-- Features -->
+    <div class="stats">
+        <div class="stat">
+            <b>{{ total_tasks }}</b>
+            <span>Total tasks</span>
+        </div>
+        <div class="stat">
+            <b>{{ pending_tasks }}</b>
+            <span>Still pending</span>
+        </div>
+        <div class="stat">
+            <b>{{ completed_tasks }}</b>
+            <span>Completed</span>
+        </div>
+        <div class="stat">
+            <b>{{ post_count }}</b>
+            <span>Blog posts</span>
+        </div>
+    </div>
 
     <div class="section-title">
-
-        <h3>
-            What can this app do?
-        </h3>
-
-        <p>
-            A simple task management application with
-            everything needed to manage your daily tasks.
-        </p>
-
+        <h3>What you can do here</h3>
+        <p>Click a card to jump straight into that part of the app.</p>
     </div>
-
 
     <div class="features">
-
-        <a href="{% url 'home' %}" class="feature feature-link">
-
-            <div class="feature-icon">
-                ➕
-            </div>
-
-            <h4>
-                Create Tasks
-            </h4>
-
-            <p>
-                Add new Todo tasks and keep everything
-                organized in one place.
-            </p>
-
+        <a class="feature" href="{% url 'home' %}">
+            <div class="icon">✅</div>
+            <h4>Manage todos</h4>
+            <p>Create tasks, track pending vs completed, and keep everything in one list.</p>
+            <span class="go">Open todos →</span>
         </a>
 
-
-        <a href="{% url 'home' %}" class="feature feature-link">
-
-            <div class="feature-icon">
-                📋
-            </div>
-
-            <h4>
-                View Tasks
-            </h4>
-
-            <p>
-                View all your tasks in a clean and easy-to-read
-                table.
-            </p>
-
+        <a class="feature" href="{% url 'calendar' %}">
+            <div class="icon">📅</div>
+            <h4>Plan on a calendar</h4>
+            <p>Give tasks a start and end date. They show up across every day in that range.</p>
+            <span class="go">Open calendar →</span>
         </a>
 
-
-        <a href="{% url 'home' %}" class="feature feature-link">
-
-            <div class="feature-icon">
-                ✅
-            </div>
-
-            <h4>
-                Track Progress
-            </h4>
-
-            <p>
-                Mark tasks as completed and keep track of
-                what's still pending.
-            </p>
-
+        <a class="feature" href="{% url 'edit_todos' %}">
+            <div class="icon">✏️</div>
+            <h4>Edit and update</h4>
+            <p>Change titles, durations, and completion status when plans shift.</p>
+            <span class="go">Edit tasks →</span>
         </a>
 
-
-        <a href="{% url 'edit_todos' %}" class="feature feature-link">
-
-            <div class="feature-icon">
-                ✏️
-            </div>
-
-            <h4>
-                Edit Tasks
-            </h4>
-
-            <p>
-                Update your Todo information whenever
-                something changes.
-            </p>
-
+        <a class="feature" href="{% url 'blog:blog' %}">
+            <div class="icon">📖</div>
+            <h4>Read the blog</h4>
+            <p>Notes from building this project: bugs, UI details, and Django lessons.</p>
+            <span class="go">Open blog →</span>
         </a>
 
+        <a class="feature" href="{% url 'home' %}">
+            <div class="icon">⏳</div>
+            <h4>Auto-complete overdue</h4>
+            <p>When a task’s end date passes, it marks itself completed the next time you visit.</p>
+            <span class="go">See your list →</span>
+        </a>
+
+        <a class="feature" href="{% url 'calendar' %}">
+            <div class="icon">🪟</div>
+            <h4>Popups, not extra pages</h4>
+            <p>Click a day to add a todo. Click a todo chip to view its details instantly.</p>
+            <span class="go">Try a popup →</span>
+        </a>
     </div>
 
+    <div class="story">
+        <div class="story-card">
+            <h3>How it grew</h3>
+            <ul class="timeline">
+                <li>A plain todo list with create + view</li>
+                <li>Edit, delete, and completed status</li>
+                <li>A monthly calendar grid</li>
+                <li>Start date → end date durations</li>
+                <li>Click-to-view popups and a blog</li>
+            </ul>
+        </div>
 
-    <!-- Django section -->
-
-    <div class="django-section">
-
-        <h3>
-            🚀 Built While Learning Django
-        </h3>
-
-        <p>
-            This project is part of my journey into web
-            development. Through this application, I'm
-            learning how Django models, views, URLs, forms,
-            templates, databases, and multiple apps work
-            together.
-        </p>
-
-        <span class="django-badge">
-            Python + Django
-        </span>
-
+        <div class="story-card">
+            <h3>Built while learning Django</h3>
+            <p>
+                This project is how I’m learning models, views, URLs, forms,
+                templates, migrations, and multiple apps working together.
+                The todo app keeps life organized. The blog keeps the lessons.
+            </p>
+            <span class="badge">Python + Django</span>
+        </div>
     </div>
-
 </div>
-
-</div>
-
 </body>
-
 </html>

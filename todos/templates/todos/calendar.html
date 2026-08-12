@@ -447,9 +447,20 @@
                 <p>Click a day to schedule a todo across a date range</p>
             </div>
 
-            <a href="{% url 'home' %}" class="ghost-btn">
-                ← Back to Todos
-            </a>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+                {% if user.is_authenticated %}
+                    <span class="ghost-btn" style="cursor:default;">👤 {{ user.username }}</span>
+                    <form method="post" action="{% url 'logout' %}" style="margin:0;">
+                        {% csrf_token %}
+                        <button type="submit" class="ghost-btn" style="cursor:pointer;font-family:inherit;">Log out</button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'login' %}" class="ghost-btn">Log in</a>
+                {% endif %}
+                <a href="{% url 'home' %}" class="ghost-btn">
+                    ← Back to Todos
+                </a>
+            </div>
         </div>
 
         <div class="planner">
