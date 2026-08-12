@@ -388,11 +388,11 @@
 <body>
 {% include "todos/_nav.html" with active_nav="edit" %}
 <div class="container">
-    <div class="page-header">
-        <p class="kicker">Manage tasks</p>
-        <h1>Edit Todos</h1>
-        <p>Check off completed work, edit details, or delete what you no longer need.</p>
-    </div>
+    {% url 'home' as home_url %}
+    {% url 'search' as search_url %}
+    {% with count_label=result_count|stringformat:"s" %}
+        {% include "todos/_page_banner.html" with banner="edit" banner_mark="✎" banner_chip_1="Board" banner_chip_2=count_label|add:" tasks" banner_chip_3="Tick · edit · delete" banner_title="Edit Todos" action1_url=home_url action1_label="Home" action2_url=search_url action2_label="Search" %}
+    {% endwith %}
 
     <form class="list-search" method="get" action="{% url 'edit_todos' %}">
         <input type="hidden" name="status" value="{{ status }}">

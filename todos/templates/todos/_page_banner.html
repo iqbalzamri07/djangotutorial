@@ -1,0 +1,30 @@
+<section class="page-banner page-banner--{{ banner|default:'home' }}">
+    <div class="page-banner-art" aria-hidden="true">
+        <span class="orb orb-a"></span>
+        <span class="orb orb-b"></span>
+        <span class="orb orb-c"></span>
+        <span class="mark">{{ banner_mark|default:"★" }}</span>
+    </div>
+
+    <div class="page-banner-body">
+        <div class="page-banner-chips">
+            {% if banner_chip_1 %}<span class="banner-chip">{{ banner_chip_1 }}</span>{% endif %}
+            {% if banner_chip_2 %}<span class="banner-chip">{{ banner_chip_2 }}</span>{% endif %}
+            {% if banner_chip_3 %}<span class="banner-chip soft">{{ banner_chip_3 }}</span>{% endif %}
+        </div>
+        <h1>{{ banner_title }}</h1>
+        {% if action1_url or action2_url or action3_url %}
+            <div class="page-banner-actions">
+                {% if action1_url %}
+                    <a href="{{ action1_url }}" class="banner-action">{{ action1_label }}</a>
+                {% endif %}
+                {% if action2_url %}
+                    <a href="{{ action2_url }}" class="banner-action">{{ action2_label }}</a>
+                {% endif %}
+                {% if action3_url %}
+                    <a href="{{ action3_url }}" class="banner-action">{{ action3_label }}</a>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+</section>

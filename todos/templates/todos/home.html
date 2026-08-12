@@ -18,15 +18,6 @@
             margin: 36px auto 70px;
         }
 
-        .kicker {
-            margin: 0 0 6px;
-            font-size: 12px;
-            font-weight: 800;
-            letter-spacing: 0.14em;
-            text-transform: uppercase;
-            color: #0f766e;
-        }
-
         .title-section h1 {
             margin: 0;
             font-size: 36px;
@@ -427,11 +418,12 @@
 <body>
 {% include "todos/_nav.html" with active_nav="home" %}
 <div class="container">
-    <div class="page-header title-section">
-        <p class="kicker">Your workspace</p>
-        <h1>{{ greeting }}, {{ user.first_name|default:user.username }}</h1>
-        <p>Plan tasks, track progress, and keep your calendar in one place.</p>
-    </div>
+    {% url 'calendar' as calendar_url %}
+    {% url 'search' as search_url %}
+    {% url 'edit_todos' as edit_url %}
+    {% with mark=user.first_name|default:user.username|slice:":1"|upper open_label=pending_tasks|stringformat:"s" %}
+        {% include "todos/_page_banner.html" with banner="home" banner_mark=mark banner_chip_1=greeting banner_chip_2=today|date:"D · M j" banner_chip_3=open_label|add:" open" banner_title=user.first_name|default:user.username action1_url=calendar_url action1_label="Open calendar" action2_url=search_url action2_label="Search" action3_url=edit_url action3_label="Edit list" %}
+    {% endwith %}
 
     <div class="hero">
         <div class="hero-main">

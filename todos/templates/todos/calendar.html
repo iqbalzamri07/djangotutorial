@@ -431,10 +431,9 @@
 <body>
     {% include "todos/_nav.html" with active_nav="calendar" %}
     <div class="container">
-        <div class="page-header">
-            <h1>Todo Calendar</h1>
-            <p>Click a day to schedule a todo. Repeating tasks show on every matching day.</p>
-        </div>
+        {% url 'home' as home_url %}
+        {% url 'search' as search_url %}
+        {% include "todos/_page_banner.html" with banner="calendar" banner_mark="▣" banner_chip_1=month_title banner_chip_2="Click a day to add" banner_chip_3="Repeats show ahead" banner_title="Month on a map" action1_url=home_url action1_label="Back home" action2_url=search_url action2_label="Search tasks" %}
 
         <div class="planner">
             <div class="planner-head">

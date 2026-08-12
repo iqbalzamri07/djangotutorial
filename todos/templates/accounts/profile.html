@@ -222,11 +222,11 @@
 <body>
 {% include "todos/_nav.html" with active_nav="profile" %}
 <div class="container">
-    <div class="page-header">
-        <p class="kicker">Your account</p>
-        <h1>Profile</h1>
-        <p>Update your details, change your password, and review your activity.</p>
-    </div>
+    {% url 'home' as home_url %}
+    {% url 'edit_todos' as edit_url %}
+    {% with mark=user.username|slice:":1"|upper total_label=total_tasks|stringformat:"s" pending_label=pending_tasks|stringformat:"s" %}
+        {% include "todos/_page_banner.html" with banner="profile" banner_mark=mark banner_chip_1=user.username banner_chip_2=total_label|add:" tasks" banner_chip_3=pending_label|add:" open" banner_title="Profile" action1_url=home_url action1_label="Home" action2_url=edit_url action2_label="Edit list" %}
+    {% endwith %}
 
     <div class="hero">
         <div class="avatar">{{ user.username|slice:":1"|upper }}</div>

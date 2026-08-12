@@ -89,11 +89,9 @@
 <body>
 {% include "todos/_nav.html" with active_nav="signup" %}
 <div class="page">
-    <div class="page-header">
-        <p class="kicker">Account</p>
-        <h1>Create an account</h1>
-        <p>Sign up to keep your todos private to you.</p>
-    </div>
+    {% url 'login' as login_url %}
+    {% include "todos/_page_banner.html" with banner="signup" banner_mark="＋" banner_chip_1="Start fresh" banner_chip_2="Your todos only" banner_title="Create an account" action1_url=login_url action1_label="Already have one?" %}
+
     <div class="wrap">
     <div class="card">
         <form method="POST">

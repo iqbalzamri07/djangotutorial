@@ -496,11 +496,11 @@
 <body>
 {% include "todos/_nav.html" with active_nav="search" %}
 <div class="container">
-    <div class="page-header">
-        <p class="kicker">Finder</p>
-        <h1>Search & filter</h1>
-        <p>Hunt down a task by title, then narrow it by status, date, or sort.</p>
-    </div>
+    {% url 'home' as home_url %}
+    {% url 'edit_todos' as edit_url %}
+    {% with matches=result_count|stringformat:"s" %}
+        {% include "todos/_page_banner.html" with banner="search" banner_mark="⌕" banner_chip_1="Finder" banner_chip_2=matches|add:" matches" banner_chip_3=status_label banner_title="Search & filter" action1_url=home_url action1_label="Home" action2_url=edit_url action2_label="Edit list" %}
+    {% endwith %}
 
     <div class="hero">
         <div class="hero-copy">

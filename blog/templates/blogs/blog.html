@@ -181,14 +181,9 @@
 <body>
 {% include "todos/_nav.html" with active_nav="blog" %}
 <div class="wrap">
-    <div class="page-header">
-        <p class="kicker">A learning journal</p>
-        <h1>Notes from Building</h1>
-        <p class="intro">
-            Short stories from my first Django project: todos, calendars,
-            popups, and all the tiny mistakes that taught me the most.
-        </p>
-    </div>
+    {% url 'home' as home_url %}
+    {% url 'about' as about_url %}
+    {% include "todos/_page_banner.html" with banner="blog" banner_mark="✎" banner_chip_1="Field notes" banner_chip_2="Bugs · UI · lessons" banner_title="Notes from Building" action1_url=home_url action1_label="Todos" action2_url=about_url action2_label="About" %}
 
     <div class="filters">
         <a class="chip {% if not active_category %}active{% endif %}" href="{% url 'blog:blog' %}">All</a>

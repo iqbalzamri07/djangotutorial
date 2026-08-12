@@ -110,16 +110,10 @@
 <body>
 {% include "todos/_nav.html" with active_nav="blog" %}
 <div class="wrap">
-    <div class="page-header">
-        <p class="kicker" style="margin:0 0 6px;font-family:'Segoe UI',sans-serif;font-size:12px;font-weight:800;letter-spacing:0.14em;text-transform:uppercase;color:#b45309;">Blog</p>
-        <h2 style="margin:0;font-size:28px;font-family:'Segoe UI',sans-serif;">Reading</h2>
-    </div>
+    {% url 'blog:blog' as blog_url %}
+    {% include "todos/_page_banner.html" with banner="blog" banner_mark=post.emoji banner_chip_1=post.get_category_display banner_chip_2=post.created_at|date:"M j, Y" banner_chip_3=post.reading_time|stringformat:"s"|add:" min read" banner_title=post.title action1_url=blog_url action1_label="All notes" %}
 
     <article class="article">
-    <div class="meta">
-        {{ post.get_category_display }} · {{ post.created_at|date:"M j, Y" }} · {{ post.reading_time }} min read
-    </div>
-    <h1>{{ post.title }}</h1>
     <p class="excerpt">{{ post.excerpt }}</p>
     <div class="hero">{{ post.emoji }}</div>
     <div class="content">

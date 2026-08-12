@@ -231,14 +231,10 @@
 <body>
 {% include "todos/_nav.html" with active_nav="about" %}
 <div class="wrap">
-    <div class="page-header">
-        <p class="kicker">A first Django project</p>
-        <h1>About this app</h1>
-        <p class="lede">
-            A todo list that grew into a calendar, popups, durations,
-            and a tiny blog. Built while learning Python and Django.
-        </p>
-    </div>
+    {% url 'home' as home_url %}
+    {% url 'calendar' as calendar_url %}
+    {% url 'blog:blog' as blog_url %}
+    {% include "todos/_page_banner.html" with banner="about" banner_mark="✦" banner_chip_1="Django build" banner_chip_2="Learning in public" banner_chip_3="Still shipping" banner_title="About this app" action1_url=home_url action1_label="Open todos" action2_url=calendar_url action2_label="Calendar" action3_url=blog_url action3_label="Blog" %}
 
     <div class="hero">
         <div class="hero-copy">
