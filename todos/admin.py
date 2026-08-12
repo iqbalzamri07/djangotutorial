@@ -6,4 +6,4 @@ from .models import Todo
 class TodoAdmin(admin.ModelAdmin):
     list_display = ("title", "user", "completed", "start_date", "end_date")
     list_filter = ("completed", "user")
-    search_fields = ("title",)
+    search_fields = ("title", "notes")

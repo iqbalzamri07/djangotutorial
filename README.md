@@ -5,7 +5,7 @@ A first Django project: personal todos, a monthly calendar, search and filters, 
 ## Features
 
 - Sign up, log in, log out, and edit your profile
-- Create todos with a title and optional start/end dates
+- Create todos with a title, optional notes, and start/end dates
 - Calendar view with date-range todos and click-to-add popups
 - Search, status/date filters, sorting, and pagination
 - Auto-complete todos after their end date passes
@@ -67,7 +67,8 @@ Authorization: Token YOUR_TOKEN
 
 ### Todos
 
-Your todos only. Supports `q`, `status`, `when`, `sort`, and `page`.
+Your todos only. Fields include `title`, `notes`, `completed`, `start_date`, and `end_date`.  
+Search `q` matches title or notes. Also supports `status`, `when`, `sort`, and `page`.
 
 | Method | URL |
 | --- | --- |

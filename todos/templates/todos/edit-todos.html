@@ -243,6 +243,14 @@
             color: #1c1917;
         }
 
+        .task-notes {
+            margin-top: 4px;
+            font-size: 12px;
+            color: #78716c;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+
         tr.done .task-title {
             text-decoration: line-through;
             color: #78716c;
@@ -449,7 +457,12 @@
                         {% for todo in todos %}
                             <tr class="{% if todo.completed %}done{% endif %}">
                                 <td><span class="number">{{ page_obj.start_index|add:forloop.counter0 }}</span></td>
-                                <td><span class="task-title">{{ todo.title }}</span></td>
+                                <td>
+                                    <span class="task-title">{{ todo.title }}</span>
+                                    {% if todo.notes %}
+                                        <div class="task-notes">{{ todo.notes|truncatechars:90 }}</div>
+                                    {% endif %}
+                                </td>
                                 <td>
                                     <span class="duration">
                                         {% if todo.start_date %}

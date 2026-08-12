@@ -11,6 +11,7 @@ class TodoSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "title",
+            "notes",
             "completed",
             "start_date",
             "end_date",

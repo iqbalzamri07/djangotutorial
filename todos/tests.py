@@ -47,6 +47,7 @@ class TodoAPITests(APITestCase):
             "/api/todos/",
             {
                 "title": "API task",
+                "notes": "Bring snacks and a notebook.",
                 "start_date": "2026-08-12",
                 "end_date": "2026-08-14",
             },
@@ -54,9 +55,11 @@ class TodoAPITests(APITestCase):
         )
         self.assertEqual(create.status_code, 201)
         todo_id = create.data["id"]
-        self.assertEqual(Todo.objects.get(id=todo_id).user, self.user)
+        todo = Todo.objects.get(id=todo_id)
+        self.assertEqual(todo.user, self.user)
+        self.assertEqual(todo.notes, "Bring snacks and a notebook.")
 
-        listing = self.client.get("/api/todos/?q=API&status=pending")
+        listing = self.client.get("/api/todos/?q=snacks&status=pending")
         self.assertEqual(listing.status_code, 200)
         self.assertGreaterEqual(listing.data["count"], 1)
 

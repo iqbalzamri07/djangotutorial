@@ -353,6 +353,13 @@
             margin-bottom: 4px;
         }
 
+        .task-notes {
+            margin: 0 0 8px;
+            font-size: 13px;
+            color: #57534e;
+            line-height: 1.45;
+        }
+
         .task-meta {
             display: flex;
             flex-wrap: wrap;
@@ -513,7 +520,7 @@
                     type="search"
                     name="q"
                     value="{{ query }}"
-                    placeholder="Try grocery, meeting, homework..."
+                        placeholder="Search titles or notes..."
                     autofocus
                 >
                 <button type="submit">Search</button>
@@ -606,6 +613,9 @@
                         <span class="accent"></span>
                         <div>
                             <div class="task-title">{{ todo.title }}</div>
+                            {% if todo.notes %}
+                                <div class="task-notes">{{ todo.notes|truncatechars:120 }}</div>
+                            {% endif %}
                             <div class="task-meta">
                                 <span class="meta-pill">
                                     {% if todo.start_date %}

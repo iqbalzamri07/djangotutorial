@@ -281,7 +281,8 @@
             color: #44403c;
         }
 
-        .modal-form input {
+        .modal-form input,
+        .modal-form textarea {
             width: 100%;
             padding: 11px 13px;
             border: 1px solid #d6d3d1;
@@ -291,9 +292,21 @@
             outline: none;
         }
 
-        .modal-form input:focus {
+        .modal-form textarea {
+            min-height: 84px;
+            resize: vertical;
+        }
+
+        .modal-form input:focus,
+        .modal-form textarea:focus {
             border-color: #0f766e;
             box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.15);
+        }
+
+        .notes-text {
+            white-space: pre-wrap;
+            font-weight: 600;
+            color: #44403c;
         }
 
         .field-gap {
@@ -469,6 +482,7 @@
                                         data-edit="{% url 'edit' todo.id %}"
                                     >
                                         {{ todo.title }}
+                                        <span class="chip-notes" hidden>{{ todo.notes }}</span>
                                     </button>
                                 {% endfor %}
 
@@ -508,6 +522,15 @@
                     value="{{ title_value }}"
                     required
                 >
+
+                <div class="field-gap"></div>
+
+                <label for="notes_input">Notes</label>
+                <textarea
+                    id="notes_input"
+                    name="notes"
+                    placeholder="Optional notes or description..."
+                >{{ notes_value }}</textarea>
 
                 <div class="field-gap"></div>
 
@@ -576,6 +599,10 @@
                     <span>Duration</span>
                     <strong id="viewTodoDuration">—</strong>
                 </div>
+                <div class="detail-row">
+                    <span>Notes</span>
+                    <strong id="viewTodoNotes" class="notes-text">—</strong>
+                </div>
                 <div class="modal-actions">
                     <button type="button" class="btn-cancel" onclick="closeViewTodoModal()">
                         Close
@@ -628,6 +655,9 @@
             document.getElementById('viewTodoStart').textContent = chip.dataset.start || '—';
             document.getElementById('viewTodoEnd').textContent = chip.dataset.end || '—';
             document.getElementById('viewTodoDuration').textContent = chip.dataset.duration || '—';
+            const notesEl = chip.querySelector('.chip-notes');
+            const notes = notesEl ? notesEl.textContent.trim() : '';
+            document.getElementById('viewTodoNotes').textContent = notes || 'No notes';
             document.getElementById('viewTodoEdit').href = chip.dataset.edit || '#';
 
             statusEl.textContent = status;

@@ -29,8 +29,14 @@ class TodoForm(forms.ModelForm):
 
     class Meta:
         model = Todo
-        fields = ["title", "start_date", "end_date"]
+        fields = ["title", "notes", "start_date", "end_date"]
         widgets = {
+            "notes": forms.Textarea(
+                attrs={
+                    "rows": 3,
+                    "placeholder": "Optional notes or description...",
+                }
+            ),
             "start_date": forms.DateInput(attrs={"type": "date"}),
             "end_date": forms.DateInput(attrs={"type": "date"}),
         }

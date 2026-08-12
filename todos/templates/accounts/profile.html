@@ -312,6 +312,9 @@
                     <a href="{% url 'edit' todo.id %}" class="task-row">
                         <div>
                             <div class="task-title">{{ todo.title }}</div>
+                            {% if todo.notes %}
+                                <div class="task-meta">{{ todo.notes|truncatechars:80 }}</div>
+                            {% endif %}
                             <div class="task-meta">
                                 {% if todo.start_date %}
                                     {{ todo.duration_label }}

@@ -64,7 +64,9 @@ def apply_todo_filters(todos, request):
     today = date.today()
 
     if query:
-        todos = todos.filter(title__icontains=query)
+        todos = todos.filter(
+            Q(title__icontains=query) | Q(notes__icontains=query)
+        )
 
     if status == "pending":
         todos = todos.filter(completed=False)
@@ -458,6 +460,7 @@ def calendar(request):
 
     show_modal = False
     title_value = ""
+    notes_value = ""
     start_date_value = ""
     end_date_value = ""
     form = None
@@ -475,6 +478,7 @@ def calendar(request):
 
         show_modal = True
         title_value = request.POST.get("title", "")
+        notes_value = request.POST.get("notes", "")
         start_date_value = request.POST.get("start_date", "")
         end_date_value = request.POST.get("end_date", "")
 
@@ -492,6 +496,7 @@ def calendar(request):
             "next_month": next_month,
             "show_modal": show_modal,
             "title_value": title_value,
+            "notes_value": notes_value,
             "start_date_value": start_date_value,
             "end_date_value": end_date_value,
             "form": form,
