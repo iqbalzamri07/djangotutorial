@@ -159,6 +159,10 @@
             align-items: start;
         }
 
+        .layout {
+            scroll-margin-top: 80px;
+        }
+
         .filter-panel,
         .results-panel {
             background: rgba(255,255,255,0.9);
@@ -517,7 +521,7 @@
             </h2>
             <p>Search only your todos. Combine filters to zoom in fast.</p>
         </div>
-        <form class="search-form" method="get" action="{% url 'search' %}" id="live-search-form">
+        <form class="search-form" method="get" action="{% url 'search' %}#filters" id="live-search-form">
             <input type="hidden" name="status" value="{{ status }}">
             <input type="hidden" name="when" value="{{ when }}">
             <input type="hidden" name="sort" value="{{ sort }}">
@@ -544,20 +548,20 @@
         </div>
     </div>
 
-    <div class="layout">
+    <div class="layout" id="filters">
         <aside class="filter-panel">
             <div class="filter-group">
                 <p class="filter-title">Status</p>
                 <div class="status-grid">
-                    <a class="status-card all {% if status == 'all' %}active{% endif %}" href="?q={{ query|urlencode }}&status=all&when={{ when }}&sort={{ sort }}">
+                    <a class="status-card all {% if status == 'all' %}active{% endif %}" href="?q={{ query|urlencode }}&status=all&when={{ when }}&sort={{ sort }}#filters">
                         <span class="name">All tasks</span>
                         <span class="count">{{ all_count }}</span>
                     </a>
-                    <a class="status-card pending {% if status == 'pending' %}active{% endif %}" href="?q={{ query|urlencode }}&status=pending&when={{ when }}&sort={{ sort }}">
+                    <a class="status-card pending {% if status == 'pending' %}active{% endif %}" href="?q={{ query|urlencode }}&status=pending&when={{ when }}&sort={{ sort }}#filters">
                         <span class="name">Pending</span>
                         <span class="count">{{ pending_count }}</span>
                     </a>
-                    <a class="status-card completed {% if status == 'completed' %}active{% endif %}" href="?q={{ query|urlencode }}&status=completed&when={{ when }}&sort={{ sort }}">
+                    <a class="status-card completed {% if status == 'completed' %}active{% endif %}" href="?q={{ query|urlencode }}&status=completed&when={{ when }}&sort={{ sort }}#filters">
                         <span class="name">Completed</span>
                         <span class="count">{{ completed_count }}</span>
                     </a>
@@ -567,25 +571,25 @@
             <div class="filter-group">
                 <p class="filter-title">When</p>
                 <div class="when-grid">
-                    <a class="when-card {% if when == 'all' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=all&sort={{ sort }}">
+                    <a class="when-card {% if when == 'all' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=all&sort={{ sort }}#filters">
                         <span class="icon">🗓️</span>Any date
                     </a>
-                    <a class="when-card {% if when == 'today' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=today&sort={{ sort }}">
+                    <a class="when-card {% if when == 'today' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=today&sort={{ sort }}#filters">
                         <span class="icon">☀️</span>Today
                     </a>
-                    <a class="when-card {% if when == 'week' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=week&sort={{ sort }}">
+                    <a class="when-card {% if when == 'week' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=week&sort={{ sort }}#filters">
                         <span class="icon">📅</span>This week
                     </a>
-                    <a class="when-card {% if when == 'month' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=month&sort={{ sort }}">
+                    <a class="when-card {% if when == 'month' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=month&sort={{ sort }}#filters">
                         <span class="icon">🌙</span>This month
                     </a>
-                    <a class="when-card {% if when == 'due_soon' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=due_soon&sort={{ sort }}&priority={{ priority }}&tag={{ tag }}">
+                    <a class="when-card {% if when == 'due_soon' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=due_soon&sort={{ sort }}&priority={{ priority }}&tag={{ tag }}#filters">
                         <span class="icon">⏰</span>Due soon
                     </a>
-                    <a class="when-card {% if when == 'upcoming' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=upcoming&sort={{ sort }}&priority={{ priority }}&tag={{ tag }}">
+                    <a class="when-card {% if when == 'upcoming' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=upcoming&sort={{ sort }}&priority={{ priority }}&tag={{ tag }}#filters">
                         <span class="icon">🚀</span>Upcoming
                     </a>
-                    <a class="when-card {% if when == 'undated' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=undated&sort={{ sort }}&priority={{ priority }}&tag={{ tag }}">
+                    <a class="when-card {% if when == 'undated' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=undated&sort={{ sort }}&priority={{ priority }}&tag={{ tag }}#filters">
                         <span class="icon">📝</span>No dates
                     </a>
                 </div>
@@ -594,10 +598,10 @@
             <div class="filter-group">
                 <p class="filter-title">Priority</p>
                 <div class="sort-grid">
-                    <a class="chip {% if priority == 'all' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort={{ sort }}&priority=all&tag={{ tag }}">Any</a>
-                    <a class="chip {% if priority == 'high' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort={{ sort }}&priority=high&tag={{ tag }}">High</a>
-                    <a class="chip {% if priority == 'medium' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort={{ sort }}&priority=medium&tag={{ tag }}">Medium</a>
-                    <a class="chip {% if priority == 'low' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort={{ sort }}&priority=low&tag={{ tag }}">Low</a>
+                    <a class="chip {% if priority == 'all' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort={{ sort }}&priority=all&tag={{ tag }}#filters">Any</a>
+                    <a class="chip {% if priority == 'high' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort={{ sort }}&priority=high&tag={{ tag }}#filters">High</a>
+                    <a class="chip {% if priority == 'medium' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort={{ sort }}&priority=medium&tag={{ tag }}#filters">Medium</a>
+                    <a class="chip {% if priority == 'low' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort={{ sort }}&priority=low&tag={{ tag }}#filters">Low</a>
                 </div>
             </div>
 
@@ -605,9 +609,9 @@
             <div class="filter-group">
                 <p class="filter-title">Tags</p>
                 <div class="sort-grid">
-                    <a class="chip {% if not tag %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort={{ sort }}&priority={{ priority }}">Any</a>
+                    <a class="chip {% if not tag %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort={{ sort }}&priority={{ priority }}#filters">Any</a>
                     {% for item in all_tags %}
-                        <a class="chip {% if tag == item.slug %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort={{ sort }}&priority={{ priority }}&tag={{ item.slug }}">{{ item.name }}</a>
+                        <a class="chip {% if tag == item.slug %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort={{ sort }}&priority={{ priority }}&tag={{ item.slug }}#filters">{{ item.name }}</a>
                     {% endfor %}
                 </div>
             </div>
@@ -616,13 +620,13 @@
             <div class="filter-group">
                 <p class="filter-title">Sort</p>
                 <div class="sort-grid">
-                    <a class="chip {% if sort == 'status' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort=status&priority={{ priority }}&tag={{ tag }}">Status</a>
-                    <a class="chip {% if sort == 'priority' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort=priority&priority={{ priority }}&tag={{ tag }}">Priority</a>
-                    <a class="chip {% if sort == 'newest' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort=newest&priority={{ priority }}&tag={{ tag }}">Newest</a>
-                    <a class="chip {% if sort == 'title' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort=title&priority={{ priority }}&tag={{ tag }}">Title</a>
-                    <a class="chip {% if sort == 'start' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort=start&priority={{ priority }}&tag={{ tag }}">Start date</a>
+                    <a class="chip {% if sort == 'status' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort=status&priority={{ priority }}&tag={{ tag }}#filters">Status</a>
+                    <a class="chip {% if sort == 'priority' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort=priority&priority={{ priority }}&tag={{ tag }}#filters">Priority</a>
+                    <a class="chip {% if sort == 'newest' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort=newest&priority={{ priority }}&tag={{ tag }}#filters">Newest</a>
+                    <a class="chip {% if sort == 'title' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort=title&priority={{ priority }}&tag={{ tag }}#filters">Title</a>
+                    <a class="chip {% if sort == 'start' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort=start&priority={{ priority }}&tag={{ tag }}#filters">Start date</a>
                     {% if filters_active %}
-                        <a class="chip clear" href="{% url 'search' %}">Clear all</a>
+                        <a class="chip clear" href="{% url 'search' %}#filters">Clear all</a>
                     {% endif %}
                 </div>
             </div>
@@ -659,7 +663,7 @@
             } else {
                 url.searchParams.delete("q");
             }
-            link.href = url.pathname + "?" + url.searchParams.toString();
+            link.href = url.pathname + "?" + url.searchParams.toString() + "#filters";
         });
     }
 
@@ -716,7 +720,7 @@
             const share = new URLSearchParams(params);
             share.delete("partial");
             const qs = share.toString();
-            history.replaceState(null, "", "{% url 'search' %}" + (qs ? "?" + qs : ""));
+            history.replaceState(null, "", "{% url 'search' %}" + (qs ? "?" + qs : "") + "#filters");
         } catch (err) {
             // Keep current results if the request fails.
         } finally {
