@@ -1,0 +1,72 @@
+<div
+    id="search-live-meta"
+    hidden
+    data-query="{{ query }}"
+    data-count="{{ result_count }}"
+    data-status-label="{{ status_label }}"
+    data-when-label="{{ when_label }}"
+    data-sort-label="{{ sort_label }}"
+></div>
+<div class="results-head">
+    <div>
+        <h3>Matching tasks</h3>
+        <p id="results-subtitle">
+            {% if query %}
+                {{ result_count }} result{{ result_count|pluralize }} for “{{ query }}”
+            {% else %}
+                {{ result_count }} task{{ result_count|pluralize }} in this view
+            {% endif %}
+        </p>
+    </div>
+</div>
+
+<div class="results" id="search-results">
+    {% for todo in todos %}
+        <div class="task-card {% if todo.completed %}done{% endif %}">
+            <span class="accent"></span>
+            <div>
+                <div class="task-title">{{ todo.title }}</div>
+                {% if todo.notes %}
+                    <div class="task-notes">{{ todo.notes|truncatechars:120 }}</div>
+                {% endif %}
+                <div class="task-meta">
+                    <span class="meta-pill">
+                        {% if todo.start_date %}
+                            {{ todo.duration_label }}
+                        {% else %}
+                            No dates yet
+                        {% endif %}
+                    </span>
+                    <span class="meta-pill">{{ todo.get_priority_display }}</span>
+                    <span class="meta-pill">Added {{ todo.created_at|date:"M j" }}</span>
+                    {% if todo.recurrence %}
+                        <span class="meta-pill repeat">↻ {{ todo.get_recurrence_display }}</span>
+                    {% endif %}
+                    {% for tag in todo.tags.all %}
+                        <span class="meta-pill repeat">{{ tag.name }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="side-actions">
+                {% if todo.completed %}
+                    <div class="status completed">Done</div>
+                {% else %}
+                    <div class="status pending">Pending</div>
+                {% endif %}
+                <a href="{% url 'edit' todo.id %}" class="edit-link">Edit</a>
+            </div>
+        </div>
+    {% empty %}
+        <div class="empty">
+            <div class="empty-icon">🔎</div>
+            {% if query or filters_active %}
+                <div><strong>Nothing matches this mix</strong></div>
+                <p>Try another word, or clear filters and start fresh.</p>
+            {% else %}
+                <div><strong>No tasks yet</strong></div>
+                <p>Add a todo on the home page first.</p>
+            {% endif %}
+        </div>
+    {% endfor %}
+    {% include "todos/_pagination.html" %}
+</div>

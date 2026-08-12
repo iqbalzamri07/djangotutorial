@@ -166,6 +166,12 @@
             border-radius: 22px;
             box-shadow: 0 16px 40px rgba(28, 25, 23, 0.06);
             backdrop-filter: blur(8px);
+            transition: opacity 0.15s ease;
+        }
+
+        .results-panel.is-loading {
+            opacity: 0.55;
+            pointer-events: none;
         }
 
         .filter-panel { padding: 18px; }
@@ -511,26 +517,30 @@
             </h2>
             <p>Search only your todos. Combine filters to zoom in fast.</p>
         </div>
-        <form class="search-form" method="get" action="{% url 'search' %}">
+        <form class="search-form" method="get" action="{% url 'search' %}" id="live-search-form">
             <input type="hidden" name="status" value="{{ status }}">
             <input type="hidden" name="when" value="{{ when }}">
             <input type="hidden" name="sort" value="{{ sort }}">
+            <input type="hidden" name="priority" value="{{ priority }}">
+            <input type="hidden" name="tag" value="{{ tag }}">
             <div class="search-row">
                 <input
                     type="search"
                     name="q"
+                    id="live-search-input"
                     value="{{ query }}"
-                        placeholder="Search titles or notes..."
+                    placeholder="Search titles or notes..."
+                    autocomplete="off"
                     autofocus
                 >
                 <button type="submit">Search</button>
             </div>
         </form>
-        <div class="active-summary">
-            <span class="summary-pill">{{ result_count }} result{{ result_count|pluralize }}</span>
-            <span class="summary-pill">{{ status_label }}</span>
-            <span class="summary-pill">{{ when_label }}</span>
-            <span class="summary-pill">Sort: {{ sort_label }}</span>
+        <div class="active-summary" id="active-summary">
+            <span class="summary-pill" id="summary-count">{{ result_count }} result{{ result_count|pluralize }}</span>
+            <span class="summary-pill" id="summary-status">{{ status_label }}</span>
+            <span class="summary-pill" id="summary-when">{{ when_label }}</span>
+            <span class="summary-pill" id="summary-sort">Sort: {{ sort_label }}</span>
         </div>
     </div>
 
@@ -618,72 +628,113 @@
             </div>
         </aside>
 
-        <section class="results-panel">
-            <div class="results-head">
-                <div>
-                    <h3>Matching tasks</h3>
-                    <p>
-                        {% if query %}
-                            {{ result_count }} result{{ result_count|pluralize }} for “{{ query }}”
-                        {% else %}
-                            {{ result_count }} task{{ result_count|pluralize }} in this view
-                        {% endif %}
-                    </p>
-                </div>
-            </div>
-
-            <div class="results">
-                {% for todo in todos %}
-                    <div class="task-card {% if todo.completed %}done{% endif %}">
-                        <span class="accent"></span>
-                        <div>
-                            <div class="task-title">{{ todo.title }}</div>
-                            {% if todo.notes %}
-                                <div class="task-notes">{{ todo.notes|truncatechars:120 }}</div>
-                            {% endif %}
-                            <div class="task-meta">
-                                <span class="meta-pill">
-                                    {% if todo.start_date %}
-                                        {{ todo.duration_label }}
-                                    {% else %}
-                                        No dates yet
-                                    {% endif %}
-                                </span>
-                                <span class="meta-pill">{{ todo.get_priority_display }}</span>
-                                <span class="meta-pill">Added {{ todo.created_at|date:"M j" }}</span>
-                                {% if todo.recurrence %}
-                                    <span class="meta-pill repeat">↻ {{ todo.get_recurrence_display }}</span>
-                                {% endif %}
-                                {% for tag in todo.tags.all %}
-                                    <span class="meta-pill repeat">{{ tag.name }}</span>
-                                {% endfor %}
-                            </div>
-                        </div>
-                        <div class="side-actions">
-                            {% if todo.completed %}
-                                <div class="status completed">Done</div>
-                            {% else %}
-                                <div class="status pending">Pending</div>
-                            {% endif %}
-                            <a href="{% url 'edit' todo.id %}" class="edit-link">Edit</a>
-                        </div>
-                    </div>
-                {% empty %}
-                    <div class="empty">
-                        <div class="empty-icon">🔎</div>
-                        {% if query or filters_active %}
-                            <div><strong>Nothing matches this mix</strong></div>
-                            <p>Try another word, or clear filters and start fresh.</p>
-                        {% else %}
-                            <div><strong>No tasks yet</strong></div>
-                            <p>Add a todo on the home page first.</p>
-                        {% endif %}
-                    </div>
-                {% endfor %}
-                {% include "todos/_pagination.html" %}
-            </div>
+        <section class="results-panel" id="results-panel">
+            {% include "todos/_search_results.html" %}
         </section>
     </div>
 </div>
+<script>
+(function () {
+    const form = document.getElementById("live-search-form");
+    const input = document.getElementById("live-search-input");
+    const panel = document.getElementById("results-panel");
+    const heroTitle = document.querySelector(".hero-copy h2");
+    if (!form || !input || !panel) return;
+
+    let timer = null;
+    let requestId = 0;
+
+    function currentParams(q) {
+        const params = new URLSearchParams(new FormData(form));
+        params.set("q", q);
+        params.delete("page");
+        return params;
+    }
+
+    function updateFilterLinks(q) {
+        document.querySelectorAll(".filter-panel a[href^='?']").forEach((link) => {
+            const url = new URL(link.href, window.location.origin);
+            if (q) {
+                url.searchParams.set("q", q);
+            } else {
+                url.searchParams.delete("q");
+            }
+            link.href = url.pathname + "?" + url.searchParams.toString();
+        });
+    }
+
+    function updateSummary(count, query, statusLabel, whenLabel, sortLabel) {
+        const plural = Number(count) === 1 ? "" : "s";
+        const countEl = document.getElementById("summary-count");
+        const statusEl = document.getElementById("summary-status");
+        const whenEl = document.getElementById("summary-when");
+        const sortEl = document.getElementById("summary-sort");
+        if (countEl) countEl.textContent = count + " result" + plural;
+        if (statusEl && statusLabel) statusEl.textContent = statusLabel;
+        if (whenEl && whenLabel) whenEl.textContent = whenLabel;
+        if (sortEl && sortLabel) sortEl.textContent = "Sort: " + sortLabel;
+        if (heroTitle) {
+            heroTitle.textContent = query
+                ? "Results for “" + query + "”"
+                : "What are you looking for?";
+        }
+        const chip = document.querySelector(".page-banner-chips .banner-chip:nth-child(2)");
+        if (chip) chip.textContent = count + " matches";
+        document.querySelectorAll("[data-live-match-count]").forEach((el) => {
+            el.textContent = count + " matches";
+        });
+    }
+
+    async function runSearch(q) {
+        const id = ++requestId;
+        const params = currentParams(q);
+        params.set("partial", "1");
+        panel.classList.add("is-loading");
+
+        try {
+            const response = await fetch("{% url 'search' %}?" + params.toString(), {
+                headers: { "X-Requested-With": "XMLHttpRequest" },
+            });
+            if (!response.ok || id !== requestId) return;
+
+            const html = await response.text();
+            if (id !== requestId) return;
+            panel.innerHTML = html;
+
+            const meta = panel.querySelector("#search-live-meta");
+            const count = meta ? meta.dataset.count : "0";
+            const query = meta ? meta.dataset.query : q;
+            updateSummary(
+                count,
+                query,
+                meta ? meta.dataset.statusLabel : null,
+                meta ? meta.dataset.whenLabel : null,
+                meta ? meta.dataset.sortLabel : null
+            );
+            updateFilterLinks(query);
+
+            const share = new URLSearchParams(params);
+            share.delete("partial");
+            const qs = share.toString();
+            history.replaceState(null, "", "{% url 'search' %}" + (qs ? "?" + qs : ""));
+        } catch (err) {
+            // Keep current results if the request fails.
+        } finally {
+            if (id === requestId) panel.classList.remove("is-loading");
+        }
+    }
+
+    input.addEventListener("input", () => {
+        clearTimeout(timer);
+        timer = setTimeout(() => runSearch(input.value.trim()), 220);
+    });
+
+    form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        clearTimeout(timer);
+        runSearch(input.value.trim());
+    });
+})();
+</script>
 </body>
 </html>

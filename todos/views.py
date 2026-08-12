@@ -257,6 +257,7 @@ def paginate_todos(queryset, request, per_page=TODOS_PER_PAGE):
     page_obj = paginator.get_page(request.GET.get("page"))
     params = request.GET.copy()
     params.pop("page", None)
+    params.pop("partial", None)
     return {
         "todos": page_obj.object_list,
         "page_obj": page_obj,
@@ -474,6 +475,8 @@ def search_todos(request):
             "priority_label": PRIORITY_LABELS[filtered["priority"]],
         }
     )
+    if request.GET.get("partial") == "1":
+        return render(request, "todos/_search_results.html", filtered)
     return render(request, "todos/search.html", filtered)
 
 
