@@ -115,6 +115,38 @@ def home(request):
 
 
 @login_required
+def search_todos(request):
+    mark_overdue_todos_completed(request.user)
+    query = request.GET.get("q", "").strip()
+    status = request.GET.get("status", "all")
+    if status not in {"all", "pending", "completed"}:
+        status = "all"
+
+    todos = Todo.objects.filter(user=request.user).order_by(
+        "completed", "start_date", "title"
+    )
+
+    if query:
+        todos = todos.filter(title__icontains=query)
+
+    if status == "pending":
+        todos = todos.filter(completed=False)
+    elif status == "completed":
+        todos = todos.filter(completed=True)
+
+    return render(
+        request,
+        "todos/search.html",
+        {
+            "todos": todos,
+            "query": query,
+            "status": status,
+            "result_count": todos.count(),
+        },
+    )
+
+
+@login_required
 def edit_todos(request):
     mark_overdue_todos_completed(request.user)
     todos = Todo.objects.filter(user=request.user)

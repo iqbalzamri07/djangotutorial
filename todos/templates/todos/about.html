@@ -273,6 +273,7 @@
                 <a class="ghost" href="{% url 'login' %}">Log in</a>
                 <a class="ghost" href="{% url 'signup' %}">Sign up</a>
             {% endif %}
+            <a class="ghost" href="{% url 'search' %}">Search</a>
             <a class="ghost" href="{% url 'home' %}">← Back to Todos</a>
         </div>
     </div>
@@ -335,6 +336,13 @@
             <span class="go">Edit tasks →</span>
         </a>
 
+        <a class="feature" href="{% url 'search' %}">
+            <div class="icon">🔎</div>
+            <h4>Search todos</h4>
+            <p>Find a task by title and filter pending or completed items.</p>
+            <span class="go">Search tasks →</span>
+        </a>
+
         <a class="feature" href="{% url 'blog:blog' %}">
             <div class="icon">📖</div>
             <h4>Read the blog</h4>
@@ -366,6 +374,7 @@
                 <li>A monthly calendar grid</li>
                 <li>Start date → end date durations</li>
                 <li>Click-to-view popups and a blog</li>
+                <li>Search todos by title and status</li>
             </ul>
         </div>
 

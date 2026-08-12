@@ -10,6 +10,8 @@ urlpatterns = [
     path("calendar/", views.calendar, name="calendar"),
     path("calendar/add/", views.calendar_add, name="calendar_add"),
 
+    path("search/", views.search_todos, name="search"),
+
     # Page showing all todos
     path("edit-todos/", views.edit_todos, name="edit_todos"),
 

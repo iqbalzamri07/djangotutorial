@@ -104,6 +104,12 @@
             border-color: #bf59eb;
         }
 
+        .button.search:hover {
+            background: #fffbeb;
+            color: #b45309;
+            border-color: #fcd34d;
+        }
+
         .button.login:hover {
             background: #eff6ff;
             color: #1d4ed8;
@@ -259,6 +265,38 @@
             font-size: 13px;
         }
 
+        .task-search {
+            display: flex;
+            gap: 8px;
+            padding: 14px 20px 0;
+        }
+
+        .task-search input {
+            flex: 1;
+            padding: 10px 12px;
+            border: 1px solid #d6d3d1;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 14px;
+        }
+
+        .task-search input:focus {
+            outline: none;
+            border-color: #0f766e;
+            box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.15);
+        }
+
+        .task-search button {
+            padding: 10px 14px;
+            background: #0f766e;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-family: inherit;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
         .todo-form {
             padding: 18px 20px 22px;
         }
@@ -377,6 +415,7 @@
             <a href="{% url 'about' %}" class="button about">About</a>
             <a href="{% url 'blog:blog' %}" class="button blog">Blog</a>
             <a href="{% url 'calendar' %}" class="button calendar">Calendar</a>
+            <a href="{% url 'search' %}" class="button search">Search</a>
             <a href="{% url 'edit_todos' %}" class="button edit">Edit Todos</a>
 
             {% if user.is_authenticated %}
@@ -454,6 +493,10 @@
                 <h3>Your tasks</h3>
                 <p>Pending first, then completed.</p>
             </div>
+            <form class="task-search" method="get" action="{% url 'search' %}">
+                <input type="search" name="q" placeholder="Search todos...">
+                <button type="submit">Search</button>
+            </form>
             <div class="task-list">
                 {% for todo in todos %}
                     <div class="task-row {% if todo.completed %}done{% endif %}">

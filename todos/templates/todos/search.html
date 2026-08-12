@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Todos</title>
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: "Segoe UI", Tahoma, sans-serif;
+            background: #f6f1e8;
+            color: #1c1917;
+        }
+
+        .container {
+            width: 94%;
+            max-width: 860px;
+            margin: 36px auto 70px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .kicker {
+            margin: 0 0 6px;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: #0f766e;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 34px;
+            letter-spacing: -0.04em;
+        }
+
+        .header p {
+            margin: 6px 0 0;
+            color: #57534e;
+        }
+
+        .nav {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .button {
+            display: inline-flex;
+            align-items: center;
+            padding: 9px 14px;
+            background: #fff;
+            color: #44403c;
+            text-decoration: none;
+            border: 1px solid #d6d3d1;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s ease;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(28, 25, 23, 0.1);
+            background: #ecfdf5;
+            color: #0f766e;
+            border-color: #5eead4;
+        }
+
+        .button.edit:hover {
+            background: #f8eaff;
+            color: #651f83;
+            border-color: #bf59eb;
+        }
+
+        .panel {
+            background: #fff;
+            border: 1px solid #e7e5e4;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 16px 40px rgba(28, 25, 23, 0.06);
+        }
+
+        .search-box {
+            padding: 22px 24px 18px;
+            background: #0f766e;
+            color: #fff;
+        }
+
+        .search-box h2 {
+            margin: 0 0 6px;
+            font-size: 18px;
+        }
+
+        .search-box p {
+            margin: 0 0 14px;
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 13px;
+        }
+
+        .search-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .search-row input {
+            flex: 1;
+            padding: 12px 14px;
+            border: none;
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 15px;
+            outline: none;
+        }
+
+        .search-row button {
+            padding: 12px 18px;
+            background: #134e4a;
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .search-row button:hover {
+            background: #9af4ee;
+            color: #0f766e;
+        }
+
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 16px 24px 0;
+        }
+
+        .chip {
+            display: inline-flex;
+            padding: 7px 12px;
+            border-radius: 999px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 800;
+            background: #fff;
+            color: #44403c;
+            border: 1px solid #d6d3d1;
+        }
+
+        .chip.active {
+            background: #0f766e;
+            color: #fff;
+            border-color: #0f766e;
+        }
+
+        .results {
+            padding: 12px 16px 20px;
+        }
+
+        .result-count {
+            padding: 0 8px 10px;
+            color: #78716c;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .task-row {
+            display: grid;
+            grid-template-columns: 28px 1fr auto auto;
+            gap: 10px;
+            align-items: center;
+            padding: 14px 10px;
+            border-bottom: 1px solid #f5f5f4;
+            text-decoration: none;
+            color: inherit;
+            border-radius: 12px;
+        }
+
+        .task-row:last-child { border-bottom: none; }
+        .task-row:hover { background: #f0fdfa; }
+
+        .task-row.done .task-title {
+            text-decoration: line-through;
+            color: #78716c;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #f97316;
+        }
+
+        .task-row.done .dot { background: #16a34a; }
+
+        .task-title {
+            font-weight: 800;
+            font-size: 15px;
+        }
+
+        .task-meta {
+            margin-top: 3px;
+            font-size: 12px;
+            color: #78716c;
+            font-weight: 700;
+        }
+
+        .status {
+            display: inline-flex;
+            padding: 5px 10px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .completed { background: #dcfce7; color: #166534; }
+        .pending { background: #ffedd5; color: #9a3412; }
+
+        .edit-link {
+            padding: 7px 12px;
+            border-radius: 999px;
+            background: #f5f3ff;
+            color: #6d28d9;
+            border: 1px solid #c4b5fd;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .edit-link:hover {
+            background: #f8eaff;
+            color: #651f83;
+            border-color: #bf59eb;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 48px 16px;
+            color: #78716c;
+        }
+
+        @media (max-width: 700px) {
+            .header { flex-direction: column; }
+            .search-row { flex-direction: column; }
+            .task-row { grid-template-columns: 28px 1fr auto; }
+            .edit-link { grid-column: 2 / -1; justify-self: start; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <div>
+            <p class="kicker">Find tasks</p>
+            <h1>Search Todos</h1>
+            <p>Look up a task by title, then jump in to edit it.</p>
+        </div>
+        <div class="nav">
+            <a href="{% url 'home' %}" class="button">← Home</a>
+            <a href="{% url 'edit_todos' %}" class="button edit">Edit Todos</a>
+            <a href="{% url 'calendar' %}" class="button">Calendar</a>
+        </div>
+    </div>
+
+    <div class="panel">
+        <div class="search-box">
+            <h2>Search your list</h2>
+            <p>Matches titles for your account only.</p>
+            <form method="get" action="{% url 'search' %}">
+                <input type="hidden" name="status" value="{{ status }}">
+                <div class="search-row">
+                    <input
+                        type="search"
+                        name="q"
+                        value="{{ query }}"
+                        placeholder="e.g. grocery, meeting, homework..."
+                        autofocus
+                    >
+                    <button type="submit">Search</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="filters">
+            <a class="chip {% if status == 'all' %}active{% endif %}" href="?q={{ query|urlencode }}&status=all">All</a>
+            <a class="chip {% if status == 'pending' %}active{% endif %}" href="?q={{ query|urlencode }}&status=pending">Pending</a>
+            <a class="chip {% if status == 'completed' %}active{% endif %}" href="?q={{ query|urlencode }}&status=completed">Completed</a>
+        </div>
+
+        <div class="results">
+            <div class="result-count">
+                {% if query %}
+                    {{ result_count }} result{{ result_count|pluralize }} for “{{ query }}”
+                {% else %}
+                    {{ result_count }} task{{ result_count|pluralize }}
+                {% endif %}
+            </div>
+
+            {% for todo in todos %}
+                <div class="task-row {% if todo.completed %}done{% endif %}">
+                    <span class="dot"></span>
+                    <div>
+                        <div class="task-title">{{ todo.title }}</div>
+                        <div class="task-meta">
+                            {% if todo.start_date %}
+                                {{ todo.duration_label }}
+                            {% else %}
+                                No dates yet
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% if todo.completed %}
+                        <span class="status completed">Done</span>
+                    {% else %}
+                        <span class="status pending">Pending</span>
+                    {% endif %}
+                    <a href="{% url 'edit' todo.id %}" class="edit-link">Edit</a>
+                </div>
+            {% empty %}
+                <div class="empty">
+                    <div style="font-size:32px;">🔎</div>
+                    {% if query %}
+                        <div><strong>No todos match “{{ query }}”</strong></div>
+                        <p>Try another word or switch the status filter.</p>
+                    {% else %}
+                        <div><strong>No tasks yet</strong></div>
+                        <p>Add a todo on the home page first.</p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+</body>
+</html>
