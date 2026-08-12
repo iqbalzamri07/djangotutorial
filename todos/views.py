@@ -73,9 +73,19 @@ def logout_view(request):
 @login_required
 def home(request):
     mark_overdue_todos_completed(request.user)
-    todos = Todo.objects.filter(user=request.user)
+    todos = Todo.objects.filter(user=request.user).order_by("completed", "start_date", "title")
     completed_tasks = todos.filter(completed=True).count()
     pending_tasks = todos.filter(completed=False).count()
+    total_tasks = todos.count()
+    progress_percent = int((completed_tasks / total_tasks) * 100) if total_tasks else 0
+
+    hour = datetime.now().hour
+    if hour < 12:
+        greeting = "Good morning"
+    elif hour < 18:
+        greeting = "Good afternoon"
+    else:
+        greeting = "Good evening"
 
     if request.method == "POST":
         form = TodoForm(request.POST)
@@ -96,6 +106,10 @@ def home(request):
             "form": form,
             "completed_tasks": completed_tasks,
             "pending_tasks": pending_tasks,
+            "total_tasks": total_tasks,
+            "progress_percent": progress_percent,
+            "greeting": greeting,
+            "today": date.today(),
         },
     )
 

@@ -1,623 +1,496 @@
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Todo App</title>
+    <style>
+        * { box-sizing: border-box; }
 
-<title>My Todo App</title>
-
-<style>
-    * {
-        box-sizing: border-box;
-    }
-
-    body {
-        margin: 0;
-        min-height: 100vh;
-        font-family: Arial, Helvetica, sans-serif;
-        background: linear-gradient(135deg, #eff6ff, #f8fafc);
-        color: #1f2937;
-    }
-
-    /* Main container */
-
-    .container {
-        width: 92%;
-        max-width: 1100px;
-        margin: 55px auto;
-    }
-
-    /* Header */
-
-    .header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 25px;
-    }
-
-    .title-section h1 {
-        margin: 0;
-        font-size: 34px;
-        color: #111827;
-    }
-
-    .title-section p {
-        margin: 7px 0 0;
-        color: #6b7280;
-        font-size: 14px;
-    }
-
-    /* Navigation */
-
-    .nav {
-        display: flex;
-        gap: 10px;
-        flex-wrap: wrap;
-        align-items: center;
-        justify-content: flex-end;
-    }
-
-    .nav form {
-        margin: 0;
-    }
-
-    .button.logout {
-        cursor: pointer;
-        font-family: inherit;
-        background: #fef2f2;
-        color: #b91c1c;
-        border-color: #fecaca;
-    }
-
-    .button {
-        display: inline-flex;
-        align-items: center;
-        gap: 7px;
-        padding: 11px 18px;
-        background-color: white;
-        color: #374151;
-        text-decoration: none;
-        border: 1px solid #e5e7eb;
-        border-radius: 9px;
-        font-size: 14px;
-        font-weight: 600;
-        transition: all 0.2s ease;
-    }
-
-    .button:hover {
-        background-color: #f9fafb;
-        border-color: #d1d5db;
-        transform: translateY(-1px);
-    }
-
-    .button.edit {
-        background-color: #7c3aed;
-        color: white;
-        border-color: #7c3aed;
-        box-shadow: 0 3px 8px rgba(124, 58, 237, 0.2);
-    }
-
-    .button.edit:hover {
-        background-color: #6d28d9;
-        border-color: #6d28d9;
-    }
-
-    /* Statistics */
-
-    .stats {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 15px;
-        margin-bottom: 30px;
-    }
-
-    .stat-card {
-        background-color: white;
-        padding: 20px;
-        border-radius: 14px;
-        border: 1px solid #e5e7eb;
-        box-shadow: 0 5px 18px rgba(0, 0, 0, 0.05);
-    }
-
-    .stat-label {
-        color: #6b7280;
-        font-size: 13px;
-        margin-bottom: 8px;
-    }
-
-    .stat-number {
-        font-size: 27px;
-        font-weight: 700;
-        color: #111827;
-    }
-
-    .stat-icon {
-        float: right;
-        font-size: 24px;
-    }
-
-    /* Section headings */
-
-    .section-title {
-        margin: 35px 0 15px;
-        color: #111827;
-        font-size: 21px;
-    }
-
-    /* Add Todo card */
-
-    .todo-form {
-        background-color: white;
-        padding: 25px;
-        border-radius: 16px;
-        border: 1px solid #e5e7eb;
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
-    }
-
-    .todo-form p {
-        margin: 0 0 15px;
-    }
-
-    .todo-form label {
-        display: block;
-        margin-bottom: 6px;
-        font-size: 14px;
-        font-weight: 600;
-        color: #374151;
-    }
-
-    .todo-form input,
-    .todo-form select,
-    .todo-form textarea {
-        width: 100%;
-        padding: 11px 13px;
-        border: 1px solid #d1d5db;
-        border-radius: 8px;
-        background-color: #ffffff;
-        font-family: inherit;
-        font-size: 14px;
-        color: #1f2937;
-        outline: none;
-        transition: border-color 0.2s, box-shadow 0.2s;
-    }
-
-    .todo-form input:focus,
-    .todo-form select:focus,
-    .todo-form textarea:focus {
-        border-color: #2563eb;
-        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-    }
-
-    .add-button {
-        display: inline-flex;
-        align-items: center;
-        gap: 7px;
-        margin-top: 5px;
-        padding: 11px 20px;
-        background-color: #16a34a;
-        color: white;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        font-size: 14px;
-        font-weight: 700;
-        transition: all 0.2s ease;
-        box-shadow: 0 3px 8px rgba(22, 163, 74, 0.2);
-    }
-
-    .add-button:hover {
-        background-color: #15803d;
-        transform: translateY(-1px);
-    }
-
-    /* Table */
-
-    .table-container {
-        background-color: white;
-        border-radius: 16px;
-        overflow: hidden;
-        border: 1px solid #e5e7eb;
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
-    }
-
-    .table-header {
-        padding: 20px 24px;
-        border-bottom: 1px solid #e5e7eb;
-    }
-
-    .table-header h3 {
-        margin: 0;
-        font-size: 18px;
-        color: #111827;
-    }
-
-    .table-header p {
-        margin: 5px 0 0;
-        font-size: 13px;
-        color: #6b7280;
-    }
-
-    .table-scroll {
-        overflow-x: auto;
-    }
-
-    table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-    th {
-        padding: 14px 20px;
-        background-color: #f9fafb;
-        color: #6b7280;
-        text-align: left;
-        font-size: 12px;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        border-bottom: 1px solid #e5e7eb;
-    }
-
-    td {
-        padding: 17px 20px;
-        border-bottom: 1px solid #f0f0f0;
-        vertical-align: middle;
-    }
-
-    tbody tr {
-        transition: background-color 0.2s ease;
-    }
-
-    tbody tr:hover {
-        background-color: #f8fafc;
-    }
-
-    tbody tr:last-child td {
-        border-bottom: none;
-    }
-
-    .number {
-        color: #9ca3af;
-        font-weight: 600;
-        font-size: 14px;
-    }
-
-    .task-title {
-        color: #1f2937;
-        font-weight: 600;
-    }
-
-    /* Status */
-
-    .status {
-        display: inline-flex;
-        align-items: center;
-        gap: 5px;
-        padding: 6px 11px;
-        border-radius: 999px;
-        font-size: 12px;
-        font-weight: 700;
-    }
-
-    .completed {
-        background-color: #dcfce7;
-        color: #166534;
-    }
-
-    .pending {
-        background-color: #fef3c7;
-        color: #92400e;
-    }
-
-    /* Empty state */
-
-    .empty {
-        text-align: center;
-        padding: 60px 20px !important;
-        color: #6b7280;
-    }
-
-    .empty-icon {
-        font-size: 40px;
-        margin-bottom: 10px;
-    }
-
-    .empty-text {
-        font-size: 15px;
-        font-weight: 600;
-    }
-
-    /* Mobile */
-
-    @media (max-width: 700px) {
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: "Segoe UI", Tahoma, sans-serif;
+            background: #f6f1e8;
+            color: #1c1917;
+        }
 
         .container {
-            width: 95%;
-            margin: 30px auto;
+            width: 94%;
+            max-width: 1120px;
+            margin: 36px auto 70px;
         }
 
         .header {
-            flex-direction: column;
+            display: flex;
+            justify-content: space-between;
             align-items: flex-start;
-            gap: 20px;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .kicker {
+            margin: 0 0 6px;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: #0f766e;
         }
 
         .title-section h1 {
-            font-size: 28px;
+            margin: 0;
+            font-size: 36px;
+            letter-spacing: -0.04em;
+        }
+
+        .title-section p {
+            margin: 6px 0 0;
+            color: #57534e;
         }
 
         .nav {
-            width: 100%;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: flex-end;
         }
 
+        .nav form { margin: 0; }
+
         .button {
-            flex: 1;
-            justify-content: center;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 9px 14px;
+            background: #fff;
+            color: #44403c;
+            text-decoration: none;
+            border: 1px solid #d6d3d1;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(28, 25, 23, 0.1);
+        }
+
+        .button.about:hover {
+            background: #fff7ed;
+            color: #c2410c;
+            border-color: #fdba74;
+        }
+
+        .button.blog:hover {
+            background: #f5f3ff;
+            color: #6d28d9;
+            border-color: #c4b5fd;
+        }
+
+        .button.calendar:hover {
+            background: #ecfdf5;
+            color: #0f766e;
+            border-color: #5eead4;
+        }
+
+        .button.edit:hover {
+            background: #f8eaff;
+            color: #651f83;
+            border-color: #bf59eb;
+        }
+
+        .button.login:hover {
+            background: #eff6ff;
+            color: #1d4ed8;
+            border-color: #93c5fd;
+        }
+
+        .button.signup:hover {
+            background: #0f766e;
+            color: #fff;
+            border-color: #0f766e;
+        }
+
+        .button.logout {
+            font-family: inherit;
+            background: #fef2f2;
+            color: #b91c1c;
+            border-color: #fecaca;
+        }
+
+        .button.logout:hover {
+            background: #b91c1c;
+            color: #fff;
+            border-color: #b91c1c;
+        }
+
+        .hero {
+            display: grid;
+            grid-template-columns: 1.4fr 0.8fr;
+            gap: 16px;
+            margin-bottom: 18px;
+        }
+
+        .hero-main {
+            background: #1c1917;
+            color: #fafaf9;
+            border-radius: 22px;
+            padding: 28px;
+        }
+
+        .hero-main h2 {
+            margin: 0 0 8px;
+            font-size: 30px;
+            letter-spacing: -0.03em;
+        }
+
+        .hero-main p {
+            margin: 0 0 18px;
+            color: #d6d3d1;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: #fdba74;
+            margin-bottom: 8px;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background: rgba(255,255,255,0.12);
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, #5eead4, #fbbf24);
+            border-radius: 999px;
+        }
+
+        .hero-side {
+            background: radial-gradient(circle at 20% 20%, #5eead4, #0f766e 70%);
+            border-radius: 22px;
+            color: #fff;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 180px;
+        }
+
+        .hero-side .date {
+            font-size: 18px;
+            font-weight: 800;
+        }
+
+        .hero-side a {
+            color: #fff;
+            font-weight: 800;
+            text-decoration: none;
         }
 
         .stats {
-            grid-template-columns: 1fr;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 22px;
+        }
+
+        .stat-card {
+            background: #fff;
+            border: 1px solid #e7e5e4;
+            border-radius: 16px;
+            padding: 16px 18px;
+        }
+
+        .stat-card.pending { border-top: 4px solid #f97316; }
+        .stat-card.done { border-top: 4px solid #16a34a; }
+        .stat-card.total { border-top: 4px solid #0f766e; }
+
+        .stat-label {
+            color: #78716c;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .stat-number {
+            margin-top: 6px;
+            font-size: 28px;
+            font-weight: 800;
+        }
+
+        .workspace {
+            display: grid;
+            grid-template-columns: 0.9fr 1.1fr;
+            gap: 16px;
+        }
+
+        .panel {
+            background: #fff;
+            border: 1px solid #e7e5e4;
+            border-radius: 18px;
+            overflow: hidden;
+        }
+
+        .panel-head {
+            padding: 18px 20px 0;
+        }
+
+        .panel-head h3 {
+            margin: 0;
+            font-size: 18px;
+        }
+
+        .panel-head p {
+            margin: 4px 0 0;
+            color: #78716c;
+            font-size: 13px;
         }
 
         .todo-form {
-            padding: 20px;
+            padding: 18px 20px 22px;
         }
 
-        th,
-        td {
-            padding: 13px 12px;
-        }
-    }
-</style>
+        .todo-form p { margin: 0 0 14px; }
 
+        .todo-form label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .todo-form input,
+        .todo-form select,
+        .todo-form textarea {
+            width: 100%;
+            padding: 11px 13px;
+            border: 1px solid #d6d3d1;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 14px;
+        }
+
+        .todo-form input:focus {
+            outline: none;
+            border-color: #0f766e;
+            box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.15);
+        }
+
+        .add-button {
+            border: none;
+            background: #0f766e;
+            color: #fff;
+            border-radius: 10px;
+            padding: 11px 18px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .task-list {
+            padding: 8px 12px 16px;
+        }
+
+        .task-row {
+            display: grid;
+            grid-template-columns: 28px 1fr auto;
+            gap: 10px;
+            align-items: center;
+            padding: 12px 10px;
+            border-bottom: 1px solid #f5f5f4;
+        }
+
+        .task-row:last-child { border-bottom: none; }
+
+        .task-row.done .task-title {
+            text-decoration: line-through;
+            color: #78716c;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #f97316;
+        }
+
+        .task-row.done .dot { background: #16a34a; }
+
+        .task-title {
+            font-weight: 800;
+            font-size: 14px;
+        }
+
+        .task-meta {
+            margin-top: 3px;
+            font-size: 12px;
+            color: #78716c;
+            font-weight: 700;
+        }
+
+        .status {
+            display: inline-flex;
+            padding: 5px 10px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .completed { background: #dcfce7; color: #166534; }
+        .pending { background: #ffedd5; color: #9a3412; }
+
+        .empty {
+            text-align: center;
+            padding: 40px 16px;
+            color: #78716c;
+        }
+
+        @media (max-width: 860px) {
+            .header, .hero, .workspace, .stats { display: block; }
+            .nav { justify-content: flex-start; margin-top: 12px; }
+            .hero-side, .panel { margin-top: 12px; }
+        }
+    </style>
 </head>
-
 <body>
-
 <div class="container">
-
-<!-- Header -->
-
-<div class="header">
-
-    <div class="title-section">
-
-        <h1>My Todo App</h1>
-
-        <p>
-            Stay organized and keep track of your tasks.
-        </p>
-
-    </div>
-
-    <div class="nav">
-        <a href="{% url 'about' %}" class="button">
-            ℹ️ About
-        </a>
-
-        <a href="{% url 'blog:blog' %}" class="button">
-            📝 Blog
-        </a>
-
-        <a href="{% url 'calendar' %}" class="button">
-            📅 Calendar
-        </a>
-
-        <a href="{% url 'edit_todos' %}" class="button edit">
-            ✏️ Edit Todos
-        </a>
-
-        {% if user.is_authenticated %}
-            <span class="button" style="cursor:default;">👤 {{ user.username }}</span>
-            <form method="post" action="{% url 'logout' %}">
-                {% csrf_token %}
-                <button type="submit" class="button logout">Log out</button>
-            </form>
-        {% else %}
-            <a href="{% url 'login' %}" class="button">Log in</a>
-            <a href="{% url 'signup' %}" class="button">Sign up</a>
-        {% endif %}
-    </div>
-
-</div>
-
-
-<!-- Statistics -->
-
-<div class="stats">
-
-    <div class="stat-card">
-
-        <span class="stat-icon">📝</span>
-
-        <div class="stat-label">
-            Total Tasks
+    <div class="header">
+        <div class="title-section">
+            <p class="kicker">Your workspace</p>
+            <h1>{{ greeting }}, {{ user.username }}</h1>
+            <p>Plan tasks, track progress, and keep your calendar in one place.</p>
         </div>
 
-        <div class="stat-number">
-            {{ todos|length }}
-        </div>
+        <div class="nav">
+            <a href="{% url 'about' %}" class="button about">About</a>
+            <a href="{% url 'blog:blog' %}" class="button blog">Blog</a>
+            <a href="{% url 'calendar' %}" class="button calendar">Calendar</a>
+            <a href="{% url 'edit_todos' %}" class="button edit">Edit Todos</a>
 
+            {% if user.is_authenticated %}
+                <form method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="button logout">Log out</button>
+                </form>
+            {% else %}
+                <a href="{% url 'login' %}" class="button login">Log in</a>
+                <a href="{% url 'signup' %}" class="button signup">Sign up</a>
+            {% endif %}
+        </div>
     </div>
 
-
-    <div class="stat-card">
-
-        <span class="stat-icon">⏳</span>
-
-        <div class="stat-label">
-            Keep Going
+    <div class="hero">
+        <div class="hero-main">
+            <h2>Let’s finish what you started.</h2>
+            <p>
+                {% if pending_tasks %}
+                    You have {{ pending_tasks }} task{{ pending_tasks|pluralize }} still open.
+                {% else %}
+                    No pending tasks. Nice work — add something new or enjoy the break.
+                {% endif %}
+            </p>
+            <div class="progress-label">
+                <span>Progress</span>
+                <span>{{ progress_percent }}%</span>
+            </div>
+            <div class="progress-bar" data-progress="{{ progress_percent }}">
+                <div class="progress-fill"></div>
+            </div>
         </div>
 
-        <div class="stat-number">
-            🚀{{ pending_tasks }}
+        <div class="hero-side">
+            <div>
+                <div class="kicker" style="color:#ecfdf5;">Today</div>
+                <div class="date">{{ today|date:"l, M j" }}</div>
+            </div>
+            <a href="{% url 'calendar' %}">Open calendar →</a>
         </div>
-
     </div>
 
-
-    <div class="stat-card">
-
-        <span class="stat-icon">✨</span>
-
-        <div class="stat-label">
-            Stay Productive
+    <div class="stats">
+        <div class="stat-card total">
+            <div class="stat-label">Total tasks</div>
+            <div class="stat-number">{{ total_tasks }}</div>
         </div>
-
-        <div class="stat-number">
-            💪{{ completed_tasks }}
+        <div class="stat-card pending">
+            <div class="stat-label">Pending</div>
+            <div class="stat-number">{{ pending_tasks }}</div>
         </div>
-
+        <div class="stat-card done">
+            <div class="stat-label">Completed</div>
+            <div class="stat-number">{{ completed_tasks }}</div>
+        </div>
     </div>
 
-</div>
+    <div class="workspace">
+        <div class="panel">
+            <div class="panel-head">
+                <h3>Add a todo</h3>
+                <p>Give it a title and an optional date range.</p>
+            </div>
+            <div class="todo-form">
+                <form method="POST">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" class="add-button">Add Todo</button>
+                </form>
+            </div>
+        </div>
 
-
-<!-- Add Todo -->
-
-<h2 class="section-title">
-    Add a Todo
-</h2>
-
-<div class="todo-form">
-
-    <form method="POST">
-
-        {% csrf_token %}
-
-        {{ form.as_p }}
-
-        <button type="submit" class="add-button">
-            ➕ Add Todo
-        </button>
-
-    </form>
-
-</div>
-
-
-<!-- Tasks -->
-
-<h2 class="section-title">
-    My Tasks
-</h2>
-
-
-<div class="table-container">
-
-    <div class="table-header">
-
-        <h3>Task List</h3>
-
-        <p>
-            Here are all the tasks in your Todo list.
-        </p>
-
-    </div>
-
-
-    <div class="table-scroll">
-
-        <table>
-
-            <thead>
-
-                <tr>
-                    <th>#</th>
-                    <th>Task</th>
-                    <th>Duration</th>
-                    <th>Status</th>
-                </tr>
-
-            </thead>
-
-
-            <tbody>
-
+        <div class="panel">
+            <div class="panel-head">
+                <h3>Your tasks</h3>
+                <p>Pending first, then completed.</p>
+            </div>
+            <div class="task-list">
                 {% for todo in todos %}
-
-                    <tr>
-
-                        <td>
-                            <span class="number">
-                                {{ forloop.counter }}
-                            </span>
-                        </td>
-
-
-                        <td>
-                            <span class="task-title">
-                                {{ todo.title }}
-                            </span>
-                        </td>
-
-
-                        <td>
-                            {% if todo.start_date %}
-                                {{ todo.duration_label }}
-                            {% else %}
-                                —
-                            {% endif %}
-                        </td>
-
-
-                        <td>
-
-                            {% if todo.completed %}
-
-                                <span class="status completed">
-                                    ✓ Completed
-                                </span>
-
-                            {% else %}
-
-                                <span class="status pending">
-                                    ⏳ Pending
-                                </span>
-
-                            {% endif %}
-
-                        </td>
-
-                    </tr>
-
-
+                    <div class="task-row {% if todo.completed %}done{% endif %}">
+                        <span class="dot"></span>
+                        <div>
+                            <div class="task-title">{{ todo.title }}</div>
+                            <div class="task-meta">
+                                {% if todo.start_date %}
+                                    {{ todo.duration_label }}
+                                {% else %}
+                                    No dates yet
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% if todo.completed %}
+                            <span class="status completed">Done</span>
+                        {% else %}
+                            <span class="status pending">Pending</span>
+                        {% endif %}
+                    </div>
                 {% empty %}
-
-                    <tr>
-
-                        <td colspan="4" class="empty">
-
-                            <div class="empty-icon">
-                                📝
-                            </div>
-
-                            <div class="empty-text">
-                                No tasks yet.
-                            </div>
-
-                            <p>
-                                Add your first task above!
-                            </p>
-
-                        </td>
-
-                    </tr>
-
+                    <div class="empty">
+                        <div style="font-size:32px;">📝</div>
+                        <div><strong>No tasks yet</strong></div>
+                        <p>Add your first one on the left.</p>
+                    </div>
                 {% endfor %}
-
-            </tbody>
-
-        </table>
-
+            </div>
+        </div>
     </div>
-
 </div>
-
-</div>
-
+<script>
+    document.querySelectorAll('.progress-bar').forEach((bar) => {
+        const fill = bar.querySelector('.progress-fill');
+        const percent = Number(bar.getAttribute('data-progress') || 0);
+        fill.style.width = Math.max(0, Math.min(100, percent)) + '%';
+    });
+</script>
 </body>
-
 </html>
