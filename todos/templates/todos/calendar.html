@@ -22,13 +22,13 @@
             margin: 40px auto 60px;
         }
 
-        .header h1 {
+        .page-header h1 {
             margin: 0;
             font-size: 28px;
             letter-spacing: -0.03em;
         }
 
-        .header p {
+        .page-header p {
             margin: 4px 0 0;
             color: #78716c;
             font-size: 14px;
@@ -429,13 +429,11 @@
 </head>
 
 <body>
+    {% include "todos/_nav.html" with active_nav="calendar" %}
     <div class="container">
-        <div class="header">
-            <div>
-                <h1>Todo Calendar</h1>
-                <p>Click a day to schedule a todo. Repeating tasks show on every matching day.</p>
-            </div>
-            {% include "todos/_nav.html" with active_nav="calendar" %}
+        <div class="page-header">
+            <h1>Todo Calendar</h1>
+            <p>Click a day to schedule a todo. Repeating tasks show on every matching day.</p>
         </div>
 
         <div class="planner">

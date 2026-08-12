@@ -18,7 +18,7 @@
             margin: 36px auto 70px;
         }
 
-        .header {
+        .page-header {
             margin-bottom: 28px;
         }
 
@@ -171,7 +171,7 @@
         }
 
         @media (max-width: 800px) {
-            .header, .featured, .grid { display: block; }
+            .featured, .grid { display: block; }
             h1 { font-size: 32px; }
             .featured-art { min-height: 160px; }
             .card { margin-bottom: 12px; }
@@ -179,17 +179,15 @@
     </style>
 </head>
 <body>
+{% include "todos/_nav.html" with active_nav="blog" %}
 <div class="wrap">
-    <div class="header">
-        <div>
-            <p class="kicker">A learning journal</p>
-            <h1>Notes from Building</h1>
-            <p class="intro">
-                Short stories from my first Django project: todos, calendars,
-                popups, and all the tiny mistakes that taught me the most.
-            </p>
-        </div>
-        {% include "todos/_nav.html" with active_nav="blog" %}
+    <div class="page-header">
+        <p class="kicker">A learning journal</p>
+        <h1>Notes from Building</h1>
+        <p class="intro">
+            Short stories from my first Django project: todos, calendars,
+            popups, and all the tiny mistakes that taught me the most.
+        </p>
     </div>
 
     <div class="filters">

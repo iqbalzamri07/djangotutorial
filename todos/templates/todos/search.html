@@ -27,13 +27,13 @@
             color: #0f766e;
         }
 
-        .header h1 {
+        .page-header h1 {
             margin: 0;
             font-size: 36px;
             letter-spacing: -0.05em;
         }
 
-        .header p {
+        .page-header p {
             margin: 6px 0 0;
             color: #57534e;
             max-width: 420px;
@@ -485,8 +485,7 @@
         .page-links .disabled { opacity: 0.45; }
 
         @media (max-width: 860px) {
-            .header, .layout { display: block; }
-            .nav { justify-content: flex-start; margin-top: 10px; }
+            .layout { display: block; }
             .filter-panel { margin-bottom: 14px; }
             .search-row { flex-direction: column; }
             .task-card { grid-template-columns: 8px 1fr; }
@@ -495,14 +494,12 @@
     </style>
 </head>
 <body>
+{% include "todos/_nav.html" with active_nav="search" %}
 <div class="container">
-    <div class="header">
-        <div>
-            <p class="kicker">Finder</p>
-            <h1>Search & filter</h1>
-            <p>Hunt down a task by title, then narrow it by status, date, or sort.</p>
-        </div>
-        {% include "todos/_nav.html" with active_nav="search" %}
+    <div class="page-header">
+        <p class="kicker">Finder</p>
+        <h1>Search & filter</h1>
+        <p>Hunt down a task by title, then narrow it by status, date, or sort.</p>
     </div>
 
     <div class="hero">

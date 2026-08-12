@@ -35,12 +35,12 @@
         color: #0f766e;
     }
 
-    .header h1 {
+    .page-header h1 {
         margin: 0;
         font-size: 32px;
     }
 
-    .header p {
+    .page-header p {
         margin: 6px 0 0;
         color: #57534e;
     }
@@ -180,14 +180,12 @@
 </head>
 
 <body>
+{% include "todos/_nav.html" with active_nav="edit" %}
 <div class="page">
-    <div class="header">
-        <div>
-            <p class="kicker">Manage tasks</p>
-            <h1>Delete Todo</h1>
-            <p>Confirm before this task is removed.</p>
-        </div>
-        {% include "todos/_nav.html" with active_nav="edit" %}
+    <div class="page-header">
+        <p class="kicker">Manage tasks</p>
+        <h1>Delete Todo</h1>
+        <p>Confirm before this task is removed.</p>
     </div>
 
 <div class="card">

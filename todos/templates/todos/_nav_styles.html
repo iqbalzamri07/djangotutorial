@@ -10,12 +10,38 @@ body {
     color: #1c1917;
 }
 
-.header {
+.site-nav {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    background: rgba(255, 255, 255, 0.92);
+    border-bottom: 1px solid #e7e5e4;
+    backdrop-filter: blur(10px);
+}
+
+.site-nav-inner {
+    width: 94%;
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 12px 0;
     display: flex;
+    align-items: center;
     justify-content: space-between;
-    align-items: flex-start;
     gap: 16px;
-    margin-bottom: 20px;
+}
+
+.site-brand {
+    flex-shrink: 0;
+    color: #0f766e;
+    text-decoration: none;
+    font-family: "Segoe UI", Tahoma, sans-serif;
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+}
+
+.site-brand:hover {
+    color: #115e59;
 }
 
 .nav {
@@ -28,7 +54,7 @@ body {
 
 .nav form { margin: 0; }
 
-.button {
+.nav .button {
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -45,80 +71,90 @@ body {
     transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.button:hover {
+.nav .button:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 16px rgba(28, 25, 23, 0.1);
 }
 
-.button.home:hover {
+.nav .button.home:hover {
     background: #ecfdf5;
     color: #0f766e;
     border-color: #5eead4;
 }
 
-.button.about:hover {
+.nav .button.about:hover {
     background: #fff7ed;
     color: #c2410c;
     border-color: #fdba74;
 }
 
-.button.blog:hover {
+.nav .button.blog:hover {
     background: #f5f3ff;
     color: #6d28d9;
     border-color: #c4b5fd;
 }
 
-.button.calendar:hover {
+.nav .button.calendar:hover {
     background: #ecfdf5;
     color: #0f766e;
     border-color: #5eead4;
 }
 
-.button.search:hover {
+.nav .button.search:hover {
     background: #fffbeb;
     color: #b45309;
     border-color: #fcd34d;
 }
 
-.button.edit:hover {
+.nav .button.edit:hover {
     background: #f8eaff;
     color: #651f83;
     border-color: #bf59eb;
 }
 
-.button.profile:hover,
-.button.login:hover {
+.nav .button.profile:hover,
+.nav .button.login:hover {
     background: #eff6ff;
     color: #1d4ed8;
     border-color: #93c5fd;
 }
 
-.button.signup:hover {
+.nav .button.signup:hover {
     background: #0f766e;
     color: #fff;
     border-color: #0f766e;
 }
 
-.button.logout {
+.nav .button.logout {
     background: #fef2f2;
     color: #b91c1c;
     border-color: #fecaca;
 }
 
-.button.logout:hover {
+.nav .button.logout:hover {
     background: #b91c1c;
     color: #fff;
     border-color: #b91c1c;
 }
 
-.button.active {
+.nav .button.active {
     background: #0f766e;
     color: #fff;
     border-color: #0f766e;
 }
 
+.page-header {
+    margin-bottom: 20px;
+}
+
 @media (max-width: 860px) {
-    .header { flex-direction: column; }
-    .nav { justify-content: flex-start; }
+    .site-nav-inner {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .nav {
+        justify-content: flex-start;
+    }
 }
 </style>

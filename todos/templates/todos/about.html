@@ -218,7 +218,7 @@
         }
 
         @media (max-width: 800px) {
-            .header, .hero, .stats, .features, .story {
+            .hero, .stats, .features, .story {
                 display: block;
             }
 
@@ -229,17 +229,15 @@
     </style>
 </head>
 <body>
+{% include "todos/_nav.html" with active_nav="about" %}
 <div class="wrap">
-    <div class="header">
-        <div>
-            <p class="kicker">A first Django project</p>
-            <h1>About this app</h1>
-            <p class="lede">
-                A todo list that grew into a calendar, popups, durations,
-                and a tiny blog. Built while learning Python and Django.
-            </p>
-        </div>
-        {% include "todos/_nav.html" with active_nav="about" %}
+    <div class="page-header">
+        <p class="kicker">A first Django project</p>
+        <h1>About this app</h1>
+        <p class="lede">
+            A todo list that grew into a calendar, popups, durations,
+            and a tiny blog. Built while learning Python and Django.
+        </p>
     </div>
 
     <div class="hero">

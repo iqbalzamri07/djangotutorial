@@ -18,14 +18,6 @@
             margin: 36px auto 70px;
         }
 
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 16px;
-            margin-bottom: 20px;
-        }
-
         .kicker {
             margin: 0 0 6px;
             font-size: 12px;
@@ -427,22 +419,18 @@
         }
 
         @media (max-width: 860px) {
-            .header, .hero, .workspace, .stats { display: block; }
-            .nav { justify-content: flex-start; margin-top: 12px; }
+            .hero, .workspace, .stats { display: block; }
             .hero-side, .panel { margin-top: 12px; }
         }
     </style>
 </head>
 <body>
+{% include "todos/_nav.html" with active_nav="home" %}
 <div class="container">
-    <div class="header">
-        <div class="title-section">
-            <p class="kicker">Your workspace</p>
-            <h1>{{ greeting }}, {{ user.first_name|default:user.username }}</h1>
-            <p>Plan tasks, track progress, and keep your calendar in one place.</p>
-        </div>
-
-        {% include "todos/_nav.html" with active_nav="home" %}
+    <div class="page-header title-section">
+        <p class="kicker">Your workspace</p>
+        <h1>{{ greeting }}, {{ user.first_name|default:user.username }}</h1>
+        <p>Plan tasks, track progress, and keep your calendar in one place.</p>
     </div>
 
     <div class="hero">

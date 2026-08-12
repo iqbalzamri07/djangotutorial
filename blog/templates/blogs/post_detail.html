@@ -18,7 +18,7 @@
             margin: 36px auto 70px;
         }
 
-        .header {
+        .page-header {
             margin-bottom: 28px;
         }
 
@@ -108,13 +108,11 @@
     </style>
 </head>
 <body>
+{% include "todos/_nav.html" with active_nav="blog" %}
 <div class="wrap">
-    <div class="header">
-        <div>
-            <p class="kicker" style="margin:0 0 6px;font-family:'Segoe UI',sans-serif;font-size:12px;font-weight:800;letter-spacing:0.14em;text-transform:uppercase;color:#b45309;">Blog</p>
-            <h2 style="margin:0;font-size:28px;font-family:'Segoe UI',sans-serif;">Reading</h2>
-        </div>
-        {% include "todos/_nav.html" with active_nav="blog" %}
+    <div class="page-header">
+        <p class="kicker" style="margin:0 0 6px;font-family:'Segoe UI',sans-serif;font-size:12px;font-weight:800;letter-spacing:0.14em;text-transform:uppercase;color:#b45309;">Blog</p>
+        <h2 style="margin:0;font-size:28px;font-family:'Segoe UI',sans-serif;">Reading</h2>
     </div>
 
     <article class="article">

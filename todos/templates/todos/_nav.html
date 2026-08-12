@@ -1,18 +1,23 @@
-<nav class="nav" aria-label="Main">
-    <a href="{% url 'home' %}" class="button home {% if active_nav == 'home' %}active{% endif %}">Home</a>
-    <a href="{% url 'about' %}" class="button about {% if active_nav == 'about' %}active{% endif %}">About</a>
-    <a href="{% url 'blog:blog' %}" class="button blog {% if active_nav == 'blog' %}active{% endif %}">Blog</a>
-    <a href="{% url 'calendar' %}" class="button calendar {% if active_nav == 'calendar' %}active{% endif %}">Calendar</a>
-    <a href="{% url 'search' %}" class="button search {% if active_nav == 'search' %}active{% endif %}">Search</a>
-    <a href="{% url 'edit_todos' %}" class="button edit {% if active_nav == 'edit' %}active{% endif %}">Edit Todos</a>
-    {% if user.is_authenticated %}
-        <a href="{% url 'profile' %}" class="button profile {% if active_nav == 'profile' %}active{% endif %}">Profile</a>
-        <form method="post" action="{% url 'logout' %}">
-            {% csrf_token %}
-            <button type="submit" class="button logout">Log out</button>
-        </form>
-    {% else %}
-        <a href="{% url 'login' %}" class="button login {% if active_nav == 'login' %}active{% endif %}">Log in</a>
-        <a href="{% url 'signup' %}" class="button signup {% if active_nav == 'signup' %}active{% endif %}">Sign up</a>
-    {% endif %}
-</nav>
+<header class="site-nav">
+    <div class="site-nav-inner">
+        <a href="{% url 'home' %}" class="site-brand">My Todo App</a>
+        <nav class="nav" aria-label="Main">
+            <a href="{% url 'home' %}" class="button home {% if active_nav == 'home' %}active{% endif %}">Home</a>
+            <a href="{% url 'about' %}" class="button about {% if active_nav == 'about' %}active{% endif %}">About</a>
+            <a href="{% url 'blog:blog' %}" class="button blog {% if active_nav == 'blog' %}active{% endif %}">Blog</a>
+            <a href="{% url 'calendar' %}" class="button calendar {% if active_nav == 'calendar' %}active{% endif %}">Calendar</a>
+            <a href="{% url 'search' %}" class="button search {% if active_nav == 'search' %}active{% endif %}">Search</a>
+            <a href="{% url 'edit_todos' %}" class="button edit {% if active_nav == 'edit' %}active{% endif %}">Edit Todos</a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'profile' %}" class="button profile {% if active_nav == 'profile' %}active{% endif %}">Profile</a>
+                <form method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="button logout">Log out</button>
+                </form>
+            {% else %}
+                <a href="{% url 'login' %}" class="button login {% if active_nav == 'login' %}active{% endif %}">Log in</a>
+                <a href="{% url 'signup' %}" class="button signup {% if active_nav == 'signup' %}active{% endif %}">Sign up</a>
+            {% endif %}
+        </nav>
+    </div>
+</header>

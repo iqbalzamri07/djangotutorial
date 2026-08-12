@@ -23,8 +23,8 @@
             text-transform: uppercase;
             color: #0f766e;
         }
-        .header h1 { margin: 0; font-size: 32px; }
-        .header p { margin: 6px 0 0; color: #57534e; }
+        .page-header h1 { margin: 0; font-size: 32px; }
+        .page-header p { margin: 6px 0 0; color: #57534e; }
         .wrap {
             width: 100%;
             max-width: 500px;
@@ -87,14 +87,12 @@
     </style>
 </head>
 <body>
+{% include "todos/_nav.html" with active_nav="signup" %}
 <div class="page">
-    <div class="header">
-        <div>
-            <p class="kicker">Account</p>
-            <h1>Create an account</h1>
-            <p>Sign up to keep your todos private to you.</p>
-        </div>
-        {% include "todos/_nav.html" with active_nav="signup" %}
+    <div class="page-header">
+        <p class="kicker">Account</p>
+        <h1>Create an account</h1>
+        <p>Sign up to keep your todos private to you.</p>
     </div>
     <div class="wrap">
     <div class="card">
