@@ -144,10 +144,25 @@
         }
 
         .filters {
+            display: grid;
+            gap: 14px;
+            padding: 18px 24px 6px;
+        }
+
+        .filter-row {
             display: flex;
             flex-wrap: wrap;
+            align-items: center;
             gap: 8px;
-            padding: 16px 24px 0;
+        }
+
+        .filter-label {
+            min-width: 58px;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: #78716c;
         }
 
         .chip {
@@ -166,6 +181,12 @@
             background: #0f766e;
             color: #fff;
             border-color: #0f766e;
+        }
+
+        .chip.clear {
+            background: #fef2f2;
+            color: #b91c1c;
+            border-color: #fecaca;
         }
 
         .results {
@@ -283,6 +304,8 @@
             <p>Matches titles for your account only.</p>
             <form method="get" action="{% url 'search' %}">
                 <input type="hidden" name="status" value="{{ status }}">
+                <input type="hidden" name="when" value="{{ when }}">
+                <input type="hidden" name="sort" value="{{ sort }}">
                 <div class="search-row">
                     <input
                         type="search"
@@ -297,9 +320,32 @@
         </div>
 
         <div class="filters">
-            <a class="chip {% if status == 'all' %}active{% endif %}" href="?q={{ query|urlencode }}&status=all">All</a>
-            <a class="chip {% if status == 'pending' %}active{% endif %}" href="?q={{ query|urlencode }}&status=pending">Pending</a>
-            <a class="chip {% if status == 'completed' %}active{% endif %}" href="?q={{ query|urlencode }}&status=completed">Completed</a>
+            <div class="filter-row">
+                <span class="filter-label">Status</span>
+                <a class="chip {% if status == 'all' %}active{% endif %}" href="?q={{ query|urlencode }}&status=all&when={{ when }}&sort={{ sort }}">All</a>
+                <a class="chip {% if status == 'pending' %}active{% endif %}" href="?q={{ query|urlencode }}&status=pending&when={{ when }}&sort={{ sort }}">Pending</a>
+                <a class="chip {% if status == 'completed' %}active{% endif %}" href="?q={{ query|urlencode }}&status=completed&when={{ when }}&sort={{ sort }}">Completed</a>
+            </div>
+            <div class="filter-row">
+                <span class="filter-label">When</span>
+                <a class="chip {% if when == 'all' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=all&sort={{ sort }}">Any date</a>
+                <a class="chip {% if when == 'today' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=today&sort={{ sort }}">Today</a>
+                <a class="chip {% if when == 'week' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=week&sort={{ sort }}">This week</a>
+                <a class="chip {% if when == 'month' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=month&sort={{ sort }}">This month</a>
+                <a class="chip {% if when == 'upcoming' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=upcoming&sort={{ sort }}">Upcoming</a>
+                <a class="chip {% if when == 'undated' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=undated&sort={{ sort }}">No dates</a>
+            </div>
+            <div class="filter-row">
+                <span class="filter-label">Sort</span>
+                <a class="chip {% if sort == 'status' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort=status">Status</a>
+                <a class="chip {% if sort == 'newest' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort=newest">Newest</a>
+                <a class="chip {% if sort == 'oldest' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort=oldest">Oldest</a>
+                <a class="chip {% if sort == 'title' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort=title">Title</a>
+                <a class="chip {% if sort == 'start' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort=start">Start date</a>
+                {% if filters_active %}
+                    <a class="chip clear" href="{% url 'search' %}">Clear filters</a>
+                {% endif %}
+            </div>
         </div>
 
         <div class="results">
@@ -336,7 +382,7 @@
                     <div style="font-size:32px;">🔎</div>
                     {% if query %}
                         <div><strong>No todos match “{{ query }}”</strong></div>
-                        <p>Try another word or switch the status filter.</p>
+                        <p>Try another word or switch the filters.</p>
                     {% else %}
                         <div><strong>No tasks yet</strong></div>
                         <p>Add a todo on the home page first.</p>

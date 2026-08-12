@@ -169,6 +169,52 @@
             cursor: pointer;
         }
 
+        .filters {
+            display: grid;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .filter-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filter-label {
+            min-width: 48px;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: #78716c;
+        }
+
+        .chip {
+            display: inline-flex;
+            padding: 6px 11px;
+            border-radius: 999px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 800;
+            background: #fff;
+            color: #44403c;
+            border: 1px solid #d6d3d1;
+        }
+
+        .chip.active {
+            background: #0f766e;
+            color: #fff;
+            border-color: #0f766e;
+        }
+
+        .chip.clear {
+            background: #fef2f2;
+            color: #b91c1c;
+            border-color: #fecaca;
+        }
+
         .table-scroll { overflow-x: auto; }
 
         table {
@@ -363,17 +409,49 @@
         </div>
     </div>
 
-    <form class="list-search" method="get" action="{% url 'search' %}">
-        <input type="search" name="q" placeholder="Search todos...">
-        <button type="submit">Search</button>
+    <form class="list-search" method="get" action="{% url 'edit_todos' %}">
+        <input type="hidden" name="status" value="{{ status }}">
+        <input type="hidden" name="when" value="{{ when }}">
+        <input type="hidden" name="sort" value="{{ sort }}">
+        <input type="search" name="q" value="{{ query }}" placeholder="Filter by title...">
+        <button type="submit">Filter</button>
     </form>
+
+    <div class="filters">
+        <div class="filter-row">
+            <span class="filter-label">Status</span>
+            <a class="chip {% if status == 'all' %}active{% endif %}" href="?q={{ query|urlencode }}&status=all&when={{ when }}&sort={{ sort }}">All</a>
+            <a class="chip {% if status == 'pending' %}active{% endif %}" href="?q={{ query|urlencode }}&status=pending&when={{ when }}&sort={{ sort }}">Pending</a>
+            <a class="chip {% if status == 'completed' %}active{% endif %}" href="?q={{ query|urlencode }}&status=completed&when={{ when }}&sort={{ sort }}">Completed</a>
+        </div>
+        <div class="filter-row">
+            <span class="filter-label">When</span>
+            <a class="chip {% if when == 'all' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=all&sort={{ sort }}">Any date</a>
+            <a class="chip {% if when == 'today' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=today&sort={{ sort }}">Today</a>
+            <a class="chip {% if when == 'week' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=week&sort={{ sort }}">This week</a>
+            <a class="chip {% if when == 'month' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=month&sort={{ sort }}">This month</a>
+            <a class="chip {% if when == 'upcoming' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=upcoming&sort={{ sort }}">Upcoming</a>
+            <a class="chip {% if when == 'undated' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=undated&sort={{ sort }}">No dates</a>
+        </div>
+        <div class="filter-row">
+            <span class="filter-label">Sort</span>
+            <a class="chip {% if sort == 'status' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort=status">Status</a>
+            <a class="chip {% if sort == 'newest' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort=newest">Newest</a>
+            <a class="chip {% if sort == 'oldest' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort=oldest">Oldest</a>
+            <a class="chip {% if sort == 'title' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort=title">Title</a>
+            <a class="chip {% if sort == 'start' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort=start">Start date</a>
+            {% if filters_active %}
+                <a class="chip clear" href="{% url 'edit_todos' %}">Clear filters</a>
+            {% endif %}
+        </div>
+    </div>
 
     <form method="POST">
         {% csrf_token %}
         <div class="panel">
             <div class="panel-head">
                 <h2>Your task list</h2>
-                <p>{{ todos|length }} task{{ todos|length|pluralize }} · tick completed items, then save</p>
+                <p>{{ result_count }} task{{ result_count|pluralize }} · tick completed items, then save</p>
             </div>
 
             <div class="table-scroll">
@@ -436,8 +514,13 @@
                             <tr>
                                 <td colspan="6" class="empty">
                                     <div class="empty-icon">📝</div>
-                                    <div class="empty-text">No tasks yet.</div>
-                                    <p>Go back home and add your first one.</p>
+                                    {% if filters_active %}
+                                        <div class="empty-text">No tasks match these filters.</div>
+                                        <p>Clear filters or try a different search.</p>
+                                    {% else %}
+                                        <div class="empty-text">No tasks yet.</div>
+                                        <p>Go back home and add your first one.</p>
+                                    {% endif %}
                                 </td>
                             </tr>
                         {% endfor %}

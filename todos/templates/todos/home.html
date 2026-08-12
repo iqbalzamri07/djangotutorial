@@ -297,6 +297,52 @@
             cursor: pointer;
         }
 
+        .filters {
+            display: grid;
+            gap: 8px;
+            padding: 12px 20px 0;
+        }
+
+        .filter-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .filter-label {
+            min-width: 48px;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: #78716c;
+        }
+
+        .chip {
+            display: inline-flex;
+            padding: 5px 10px;
+            border-radius: 999px;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 800;
+            background: #fff;
+            color: #44403c;
+            border: 1px solid #d6d3d1;
+        }
+
+        .chip.active {
+            background: #0f766e;
+            color: #fff;
+            border-color: #0f766e;
+        }
+
+        .chip.clear {
+            background: #fef2f2;
+            color: #b91c1c;
+            border-color: #fecaca;
+        }
+
         .todo-form {
             padding: 18px 20px 22px;
         }
@@ -491,12 +537,41 @@
         <div class="panel">
             <div class="panel-head">
                 <h3>Your tasks</h3>
-                <p>Pending first, then completed.</p>
+                <p>
+                    {% if filters_active %}
+                        Showing {{ result_count }} of {{ total_tasks }} task{{ total_tasks|pluralize }}.
+                    {% else %}
+                        Pending first, then completed.
+                    {% endif %}
+                </p>
             </div>
-            <form class="task-search" method="get" action="{% url 'search' %}">
-                <input type="search" name="q" placeholder="Search todos...">
-                <button type="submit">Search</button>
+            <form class="task-search" method="get" action="{% url 'home' %}">
+                <input type="hidden" name="status" value="{{ status }}">
+                <input type="hidden" name="when" value="{{ when }}">
+                <input type="hidden" name="sort" value="{{ sort }}">
+                <input type="search" name="q" value="{{ query }}" placeholder="Filter by title...">
+                <button type="submit">Filter</button>
             </form>
+            <div class="filters">
+                <div class="filter-row">
+                    <span class="filter-label">Status</span>
+                    <a class="chip {% if status == 'all' %}active{% endif %}" href="?q={{ query|urlencode }}&status=all&when={{ when }}&sort={{ sort }}">All</a>
+                    <a class="chip {% if status == 'pending' %}active{% endif %}" href="?q={{ query|urlencode }}&status=pending&when={{ when }}&sort={{ sort }}">Pending</a>
+                    <a class="chip {% if status == 'completed' %}active{% endif %}" href="?q={{ query|urlencode }}&status=completed&when={{ when }}&sort={{ sort }}">Done</a>
+                </div>
+                <div class="filter-row">
+                    <span class="filter-label">When</span>
+                    <a class="chip {% if when == 'all' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=all&sort={{ sort }}">Any</a>
+                    <a class="chip {% if when == 'today' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=today&sort={{ sort }}">Today</a>
+                    <a class="chip {% if when == 'week' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=week&sort={{ sort }}">Week</a>
+                    <a class="chip {% if when == 'month' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=month&sort={{ sort }}">Month</a>
+                    <a class="chip {% if when == 'upcoming' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=upcoming&sort={{ sort }}">Upcoming</a>
+                    <a class="chip {% if when == 'undated' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=undated&sort={{ sort }}">No dates</a>
+                    {% if filters_active %}
+                        <a class="chip clear" href="{% url 'home' %}">Clear</a>
+                    {% endif %}
+                </div>
+            </div>
             <div class="task-list">
                 {% for todo in todos %}
                     <div class="task-row {% if todo.completed %}done{% endif %}">
@@ -520,8 +595,13 @@
                 {% empty %}
                     <div class="empty">
                         <div style="font-size:32px;">📝</div>
-                        <div><strong>No tasks yet</strong></div>
-                        <p>Add your first one on the left.</p>
+                        {% if filters_active %}
+                            <div><strong>No tasks match these filters</strong></div>
+                            <p>Clear filters or try another title.</p>
+                        {% else %}
+                            <div><strong>No tasks yet</strong></div>
+                            <p>Add your first one on the left.</p>
+                        {% endif %}
                     </div>
                 {% endfor %}
             </div>

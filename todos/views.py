@@ -4,11 +4,111 @@ from datetime import date, datetime, timedelta
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
+from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 
 from .forms import SignUpForm, TodoForm
 from .models import Todo
+
+STATUS_FILTERS = ("all", "pending", "completed")
+WHEN_FILTERS = ("all", "today", "week", "month", "upcoming", "undated")
+SORT_FILTERS = ("status", "newest", "oldest", "title", "start")
+
+
+def month_bounds(today):
+    start = today.replace(day=1)
+    if today.month == 12:
+        end = date(today.year + 1, 1, 1) - timedelta(days=1)
+    else:
+        end = date(today.year, today.month + 1, 1) - timedelta(days=1)
+    return start, end
+
+
+def apply_todo_filters(todos, request):
+    query = request.GET.get("q", "").strip()
+    status = request.GET.get("status", "all")
+    when = request.GET.get("when", "all")
+    sort = request.GET.get("sort", "status")
+
+    if status not in STATUS_FILTERS:
+        status = "all"
+    if when not in WHEN_FILTERS:
+        when = "all"
+    if sort not in SORT_FILTERS:
+        sort = "status"
+
+    today = date.today()
+
+    if query:
+        todos = todos.filter(title__icontains=query)
+
+    if status == "pending":
+        todos = todos.filter(completed=False)
+    elif status == "completed":
+        todos = todos.filter(completed=True)
+
+    if when == "today":
+        todos = todos.filter(
+            Q(start_date=today, end_date__isnull=True)
+            | Q(start_date__lte=today, end_date__gte=today)
+        )
+    elif when == "week":
+        week_start = today - timedelta(days=today.weekday())
+        week_end = week_start + timedelta(days=6)
+        todos = todos.filter(
+            Q(
+                end_date__isnull=True,
+                start_date__gte=week_start,
+                start_date__lte=week_end,
+            )
+            | Q(
+                end_date__isnull=False,
+                start_date__lte=week_end,
+                end_date__gte=week_start,
+            )
+        )
+    elif when == "month":
+        month_start, month_end = month_bounds(today)
+        todos = todos.filter(
+            Q(
+                end_date__isnull=True,
+                start_date__gte=month_start,
+                start_date__lte=month_end,
+            )
+            | Q(
+                end_date__isnull=False,
+                start_date__lte=month_end,
+                end_date__gte=month_start,
+            )
+        )
+    elif when == "upcoming":
+        todos = todos.filter(start_date__gte=today)
+    elif when == "undated":
+        todos = todos.filter(start_date__isnull=True)
+
+    if sort == "newest":
+        todos = todos.order_by("-created_at")
+    elif sort == "oldest":
+        todos = todos.order_by("created_at")
+    elif sort == "title":
+        todos = todos.order_by("title")
+    elif sort == "start":
+        todos = todos.order_by("start_date", "title")
+    else:
+        todos = todos.order_by("completed", "start_date", "title")
+
+    return {
+        "todos": todos,
+        "query": query,
+        "status": status,
+        "when": when,
+        "sort": sort,
+        "filters_active": bool(
+            query or status != "all" or when != "all" or sort != "status"
+        ),
+        "result_count": todos.count(),
+    }
 
 
 def mark_overdue_todos_completed(user=None):
@@ -73,11 +173,12 @@ def logout_view(request):
 @login_required
 def home(request):
     mark_overdue_todos_completed(request.user)
-    todos = Todo.objects.filter(user=request.user).order_by("completed", "start_date", "title")
-    completed_tasks = todos.filter(completed=True).count()
-    pending_tasks = todos.filter(completed=False).count()
-    total_tasks = todos.count()
+    all_todos = Todo.objects.filter(user=request.user)
+    completed_tasks = all_todos.filter(completed=True).count()
+    pending_tasks = all_todos.filter(completed=False).count()
+    total_tasks = all_todos.count()
     progress_percent = int((completed_tasks / total_tasks) * 100) if total_tasks else 0
+    filtered = apply_todo_filters(all_todos, request)
 
     hour = datetime.now().hour
     if hour < 12:
@@ -102,7 +203,6 @@ def home(request):
         request,
         "todos/home.html",
         {
-            "todos": todos,
             "form": form,
             "completed_tasks": completed_tasks,
             "pending_tasks": pending_tasks,
@@ -110,6 +210,7 @@ def home(request):
             "progress_percent": progress_percent,
             "greeting": greeting,
             "today": date.today(),
+            **filtered,
         },
     )
 
@@ -117,50 +218,34 @@ def home(request):
 @login_required
 def search_todos(request):
     mark_overdue_todos_completed(request.user)
-    query = request.GET.get("q", "").strip()
-    status = request.GET.get("status", "all")
-    if status not in {"all", "pending", "completed"}:
-        status = "all"
-
-    todos = Todo.objects.filter(user=request.user).order_by(
-        "completed", "start_date", "title"
-    )
-
-    if query:
-        todos = todos.filter(title__icontains=query)
-
-    if status == "pending":
-        todos = todos.filter(completed=False)
-    elif status == "completed":
-        todos = todos.filter(completed=True)
-
-    return render(
+    filtered = apply_todo_filters(
+        Todo.objects.filter(user=request.user),
         request,
-        "todos/search.html",
-        {
-            "todos": todos,
-            "query": query,
-            "status": status,
-            "result_count": todos.count(),
-        },
     )
+    return render(request, "todos/search.html", filtered)
 
 
 @login_required
 def edit_todos(request):
     mark_overdue_todos_completed(request.user)
-    todos = Todo.objects.filter(user=request.user)
+    filtered = apply_todo_filters(
+        Todo.objects.filter(user=request.user),
+        request,
+    )
+    todos = filtered["todos"]
 
     if request.method == "POST":
         for todo in todos:
             todo.completed = f"completed_{todo.id}" in request.POST
             todo.save()
 
-        return redirect("home")
+        redirect_url = reverse("edit_todos")
+        querystring = request.GET.urlencode()
+        if querystring:
+            redirect_url = f"{redirect_url}?{querystring}"
+        return redirect(redirect_url)
 
-    return render(request, "todos/edit-todos.html", {
-        "todos": todos,
-    })
+    return render(request, "todos/edit-todos.html", filtered)
 
 
 @login_required
