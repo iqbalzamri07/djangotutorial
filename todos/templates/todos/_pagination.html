@@ -5,7 +5,7 @@
     </span>
     <div class="page-links">
         {% if page_obj.has_previous %}
-            <a href="?page={{ page_obj.previous_page_number }}{% if page_query %}&{{ page_query }}{% endif %}">← Prev</a>
+            <a href="?page={{ page_obj.previous_page_number }}{% if page_query %}&{{ page_query }}{% endif %}{% if page_anchor %}#{{ page_anchor }}{% endif %}">← Prev</a>
         {% else %}
             <span class="disabled">← Prev</span>
         {% endif %}
@@ -14,12 +14,12 @@
             {% if num == page_obj.number %}
                 <span class="current">{{ num }}</span>
             {% else %}
-                <a href="?page={{ num }}{% if page_query %}&{{ page_query }}{% endif %}">{{ num }}</a>
+                <a href="?page={{ num }}{% if page_query %}&{{ page_query }}{% endif %}{% if page_anchor %}#{{ page_anchor }}{% endif %}">{{ num }}</a>
             {% endif %}
         {% endfor %}
 
         {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}{% if page_query %}&{{ page_query }}{% endif %}">Next →</a>
+            <a href="?page={{ page_obj.next_page_number }}{% if page_query %}&{{ page_query }}{% endif %}{% if page_anchor %}#{{ page_anchor }}{% endif %}">Next →</a>
         {% else %}
             <span class="disabled">Next →</span>
         {% endif %}

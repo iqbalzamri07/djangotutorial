@@ -401,6 +401,10 @@
             margin-top: 4px;
         }
 
+        .tasks-panel {
+            scroll-margin-top: 88px;
+        }
+
         .task-list {
             padding: 12px 18px 20px;
         }
@@ -679,7 +683,7 @@
             </div>
         </div>
 
-        <div class="panel tasks-panel">
+        <div class="panel tasks-panel" id="tasks">
             <div class="panel-head">
                 <h3>Your tasks</h3>
                 <p>
@@ -690,7 +694,7 @@
                     {% endif %}
                 </p>
             </div>
-            <form class="task-search" method="get" action="{% url 'home' %}">
+            <form class="task-search" method="get" action="{% url 'home' %}#tasks">
                 <input type="hidden" name="status" value="{{ status }}">
                 <input type="hidden" name="when" value="{{ when }}">
                 <input type="hidden" name="sort" value="{{ sort }}">
@@ -702,36 +706,36 @@
             <div class="filters">
                 <div class="filter-row">
                     <span class="filter-label">Status</span>
-                    <a class="chip {% if status == 'all' %}active{% endif %}" href="?q={{ query|urlencode }}&status=all&when={{ when }}&sort={{ sort }}&priority={{ priority }}&tag={{ tag }}">All</a>
-                    <a class="chip {% if status == 'pending' %}active{% endif %}" href="?q={{ query|urlencode }}&status=pending&when={{ when }}&sort={{ sort }}&priority={{ priority }}&tag={{ tag }}">Pending</a>
-                    <a class="chip {% if status == 'completed' %}active{% endif %}" href="?q={{ query|urlencode }}&status=completed&when={{ when }}&sort={{ sort }}&priority={{ priority }}&tag={{ tag }}">Done</a>
+                    <a class="chip {% if status == 'all' %}active{% endif %}" href="?q={{ query|urlencode }}&status=all&when={{ when }}&sort={{ sort }}&priority={{ priority }}&tag={{ tag }}#tasks">All</a>
+                    <a class="chip {% if status == 'pending' %}active{% endif %}" href="?q={{ query|urlencode }}&status=pending&when={{ when }}&sort={{ sort }}&priority={{ priority }}&tag={{ tag }}#tasks">Pending</a>
+                    <a class="chip {% if status == 'completed' %}active{% endif %}" href="?q={{ query|urlencode }}&status=completed&when={{ when }}&sort={{ sort }}&priority={{ priority }}&tag={{ tag }}#tasks">Done</a>
                 </div>
                 <div class="filter-row">
                     <span class="filter-label">When</span>
-                    <a class="chip {% if when == 'all' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=all&sort={{ sort }}&priority={{ priority }}&tag={{ tag }}">Any</a>
-                    <a class="chip {% if when == 'today' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=today&sort={{ sort }}&priority={{ priority }}&tag={{ tag }}">Today</a>
-                    <a class="chip {% if when == 'week' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=week&sort={{ sort }}&priority={{ priority }}&tag={{ tag }}">Week</a>
-                    <a class="chip {% if when == 'month' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=month&sort={{ sort }}&priority={{ priority }}&tag={{ tag }}">Month</a>
-                    <a class="chip {% if when == 'upcoming' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=upcoming&sort={{ sort }}&priority={{ priority }}&tag={{ tag }}">Upcoming</a>
-                    <a class="chip {% if when == 'due_soon' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=due_soon&sort={{ sort }}&priority={{ priority }}&tag={{ tag }}">Due soon</a>
-                    <a class="chip {% if when == 'undated' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=undated&sort={{ sort }}&priority={{ priority }}&tag={{ tag }}">No dates</a>
+                    <a class="chip {% if when == 'all' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=all&sort={{ sort }}&priority={{ priority }}&tag={{ tag }}#tasks">Any</a>
+                    <a class="chip {% if when == 'today' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=today&sort={{ sort }}&priority={{ priority }}&tag={{ tag }}#tasks">Today</a>
+                    <a class="chip {% if when == 'week' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=week&sort={{ sort }}&priority={{ priority }}&tag={{ tag }}#tasks">Week</a>
+                    <a class="chip {% if when == 'month' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=month&sort={{ sort }}&priority={{ priority }}&tag={{ tag }}#tasks">Month</a>
+                    <a class="chip {% if when == 'upcoming' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=upcoming&sort={{ sort }}&priority={{ priority }}&tag={{ tag }}#tasks">Upcoming</a>
+                    <a class="chip {% if when == 'due_soon' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=due_soon&sort={{ sort }}&priority={{ priority }}&tag={{ tag }}#tasks">Due soon</a>
+                    <a class="chip {% if when == 'undated' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when=undated&sort={{ sort }}&priority={{ priority }}&tag={{ tag }}#tasks">No dates</a>
                     {% if filters_active %}
-                        <a class="chip clear" href="{% url 'home' %}">Clear</a>
+                        <a class="chip clear" href="{% url 'home' %}#tasks">Clear</a>
                     {% endif %}
                 </div>
                 <div class="filter-row">
                     <span class="filter-label">Priority</span>
-                    <a class="chip {% if priority == 'all' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort={{ sort }}&priority=all&tag={{ tag }}">Any</a>
-                    <a class="chip {% if priority == 'high' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort={{ sort }}&priority=high&tag={{ tag }}">High</a>
-                    <a class="chip {% if priority == 'medium' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort={{ sort }}&priority=medium&tag={{ tag }}">Medium</a>
-                    <a class="chip {% if priority == 'low' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort={{ sort }}&priority=low&tag={{ tag }}">Low</a>
+                    <a class="chip {% if priority == 'all' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort={{ sort }}&priority=all&tag={{ tag }}#tasks">Any</a>
+                    <a class="chip {% if priority == 'high' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort={{ sort }}&priority=high&tag={{ tag }}#tasks">High</a>
+                    <a class="chip {% if priority == 'medium' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort={{ sort }}&priority=medium&tag={{ tag }}#tasks">Medium</a>
+                    <a class="chip {% if priority == 'low' %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort={{ sort }}&priority=low&tag={{ tag }}#tasks">Low</a>
                 </div>
                 {% if all_tags %}
                 <div class="filter-row">
                     <span class="filter-label">Tag</span>
-                    <a class="chip {% if not tag %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort={{ sort }}&priority={{ priority }}">Any</a>
+                    <a class="chip {% if not tag %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort={{ sort }}&priority={{ priority }}#tasks">Any</a>
                     {% for item in all_tags %}
-                        <a class="chip {% if tag == item.slug %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort={{ sort }}&priority={{ priority }}&tag={{ item.slug }}">{{ item.name }}</a>
+                        <a class="chip {% if tag == item.slug %}active{% endif %}" href="?q={{ query|urlencode }}&status={{ status }}&when={{ when }}&sort={{ sort }}&priority={{ priority }}&tag={{ item.slug }}#tasks">{{ item.name }}</a>
                     {% endfor %}
                 </div>
                 {% endif %}
@@ -791,7 +795,7 @@
                     </div>
                 {% endfor %}
             </div>
-            {% include "todos/_pagination.html" %}
+            {% include "todos/_pagination.html" with page_anchor="tasks" %}
         </div>
     </div>
 </div>
