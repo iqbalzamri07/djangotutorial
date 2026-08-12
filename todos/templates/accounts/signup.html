@@ -37,8 +37,30 @@
             font-family: inherit;
             margin-bottom: 14px;
         }
+        .password-wrap {
+            position: relative;
+            margin-bottom: 14px;
+        }
+        .password-wrap input {
+            margin-bottom: 0;
+            padding-right: 46px;
+        }
+        .eye-btn {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: auto;
+            border: none;
+            background: transparent;
+            color: #44403c;
+            padding: 4px 6px;
+            cursor: pointer;
+            font-size: 16px;
+            line-height: 1;
+        }
         .helptext { display: block; color: #78716c; font-size: 12px; margin: -8px 0 12px; }
-        button {
+        button[type="submit"] {
             width: 100%;
             border: none;
             background: #0f766e;
@@ -69,5 +91,26 @@
         </div>
     </div>
 </div>
+<script>
+    document.querySelectorAll('input[type="password"]').forEach((input) => {
+        const wrap = document.createElement('div');
+        wrap.className = 'password-wrap';
+        input.parentNode.insertBefore(wrap, input);
+        wrap.appendChild(input);
+
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'eye-btn';
+        btn.setAttribute('aria-label', 'Show password');
+        btn.textContent = '👁️';
+        btn.addEventListener('click', () => {
+            const showing = input.type === 'text';
+            input.type = showing ? 'password' : 'text';
+            btn.textContent = showing ? '👁️' : '🙈';
+            btn.setAttribute('aria-label', showing ? 'Show password' : 'Hide password');
+        });
+        wrap.appendChild(btn);
+    });
+</script>
 </body>
 </html>
